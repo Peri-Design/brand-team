@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixVerse Branding Team</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    header h1 {
+      font-size: 3.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    header p {
+      font-size: 1.3em;
+      opacity: 0.95;
+    }
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    .service-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInUp 0.8s ease-out;
+    }
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .service-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+    .service-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+    .cta-section {
+      background: white;
+      border-radius: 12px;
+      padding: 50px 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+    .cta-section h2 {
+      color: #667eea;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+    .cta-section p {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 2.2em;
+      }
+      header p {
+        font-size: 1.05em;
+      }
+      .service-card,
+      .cta-section {
+        padding: 28px 22px;
+      }
+    }
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✨ PixVerse Branding</h1>
+      <p>创意设计 • 品牌打造 • 视觉传达</p>
+    </header>
+
+    <div class="services">
+      <div class="service-card">
+        <h3>🎨 品牌设计</h3>
+        <p>专业的品牌识别系统设计，包括标志、色彩方案和视觉指南，为企业树立独特的品牌形象。</p>
+      </div>
+      <div class="service-card">
+        <h3>📱 UI/UX 设计</h3>
+        <p>创意用户界面和用户体验设计，打造直观、美观、易用的数字产品，提升用户满意度。</p>
+      </div>
+      <div class="service-card">
+        <h3>🎬 视频制作</h3>
+        <p>专业的视频制作和后期处理服务，从概念到成品，为品牌故事增添生动的视觉表现。</p>
+      </div>
+      <div class="service-card">
+        <h3>📸 摄影服务</h3>
+        <p>高质量的商业摄影和产品拍摄，捕捉品牌精髓，为营销和宣传提供优质视觉素材。</p>
+      </div>
+      <div class="service-card">
+        <h3>✍️ 内容策划</h3>
+        <p>创意内容策划和文案撰写，精准传达品牌信息，增强与目标受众的连接和互动。</p>
+      </div>
+      <div class="service-card">
+        <h3>🚀 营销推广</h3>
+        <p>整合营销策略和推广方案，通过多渠道传播，最大化品牌曝光和市场影响力。</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>准备好提升您的品牌了吗?</h2>
+      <p>联系我们的团队，开始您的品牌变革之旅</p>
+      <a href="mailto:team@pixverse.com" class="btn">联系我们</a>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 PixVerse Branding Team. 版权所有。</p>
+    </footer>
+  </div>
+</body>
+</html>
