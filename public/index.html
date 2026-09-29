@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PixVerse · 品牌工作台</title>
+  <title>PixVerse 品牌工作台</title>
   <meta name="description" content="选择资源位和语言，在本机适配、微调和导出品牌 Banner。">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%237c3aed'/%3E%3Cpath d='M9 8h10v5H14v4h9v7H9z' fill='white'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=20260929-icon-module">
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260928-download-highlight-fix"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
+  <link rel="stylesheet" href="style.css?v=20260929-assets-equal-grid">
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260929-cloud-projects"></script>
 </head>
-<body>
+<body data-view="studio">
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
@@ -23,8 +23,7 @@
  <div class="monogram" aria-label="PixVerse 品牌工作台"><img src="assets/ghost-logo.svg" alt=""></div>
  <button class="nav active" data-view="studio"><svg><use href="#i-grid"/></svg><span>设计延展</span></button>
  <button class="nav" data-view="assets"><svg><use href="#i-box"/></svg><span>品牌素材</span></button>
- <button class="nav" data-view="draft"><svg><use href="#i-image"/></svg><span>本地草稿</span></button>
- <div class="rail-bottom"><span class="avatar">P</span><span>本地版</span></div>
+ <button class="nav" data-view="draft"><svg><use href="#i-image"/></svg><span>我的工程</span></button>
 </aside>
 <div class="app-shell">
  <header class="topbar">
@@ -154,10 +153,11 @@
    </div>
   </aside>
  </main>
- <section id="assets" class="library" hidden>
+ <section id="assets" class="library assets-library" hidden>
   <div class="library-hero"><span class="eyebrow">BRAND LIBRARY</span><h1>品牌素材</h1><p>使用已有规范素材，保持品牌一致。</p></div>
-  <h2>PixVerse Logo</h2>
-  <div class="asset-grid">
+  <section class="asset-section pixverse-assets" aria-labelledby="pixverse-logo-title">
+   <h2 id="pixverse-logo-title">PixVerse Logo</h2>
+   <div class="asset-grid">
    <article>
     <div class="asset-preview"><img src="assets/PixVerse-black.svg" alt="PixVerse 黑色 Logo"></div>
     <h3>PixVerse · 黑色</h3>
@@ -176,10 +176,6 @@
      <a class="secondary" href="assets/PixVerse-white.png" download="PixVerse-white.png" aria-label="下载白色 PixVerse Logo PNG">下载 PNG</a>
     </div>
    </article>
-  </div>
-  <p class="hint">来源：现有运营资源位规范素材。常规 App Banner 不放 Logo；其他活动按专项规范处理。</p>
-  <h2>PixVerse Icon</h2>
-  <div class="asset-grid">
    <article>
     <div class="asset-preview icon-preview"><img src="assets/PixVerse-icon-light.svg" alt="PixVerse 浅色底 Icon"></div>
     <h3>PixVerse Icon · 浅色底</h3>
@@ -198,10 +194,12 @@
      <a class="secondary" href="assets/PixVerse-icon-dark.png" download="PixVerse-Icon-Dark.png" aria-label="下载 PixVerse 深色底 Icon PNG">下载 PNG</a>
     </div>
    </article>
-  </div>
-  <p class="hint">来源：PixVerse 新版本 Logo 官方 Icon 素材。</p>
-  <h2>爱诗科技 Logo</h2>
-  <div class="asset-grid">
+   </div>
+   <p class="hint">来源：PixVerse Logo 与新版本 Icon 官方素材。常规 App Banner 不放 Logo；其他活动按专项规范处理。</p>
+  </section>
+  <section class="asset-section" aria-labelledby="aisphere-logo-title">
+   <h2 id="aisphere-logo-title">爱诗科技 Logo</h2>
+   <div class="asset-grid">
    <article>
     <div class="asset-preview"><img src="assets/AIsphere-black.svg" alt="爱诗科技 AIsphere 黑色 Logo"></div>
     <h3>爱诗科技 · 黑色</h3>
@@ -220,12 +218,28 @@
      <a class="secondary" href="assets/AIsphere-white.png" download="AIsphere-white.png" aria-label="下载爱诗科技白色 Logo PNG">下载 PNG</a>
     </div>
    </article>
-  </div>
-  <p class="hint">来源：爱诗科技官方 Logo 素材包。</p>
+   </div>
+   <p class="hint">来源：爱诗科技官方 Logo 素材包。</p>
+  </section>
  </section>
- <section id="draft" class="library" hidden>
-  <div class="library-hero"><span class="eyebrow">YOUR WORKSPACE</span><h1>本地草稿</h1><p>当前工程会自动保存在此浏览器，可随时继续编辑。</p></div>
-  <article class="draft-card"><img id="draft-preview" src="assets/demo.png" alt="当前草稿主视觉"><div><h2 id="draft-name">礼盒活动 · 延展测试</h2><p id="draft-detail">当前工程</p><button id="continue-draft" class="primary">继续编辑</button></div></article>
+ <section id="draft" class="library draft-library" hidden>
+  <div class="library-hero"><span class="eyebrow">YOUR WORKSPACE</span><h1>我的工程</h1><p>未登录也可在本机继续编辑；使用飞书登录后可将工程同步到云端。</p></div>
+  <section class="draft-section" aria-labelledby="local-draft-title">
+   <div class="section-title"><div><h2 id="local-draft-title">本地草稿</h2><p>自动保存在当前设备与浏览器中。</p></div><span class="storage-badge">本机</span></div>
+   <article class="draft-card"><img id="draft-preview" src="assets/demo.png" alt="当前草稿主视觉"><div><h3 id="draft-name">礼盒活动 · 延展测试</h3><p id="draft-detail">当前工程</p><button id="continue-draft" class="primary">继续编辑</button></div></article>
+  </section>
+  <section class="draft-section cloud-section" aria-labelledby="cloud-project-title">
+   <div class="section-title"><div><h2 id="cloud-project-title">云端工程</h2><p>登录后跨设备打开工程；品牌素材和本地设计功能始终公开。</p></div><span class="storage-badge cloud">云端</span></div>
+   <div id="cloud-disabled" class="cloud-message" hidden><strong>云端工程尚未启用</strong><p>网站仍可正常使用本地草稿、品牌素材和图片下载。</p></div>
+   <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号保存工程</strong><p>飞书只用于确认身份；工程数据保存在本网站的云端存储中。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
+   <div id="cloud-signed-in" hidden>
+    <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div><strong id="cloud-user-name"></strong><p><span id="cloud-admin-badge" class="small-tag" hidden>管理员</span><span>已通过飞书登录</span></p></div></div><button id="cloud-logout" class="quiet">退出登录</button></div>
+    <div class="cloud-actions"><div><strong>当前本地工程</strong><p id="cloud-sync-status">尚未保存到云端</p></div><button id="cloud-save-current" class="primary">保存到云端</button></div>
+    <div class="cloud-list-heading"><h3>我的云端工程</h3><button id="cloud-refresh" class="quiet">刷新</button></div>
+    <div id="cloud-project-list" class="cloud-project-list" aria-live="polite"><p class="hint">正在读取云端工程…</p></div>
+    <aside id="cloud-admin-panel" class="cloud-admin-panel" hidden><strong>管理员概览</strong><p id="cloud-admin-summary">正在读取…</p><p class="hint">管理员可以查看使用规模，不会在此页面打开其他成员的工程内容。</p></aside>
+   </div>
+  </section>
   <section class="project-file-box" aria-labelledby="project-file-title"><div><h2 id="project-file-title">工程文件</h2><p>工程文件用于备份或换电脑继续编辑，包含图片、文案和调整参数，不是最终交付图片。</p></div><div class="project-file-actions" role="group" aria-label="工程文件操作"><button id="backup-draft" class="secondary"><svg><use href="#i-download"/></svg>备份工程</button><button id="import-project" class="secondary"><svg><use href="#i-upload"/></svg>打开工程</button></div><input id="project-upload" type="file" accept="application/json,.json" hidden></section>
  </section>
 </div>

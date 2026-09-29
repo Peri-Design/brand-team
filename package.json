@@ -1,8 +1,9 @@
 {
-  "name": "brand-team",
-  "version": "1.0.0",
+  "name": "pixverse-brand-workspace",
+  "version": "1.1.0",
+  "packageManager": "pnpm@11.19.0",
   "private": true,
-  "description": "PixVerse multilingual brand banner workspace",
+  "description": "PixVerse multilingual brand workspace with optional Feishu cloud projects",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -11,6 +12,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
   }
 }
