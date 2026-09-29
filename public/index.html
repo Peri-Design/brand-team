@@ -1,185 +1,211 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixVerse Branding Team</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      color: #333;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    header {
-      text-align: center;
-      color: white;
-      margin-bottom: 60px;
-      animation: fadeInDown 0.8s ease-out;
-    }
-    header h1 {
-      font-size: 3.5em;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-    header p {
-      font-size: 1.3em;
-      opacity: 0.95;
-    }
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-bottom: 60px;
-    }
-    .service-card {
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: fadeInUp 0.8s ease-out;
-    }
-    .service-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-    .service-card h3 {
-      color: #667eea;
-      margin-bottom: 15px;
-      font-size: 1.5em;
-    }
-    .service-card p {
-      color: #666;
-      line-height: 1.6;
-    }
-    .cta-section {
-      background: white;
-      border-radius: 12px;
-      padding: 50px 40px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      animation: fadeInUp 0.8s ease-out 0.2s both;
-    }
-    .cta-section h2 {
-      color: #667eea;
-      margin-bottom: 20px;
-      font-size: 2em;
-    }
-    .cta-section p {
-      color: #666;
-      margin-bottom: 30px;
-      font-size: 1.1em;
-    }
-    .btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px 40px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-    }
-    footer {
-      text-align: center;
-      color: white;
-      margin-top: 60px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-    @media (max-width: 640px) {
-      header h1 {
-        font-size: 2.2em;
-      }
-      header p {
-        font-size: 1.05em;
-      }
-      .service-card,
-      .cta-section {
-        padding: 28px 22px;
-      }
-    }
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PixVerse · 品牌工作台</title>
+  <meta name="description" content="选择资源位和语言，在本机适配、微调和导出品牌 Banner。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%237c3aed'/%3E%3Cpath d='M9 8h10v5H14v4h9v7H9z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css?v=20260928-ghost-logo">
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260928-download-highlight-fix"></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>✨ PixVerse Branding</h1>
-      <p>创意设计 • 品牌打造 • 视觉传达</p>
-    </header>
-
-    <div class="services">
-      <div class="service-card">
-        <h3>🎨 品牌设计</h3>
-        <p>专业的品牌识别系统设计，包括标志、色彩方案和视觉指南，为企业树立独特的品牌形象。</p>
-      </div>
-      <div class="service-card">
-        <h3>📱 UI/UX 设计</h3>
-        <p>创意用户界面和用户体验设计，打造直观、美观、易用的数字产品，提升用户满意度。</p>
-      </div>
-      <div class="service-card">
-        <h3>🎬 视频制作</h3>
-        <p>专业的视频制作和后期处理服务，从概念到成品，为品牌故事增添生动的视觉表现。</p>
-      </div>
-      <div class="service-card">
-        <h3>📸 摄影服务</h3>
-        <p>高质量的商业摄影和产品拍摄，捕捉品牌精髓，为营销和宣传提供优质视觉素材。</p>
-      </div>
-      <div class="service-card">
-        <h3>✍️ 内容策划</h3>
-        <p>创意内容策划和文案撰写，精准传达品牌信息，增强与目标受众的连接和互动。</p>
-      </div>
-      <div class="service-card">
-        <h3>🚀 营销推广</h3>
-        <p>整合营销策略和推广方案，通过多渠道传播，最大化品牌曝光和市场影响力。</p>
-      </div>
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 9 5v9l-9 5-9-5V8zm0 10v9M3 8l9 5 9-5M7.5 5.5l9 5v4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 17V3m-5 5 5-5 5 5M4 16v5h16v-5"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h5m5 0h6M4 12h10m5 0h1M4 18h3m5 0h8"/><circle cx="11.5" cy="6" r="2.5"/><circle cx="16.5" cy="12" r="2.5"/><circle cx="9.5" cy="18" r="2.5"/></symbol>
+</defs></svg>
+<aside class="rail" aria-label="主要功能">
+ <div class="monogram" aria-label="PixVerse 品牌工作台"><img src="assets/ghost-logo.svg" alt=""></div>
+ <button class="nav active" data-view="studio"><svg><use href="#i-grid"/></svg><span>设计延展</span></button>
+ <button class="nav" data-view="assets"><svg><use href="#i-box"/></svg><span>品牌素材</span></button>
+ <button class="nav" data-view="draft"><svg><use href="#i-image"/></svg><span>本地草稿</span></button>
+ <div class="rail-bottom"><span class="avatar">P</span><span>本地版</span></div>
+</aside>
+<div class="app-shell">
+ <header class="topbar">
+  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill">原型</span></div>
+  <div class="top-actions"><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled>↶ <span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled>↷ <span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
+ </header>
+ <main id="studio" class="workspace">
+  <section class="setup" aria-label="母版与生成设置">
+   <div class="panel-heading"><h1>创建设计</h1><p>一份主视觉，延展多个资源位</p></div>
+   <div class="setup-scroll" tabindex="0" role="region" aria-label="母版设置，独立滚动">
+   <label class="field-label" for="project-name">项目名称</label><input id="project-name" value="礼盒活动 · 延展测试" maxlength="80">
+   <details id="visual-settings" class="settings-group" open>
+    <summary><span>主视觉</span><span class="small-tag">原图保真</span></summary>
+    <div class="settings-group-body">
+   <label class="upload" for="image-upload"><img id="source-preview" src="assets/demo.png" alt="当前主视觉：紫色礼盒"><span><svg><use href="#i-upload"/></svg>替换主视觉</span></label>
+   <input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden><p id="source-info" class="hint">正在读取示例原图</p>
+   <label class="field-label background-toggle" for="background-enabled"><span>左侧补色</span><span class="switch-control"><span id="background-status" aria-hidden="true">已关闭</span><input id="background-enabled" type="checkbox" role="switch" aria-describedby="background-hint"></span></label>
+   <label class="field-label" for="background">左侧补边色 <input id="background" type="color" value="#3022bb" disabled></label>
+   <button id="background-match" class="secondary full">重新自动取色</button>
+   <p class="hint">替换主视觉时自动从左侧取色，可用色板微调。刷新与打开工程保留已选颜色。</p>
+   <p id="background-hint" class="hint">开启后同步补色至全部设计，并启用左侧渐变。关闭时保留颜色与渐变设置；原图未铺满处透明，可用缩放铺满。</p>
     </div>
-
-    <div class="cta-section">
-      <h2>准备好提升您的品牌了吗?</h2>
-      <p>联系我们的团队，开始您的品牌变革之旅</p>
-      <a href="mailto:team@pixverse.com" class="btn">联系我们</a>
+   </details>
+   <details id="copy-settings" class="settings-group" open>
+    <summary><span>语言与文案</span><span id="language-summary" class="setting-summary"></span></summary>
+    <div class="settings-group-body">
+   <div class="language-options"><label><input type="checkbox" name="language" value="zh" checked>中文</label><label><input type="checkbox" name="language" value="en" checked>English</label><label><input type="checkbox" name="language" value="ja">日本語</label></div>
+   <div class="lang-tabs" role="tablist" aria-label="编辑母版文案"><button role="tab" aria-selected="true" data-lang="zh">中文</button><button role="tab" aria-selected="false" data-lang="en">English</button><button role="tab" aria-selected="false" data-lang="ja">日本語</button></div>
+   <div id="shared-title-field"><label class="field-label" for="title-copy"><span id="shared-title-label">Web / App 双行标题</span><span id="shared-title-hint" class="hint">固定两行</span></label><textarea id="title-copy" rows="2" spellcheck="false"></textarea></div>
+   <div id="subtitle-field" hidden><label class="field-label" for="app-title-copy">App 主标题 <span class="hint">固定单行</span></label><input id="app-title-copy" maxlength="160"><label class="field-label" for="subtitle-copy">App 副标题 <span class="hint">固定单行</span></label><input id="subtitle-copy" maxlength="160"></div>
+   <p id="copy-mode-note" class="hint copy-note"><svg><use href="#i-lock"/></svg><span>位置与字号固定 · Web 与 App 同步</span></p>
+   <label class="field-label" for="text-color-mode">当前设计文字颜色</label>
+   <select id="text-color-mode" aria-describedby="text-color-hint"><option value="white">纯白 · 默认 #FFFFFF</option><option value="custom">自定义颜色</option></select>
+   <div id="custom-text-color" hidden>
+    <label class="field-label" for="text-color-hex">自定义色值</label>
+    <div class="text-color-inputs"><input id="text-color-picker" type="color" value="#ffffff" aria-label="选择文字颜色"><input id="text-color-hex" type="text" value="#FFFFFF" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="text-color-error text-color-hint"></div>
+    <p id="text-color-error" class="hint error" role="alert" hidden>色值尚未应用，请输入 6 位十六进制色值，如 #FFFFFF。</p>
+   </div>
+   <p id="text-color-hint" class="hint">仅应用于当前选中的单张设计，随工程保存。</p>
     </div>
-
-    <footer>
-      <p>&copy; 2026 PixVerse Branding Team. 版权所有。</p>
-    </footer>
+   </details>
+   <details id="slot-settings" class="settings-group">
+    <summary><span>资源位与版式</span><span id="slot-summary" class="setting-summary"></span></summary>
+    <div class="settings-group-body">
+   <label class="choice"><input type="checkbox" name="slot" value="web" checked><span><strong>Web 首页 Banner</strong><small>1320 × 558 px</small></span><span class="slot-icon web-icon"></span></label>
+   <label class="choice"><input type="checkbox" name="slot" value="app" checked><span><strong>App 首页 Banner</strong><small>1524 × 480 px</small></span><span class="slot-icon app-icon"></span></label>
+   <label class="field-label" for="app-variant">App 版式</label><select id="app-variant"><option value="primary">双行大标题</option><option value="secondary">主标题＋副标题</option></select>
+    </div>
+   </details>
+<p class="settings-caption">品牌设置 · 同步至全部 Web 语言</p>
+   <details class="block-editor logo-editor">
+    <summary><span>Web Logo</span><span id="logo-summary" class="setting-summary">不添加</span></summary>
+    <label class="field-label" for="web-logo">Logo 样式</label>
+    <select id="web-logo"><option value="none">不添加 Logo</option><option value="white">PixVerse · 白色字标</option><option value="black">PixVerse · 黑色字标</option><option value="custom" disabled>自定义 Logo（上传后可选）</option></select>
+    <div id="custom-logo-controls"><button id="upload-logo" class="secondary full">上传／替换 Logo</button><input id="logo-upload" type="file" accept="image/png,image/webp,image/svg+xml,.svg" hidden><p class="hint">透明 PNG / WebP，或文字已转曲的 SVG，最大 5 MB。</p></div>
+    <div id="logo-preview-wrap" class="logo-preview" hidden><img id="logo-preview" alt="当前 Web Logo"></div>
+    <p id="logo-info" class="hint">常规 App Banner 不放 Logo。</p>
+    <p class="hint">位置锁定：右上角；距上 10 px、距右 12 px，整体高 14 px（1×）。按原比例缩放，自动去除透明留白。</p>
+   </details>
+   <details class="block-editor">
+    <summary><span>Web 模板色块</span><span class="setting-summary"><span id="block-summary">自动匹配</span><span id="block-swatches" aria-hidden="true"></span></span></summary>
+    <p class="hint">保留原模板的两层几何色块。仅调整颜色和透明度，形状与文字位置固定。</p>
+    <label class="field-label" for="block-preset">配色方案</label><select id="block-preset"><option value="auto">自动匹配主视觉</option><option value="custom">自定义</option></select>
+    <button id="blocks-match" class="secondary full">重新自动匹配色块</button>
+    <p class="hint">替换主视觉时自动生成同色系渐变，可继续微调；手动修改后刷新仍保留。</p>
+    <div id="block-controls"></div>
+   </details>
+   </div>
+   <div class="setup-footer">
+   <button id="generate" class="primary generate">更新设计预览 <span id="selection-count">4 张</span></button>
+   <p class="hint">点击后更新右侧画布，确认效果后再下载。中日英文案独立填写。</p>
+   </div>
+  </section>
+  <section class="stage" aria-label="画布工作区">
+   <div class="stage-header"><div><div class="eyebrow">CAMPAIGN WORKSPACE</div><h2>画布工作区 <span id="result-count" class="count">0</span></h2></div><div class="stage-actions"><label class="guide-toggle"><input type="checkbox" id="show-guides">显示规范辅助线</label><button id="batch-toggle" class="secondary" aria-pressed="false">批量调整</button><button id="open-inspector" class="secondary" aria-controls="adjust-panel" aria-expanded="false">单张调整</button></div></div>
+   <div class="workspace-notice"><svg><use href="#i-check"/></svg><span>拖动空白处移动画布；按住空格或开启手型，可在图片上拖动视野。</span></div>
+   <div id="canvas-viewport" tabindex="0" role="region" aria-label="画布浏览区域，可横向或纵向滚动">
+    <div id="canvas-space"><div id="results" class="results"><div class="empty">正在载入原图与字体…</div></div></div>
+   </div>
+   <div class="canvas-toolbar" aria-label="画布观看控制">
+    <button id="view-hand" aria-label="手型工具，拖动画布" aria-pressed="false" title="手型工具；也可按住空格临时使用"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V5a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v7c0 4-2 6-6 6h-1c-2 0-3-1-4-2L4 14a1.5 1.5 0 0 1 2-2l2 2"/></svg>手型</button>
+    <div class="view-scale"><span>观看缩放</span><button id="view-zoom-out" aria-label="缩小画布">−</button><label class="view-percent" title="100% 对应模板规范的 1× 显示尺寸；导出仍为 4×"><input id="view-zoom" type="number" min="10" max="400" step="1" value="100" aria-label="画布观看比例，百分比"><span>%</span></label><button id="view-zoom-in" aria-label="放大画布">＋</button></div>
+    <div class="view-presets"><button id="view-fit" aria-pressed="true">适应窗口</button><button id="view-all" aria-pressed="false">查看全部</button><button id="view-selected" aria-pressed="false">放大选中</button></div>
+   </div>
+   <p id="view-status" class="view-status" role="status">仅改变观看大小 · 图片在本机处理</p>
+  </section>
+  <aside id="adjust-panel" class="inspector" tabindex="0" aria-label="单张图片调整，独立滚动">
+   <div class="inspector-heading"><svg><use href="#i-sliders"/></svg><h2 id="inspector-title">单张调整</h2><button id="close-inspector" class="quiet" aria-label="收起调整面板">收起</button></div>
+   <div id="inspector-empty" class="hint">选择一张预览图开始调整。</div>
+   <div id="inspector-body" hidden>
+    <h3 id="selected-name"></h3><p id="selected-size" class="hint"></p><span class="linked"><span></span><span id="adjust-scope-label">主视觉与母版保持关联</span></span>
+    <div id="batch-controls" class="batch-controls" hidden>
+     <strong id="batch-summary"></strong>
+     <p class="hint">当前卡片是基准。只可选择相同资源位；缩放、位置及勾选项同步，退出后仍可逐张调整。</p>
+     <label class="batch-fade"><input id="batch-sync-fade" type="checkbox">同时同步左侧渐变</label>
+     <label class="batch-fade"><input id="batch-sync-text-color" type="checkbox">同时同步文字颜色</label>
+     <button id="sync-composition" class="primary full">同步基准设置</button>
+     <button id="batch-done" class="secondary full">退出批量调整</button>
+    </div>
+    <div id="download-controls" class="download-controls" hidden>
+     <strong id="download-summary">已选择 1 张</strong>
+     <p class="hint">可跨 Web、App 和语言选择。这里只决定下载范围，不会同步或修改图片参数。</p>
+     <div class="download-selection-actions"><button id="download-select-all" class="quiet">全选</button><button id="download-clear" class="quiet">清空</button></div>
+     <button id="download-done" class="secondary full">退出选择下载</button>
+    </div>
+    <section id="slot-image-controls" class="slot-image-controls" aria-labelledby="slot-image-title">
+     <div class="slot-image-heading"><strong id="slot-image-title">资源位图片</strong><span id="slot-image-mode" class="small-tag">使用母版</span></div>
+     <p id="slot-image-status" class="hint"></p>
+     <input id="slot-image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+     <button id="replace-slot-image" class="secondary full">替换此资源位图片</button>
+     <button id="reset-slot-image" class="quiet full" hidden>恢复使用母版图</button>
+     <div id="slot-palette-controls" class="slot-palette-controls" hidden>
+      <label class="field-label" for="slot-background">资源位补边色 <input id="slot-background" type="color" value="#3022bb"></label>
+      <button id="match-slot-background" class="secondary full">按此资源位图片重新取色</button>
+     </div>
+    </section>
+    <div class="mini-preview"><canvas id="detail-canvas" aria-label="选中图片预览"></canvas></div>
+    <p id="adjust-help" class="hint">以下设置改变当前图片的构图；观看大小请用画布底部的缩放。</p>
+    <label class="range-label" for="zoom">主视觉缩放 <output id="zoom-value">100%</output></label><input id="zoom" type="range" step="0.001" min="60" max="220" value="100">
+    <label class="range-label" for="pan-x">水平位置 <output id="pan-x-value">0</output></label><input id="pan-x" type="range" step="0.001" min="-50" max="50" value="0">
+    <label class="range-label" for="pan-y">垂直位置 <output id="pan-y-value">0</output></label><input id="pan-y" type="range" step="0.001" min="-50" max="50" value="0">
+    <label class="range-label" for="fade">自定义左侧渐变 <output id="fade-value">48%</output></label><input id="fade" type="range" min="0" max="80" value="48" disabled aria-describedby="fade-hint">
+    <p id="fade-hint" class="hint">请先在主视觉设置中开启「左侧补色」。</p>
+    <button id="reset-crop" class="secondary full">恢复自动适配</button>
+    <div class="locked-note"><svg><use href="#i-lock"/></svg><div><strong>文字位置已锁定</strong><p>修改文案请使用左侧母版。图片微调只影响当前这一张。</p></div></div>
+    <div id="checks" class="checks" role="status"></div><button id="export-one" class="primary full"><svg><use href="#i-download"/></svg>下载这张 PNG</button>
+   </div>
+  </aside>
+ </main>
+ <section id="assets" class="library" hidden>
+  <div class="library-hero"><span class="eyebrow">BRAND LIBRARY</span><h1>品牌素材</h1><p>使用已有规范素材，保持品牌一致。</p></div>
+  <h2>PixVerse Logo</h2>
+  <div class="asset-grid">
+   <article>
+    <div class="asset-preview"><img src="assets/PixVerse-black.svg" alt="PixVerse 黑色 Logo"></div>
+    <h3>PixVerse · 黑色</h3>
+    <p>PNG 透明背景 · 适用于浅色背景 · 保持比例使用</p>
+    <div class="asset-downloads" role="group" aria-label="PixVerse 黑色 Logo 下载">
+     <a class="secondary" href="assets/PixVerse-black.svg" download="PixVerse-black.svg" aria-label="下载黑色 PixVerse Logo SVG">下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-black.png" download="PixVerse-black.png" aria-label="下载黑色 PixVerse Logo PNG">下载 PNG</a>
+    </div>
+   </article>
+   <article>
+    <div class="asset-preview dark"><img src="assets/PixVerse-white.svg" alt="PixVerse 白色 Logo"></div>
+    <h3>PixVerse · 白色</h3>
+    <p>PNG 透明背景 · 适用于深色背景 · 保持比例使用</p>
+    <div class="asset-downloads" role="group" aria-label="PixVerse 白色 Logo 下载">
+     <a class="secondary" href="assets/PixVerse-white.svg" download="PixVerse-white.svg" aria-label="下载白色 PixVerse Logo SVG">下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-white.png" download="PixVerse-white.png" aria-label="下载白色 PixVerse Logo PNG">下载 PNG</a>
+    </div>
+   </article>
   </div>
-</body>
-</html>
+  <p class="hint">来源：现有运营资源位规范素材。常规 App Banner 不放 Logo；其他活动按专项规范处理。</p>
+  <h2>爱诗科技 Logo</h2>
+  <div class="asset-grid">
+   <article>
+    <div class="asset-preview"><img src="assets/AIsphere-black.svg" alt="爱诗科技 AIsphere 黑色 Logo"></div>
+    <h3>爱诗科技 · 黑色</h3>
+    <p>PNG 透明背景 · 适用于浅色背景 · 保持比例使用</p>
+    <div class="asset-downloads" role="group" aria-label="爱诗科技黑色 Logo 下载">
+     <a class="secondary" href="assets/AIsphere-black.svg" download="AIsphere-black.svg" aria-label="下载爱诗科技黑色 Logo SVG">下载 SVG</a>
+     <a class="secondary" href="assets/AIsphere-black.png" download="AIsphere-black.png" aria-label="下载爱诗科技黑色 Logo PNG">下载 PNG</a>
+    </div>
+   </article>
+   <article>
+    <div class="asset-preview dark"><img src="assets/AIsphere-white.svg" alt="爱诗科技 AIsphere 白色 Logo"></div>
+    <h3>爱诗科技 · 白色</h3>
+    <p>PNG 透明背景 · 适用于深色背景 · 保持比例使用</p>
+    <div class="asset-downloads" role="group" aria-label="爱诗科技白色 Logo 下载">
+     <a class="secondary" href="assets/AIsphere-white.svg" download="AIsphere-white.svg" aria-label="下载爱诗科技白色 Logo SVG">下载 SVG</a>
+     <a class="secondary" href="assets/AIsphere-white.png" download="AIsphere-white.png" aria-label="下载爱诗科技白色 Logo PNG">下载 PNG</a>
+    </div>
+   </article>
+  </div>
+  <p class="hint">来源：爱诗科技官方 Logo 素材包。</p>
+ </section>
+ <section id="draft" class="library" hidden>
+  <div class="library-hero"><span class="eyebrow">YOUR WORKSPACE</span><h1>本地草稿</h1><p>当前工程会自动保存在此浏览器，可随时继续编辑。</p></div>
+  <article class="draft-card"><img id="draft-preview" src="assets/demo.png" alt="当前草稿主视觉"><div><h2 id="draft-name">礼盒活动 · 延展测试</h2><p id="draft-detail">当前工程</p><button id="continue-draft" class="primary">继续编辑</button></div></article>
+  <section class="project-file-box" aria-labelledby="project-file-title"><div><h2 id="project-file-title">工程文件</h2><p>工程文件用于备份或换电脑继续编辑，包含图片、文案和调整参数，不是最终交付图片。</p></div><div class="project-file-actions" role="group" aria-label="工程文件操作"><button id="backup-draft" class="secondary"><svg><use href="#i-download"/></svg>备份工程</button><button id="import-project" class="secondary"><svg><use href="#i-upload"/></svg>打开工程</button></div><input id="project-upload" type="file" accept="application/json,.json" hidden></section>
+ </section>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>

@@ -2,7 +2,7 @@
   "name": "brand-team",
   "version": "1.0.0",
   "private": true,
-  "description": "PixVerse Branding Team site",
+  "description": "PixVerse multilingual brand banner workspace",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
