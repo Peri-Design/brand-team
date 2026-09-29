@@ -1,6 +1,6 @@
 # PixVerse 品牌工作台
 
-线上版本部署于 Railway；本地开发可双击 `启动工作台.command`，保持启动窗口开启，在浏览器使用 http://127.0.0.1:8766/ 。
+线上版本已部署至 https://brand-team-production.up.railway.app/ 。本地开发可双击 `启动工作台.command`，保持启动窗口开启，在浏览器使用 http://127.0.0.1:8766/ 。
 
 ## 使用
 
