@@ -111,6 +111,7 @@ summary:focus-visible,.setup-scroll:focus-visible,.stage:focus-visible,.inspecto
 /* Official asset downloads share the existing secondary button style. */
 .asset-downloads{display:flex;flex-wrap:wrap;gap:12px}
 .asset-downloads a.secondary{min-height:44px;align-items:center;justify-content:center;white-space:nowrap}
+.asset-preview.icon-preview img{width:140px;height:140px;object-fit:contain;border-radius:10px;box-shadow:0 3px 12px #29213614}
 
 .text-color-inputs{display:flex;align-items:center;gap:8px}.text-color-inputs input[type=color]{flex:0 0 44px;width:44px;height:40px;padding:3px}.text-color-inputs input[type=text]{flex:1;min-width:0;font-family:monospace;text-transform:uppercase}.text-color-inputs input[aria-invalid=true]{border-color:#b33636}#text-color-error{color:#b33636}
 
