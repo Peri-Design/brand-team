@@ -94,7 +94,12 @@ function projectBody(req, res) {
     res.status(413).json({ error: '工程超过 160 MB，请压缩图片后重试。' });
     return null;
   }
-  return { project, sizeBytes, name: project.name.trim() || '未命名工程' };
+  const previewDataUrl = typeof req.body?.preview === 'string' ? req.body.preview : '';
+  if (previewDataUrl && (!/^data:image\/(?:jpeg|png|webp);base64,/i.test(previewDataUrl) || Buffer.byteLength(previewDataUrl) > 1024 * 1024)) {
+    res.status(400).json({ error: '工程预览图格式不正确或超过 1 MB。' });
+    return null;
+  }
+  return { project, sizeBytes, previewDataUrl: previewDataUrl || null, name: project.name.trim() || '未命名工程' };
 }
 
 function validId(id) {
@@ -213,7 +218,7 @@ app.post('/api/cloud/projects', sameOrigin, requireAuth, parseProjectJson, async
   try {
     const parsed = projectBody(req, res);
     if (!parsed) return;
-    const project = await (await ready).store.createProject(req.user.openId, parsed.name, parsed.project, parsed.sizeBytes);
+    const project = await (await ready).store.createProject(req.user.openId, parsed.name, parsed.project, parsed.sizeBytes, parsed.previewDataUrl);
     res.status(201).json({ project: { id: project.id, name: project.name, sizeBytes: project.sizeBytes, revision: project.revision, createdAt: project.createdAt, updatedAt: project.updatedAt } });
   } catch (error) {
     next(error);
@@ -238,7 +243,7 @@ app.put('/api/cloud/projects/:id', sameOrigin, requireAuth, parseProjectJson, as
     if (!parsed) return;
     const baseRevision = Number(req.body?.baseRevision);
     if (!Number.isInteger(baseRevision) || baseRevision < 1) return res.status(400).json({ error: '缺少云端版本信息。' });
-    const result = await (await ready).store.updateProject(req.user.openId, req.params.id, parsed.name, parsed.project, parsed.sizeBytes, baseRevision);
+    const result = await (await ready).store.updateProject(req.user.openId, req.params.id, parsed.name, parsed.project, parsed.sizeBytes, baseRevision, parsed.previewDataUrl);
     if (result.missing) return res.status(404).json({ error: '未找到云端工程。' });
     if (result.conflict) return res.status(409).json({ error: '云端工程已在其他页面更新，请重新打开后再编辑。', project: { id: result.project.id, revision: result.project.revision, updatedAt: result.project.updatedAt } });
     const project = result.project;

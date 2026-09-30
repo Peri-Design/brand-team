@@ -52,9 +52,9 @@ class MemoryStore {
       .map(({ payload, ...metadata }) => clone(metadata));
   }
 
-  async createProject(openId, name, payload, sizeBytes) {
+  async createProject(openId, name, payload, sizeBytes, previewDataUrl = null) {
     const now = new Date().toISOString();
-    const project = { id: crypto.randomUUID(), ownerOpenId: openId, name, payload: clone(payload), sizeBytes, revision: 1, createdAt: now, updatedAt: now };
+    const project = { id: crypto.randomUUID(), ownerOpenId: openId, name, payload: clone(payload), sizeBytes, previewDataUrl, revision: 1, createdAt: now, updatedAt: now };
     this.projects.set(project.id, project);
     return clone(project);
   }
@@ -64,11 +64,11 @@ class MemoryStore {
     return project?.ownerOpenId === openId ? clone(project) : null;
   }
 
-  async updateProject(openId, id, name, payload, sizeBytes, baseRevision) {
+  async updateProject(openId, id, name, payload, sizeBytes, baseRevision, previewDataUrl = null) {
     const project = this.projects.get(id);
     if (!project || project.ownerOpenId !== openId) return { missing: true };
     if (project.revision !== baseRevision) return { conflict: true, project: clone(project) };
-    Object.assign(project, { name, payload: clone(payload), sizeBytes, revision: project.revision + 1, updatedAt: new Date().toISOString() });
+    Object.assign(project, { name, payload: clone(payload), sizeBytes, previewDataUrl, revision: project.revision + 1, updatedAt: new Date().toISOString() });
     return { project: clone(project) };
   }
 
@@ -126,8 +126,10 @@ class PostgresStore {
         size_bytes integer NOT NULL,
         revision integer NOT NULL DEFAULT 1,
         created_at timestamptz NOT NULL DEFAULT now(),
-        updated_at timestamptz NOT NULL DEFAULT now()
+        updated_at timestamptz NOT NULL DEFAULT now(),
+        preview_data_url text
       );
+      ALTER TABLE cloud_projects ADD COLUMN IF NOT EXISTS preview_data_url text;
       CREATE INDEX IF NOT EXISTS cloud_projects_owner_updated_idx ON cloud_projects(owner_open_id, updated_at DESC);
     `);
   }
@@ -188,36 +190,36 @@ class PostgresStore {
 
   async listProjects(openId) {
     const result = await this.pool.query(`
-      SELECT id::text,name,size_bytes AS "sizeBytes",revision,created_at AS "createdAt",updated_at AS "updatedAt"
+      SELECT id::text,name,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt"
       FROM cloud_projects WHERE owner_open_id=$1 ORDER BY updated_at DESC
     `, [openId]);
     return result.rows;
   }
 
-  async createProject(openId, name, payload, sizeBytes) {
+  async createProject(openId, name, payload, sizeBytes, previewDataUrl = null) {
     const id = crypto.randomUUID();
     const result = await this.pool.query(`
-      INSERT INTO cloud_projects(id,owner_open_id,name,payload,size_bytes)
-      VALUES($1,$2,$3,$4::jsonb,$5)
-      RETURNING id::text,name,payload,size_bytes AS "sizeBytes",revision,created_at AS "createdAt",updated_at AS "updatedAt"
-    `, [id, openId, name, JSON.stringify(payload), sizeBytes]);
+      INSERT INTO cloud_projects(id,owner_open_id,name,payload,size_bytes,preview_data_url)
+      VALUES($1,$2,$3,$4::jsonb,$5,$6)
+      RETURNING id::text,name,payload,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt"
+    `, [id, openId, name, JSON.stringify(payload), sizeBytes, previewDataUrl]);
     return result.rows[0];
   }
 
   async getProject(openId, id) {
     const result = await this.pool.query(`
-      SELECT id::text,name,payload,size_bytes AS "sizeBytes",revision,created_at AS "createdAt",updated_at AS "updatedAt"
+      SELECT id::text,name,payload,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt"
       FROM cloud_projects WHERE owner_open_id=$1 AND id=$2
     `, [openId, id]);
     return result.rows[0] || null;
   }
 
-  async updateProject(openId, id, name, payload, sizeBytes, baseRevision) {
+  async updateProject(openId, id, name, payload, sizeBytes, baseRevision, previewDataUrl = null) {
     const result = await this.pool.query(`
-      UPDATE cloud_projects SET name=$3,payload=$4::jsonb,size_bytes=$5,revision=revision+1,updated_at=now()
+      UPDATE cloud_projects SET name=$3,payload=$4::jsonb,size_bytes=$5,preview_data_url=$7,revision=revision+1,updated_at=now()
       WHERE owner_open_id=$1 AND id=$2 AND revision=$6
-      RETURNING id::text,name,payload,size_bytes AS "sizeBytes",revision,created_at AS "createdAt",updated_at AS "updatedAt"
-    `, [openId, id, name, JSON.stringify(payload), sizeBytes, baseRevision]);
+      RETURNING id::text,name,payload,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt"
+    `, [openId, id, name, JSON.stringify(payload), sizeBytes, baseRevision, previewDataUrl]);
     if (result.rows[0]) return { project: result.rows[0] };
     const existing = await this.getProject(openId, id);
     return existing ? { conflict: true, project: existing } : { missing: true };

@@ -5,8 +5,8 @@
   <title>PixVerse 品牌工作台</title>
   <meta name="description" content="选择资源位和语言，在本机适配、微调和导出品牌 Banner。">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
-  <link rel="stylesheet" href="style.css?v=20260929-assets-equal-grid">
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260929-cloud-projects"></script>
+  <link rel="stylesheet" href="style.css?v=20260930-project-grid">
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-project-grid"></script>
 </head>
 <body data-view="studio">
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -226,7 +226,12 @@
   <div class="library-hero"><span class="eyebrow">YOUR WORKSPACE</span><h1>我的工程</h1><p>未登录也可在本机继续编辑；使用飞书登录后可将工程同步到云端。</p></div>
   <section class="draft-section" aria-labelledby="local-draft-title">
    <div class="section-title"><div><h2 id="local-draft-title">本地草稿</h2><p>自动保存在当前设备与浏览器中。</p></div><span class="storage-badge">本机</span></div>
-   <article class="draft-card"><img id="draft-preview" src="assets/demo.png" alt="当前草稿主视觉"><div><h3 id="draft-name">礼盒活动 · 延展测试</h3><p id="draft-detail">当前工程</p><button id="continue-draft" class="primary">继续编辑</button></div></article>
+   <div class="project-grid local-project-grid">
+    <article class="project-tile local-project-card">
+     <div class="project-tile-preview"><img id="draft-preview" src="assets/demo.png" alt="当前本地工程预览"></div>
+     <div class="project-tile-footer"><div class="project-tile-copy"><h3 id="draft-name">礼盒活动 · 延展测试</h3><p id="draft-detail">当前工程</p></div><button id="continue-draft" class="secondary">继续编辑</button></div>
+    </article>
+   </div>
   </section>
   <section class="draft-section cloud-section" aria-labelledby="cloud-project-title">
    <div class="section-title"><div><h2 id="cloud-project-title">云端工程</h2><p>登录后跨设备打开工程；品牌素材和本地设计功能始终公开。</p></div><span class="storage-badge cloud">云端</span></div>
