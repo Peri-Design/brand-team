@@ -149,7 +149,7 @@ app.get('/api/auth/session', async (req, res, next) => {
 
 app.get('/api/auth/feishu/start', async (req, res, next) => {
   try {
-    const nextView = ['studio', 'files'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
+    const nextView = ['new', 'studio', 'files'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
     setCookie(res, 'pv_auth_next', nextView, { maxAge: 10 * 60 * 1000 });
     if (devCloud) {
       const { store } = await ready;
@@ -174,7 +174,7 @@ app.get('/api/auth/feishu/start', async (req, res, next) => {
 
 app.get('/api/auth/feishu/callback', async (req, res, next) => {
   try {
-    const nextView = ['studio', 'files'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
+    const nextView = ['new', 'studio', 'files'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
     clearCookie(res, 'pv_auth_next');
     const expectedState = cookies(req).pv_oauth_state;
     clearCookie(res, 'pv_oauth_state');
@@ -344,7 +344,7 @@ async function serveWorkspace(req, res, next) {
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20260930-access-approval-4"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20260930-new-design-1"></script>\n</head>');
     }
     res.set('Cache-Control', 'no-cache').type('html').send(html);
   } catch (error) {

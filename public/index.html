@@ -5,8 +5,8 @@
   <title>PixVerse 品牌工作台</title>
   <meta name="description" content="选择资源位和语言，在线适配、微调、保存并导出 PixVerse 品牌素材。">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
-  <link rel="stylesheet" href="style.css?v=20260930-icon-system-2">
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-access-approval-3"></script>
+  <link rel="stylesheet" href="style.css?v=20260930-new-design-1">
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-new-design-1"></script>
 </head>
 <body data-view="assets">
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -32,20 +32,20 @@
 <aside class="rail" aria-label="主要功能">
  <div class="monogram" aria-label="PixVerse 品牌工作台"><img src="assets/ghost-logo.svg" alt=""></div>
  <button class="nav active" data-view="assets"><svg><use href="#i-box"/></svg><span>品牌素材</span></button>
- <button class="nav protected-nav is-locked" data-view="studio" aria-haspopup="dialog"><svg><use href="#i-grid"/></svg><span>运营设计</span><span class="nav-lock" aria-label="需要访问权限"><svg><use href="#i-lock"/></svg></span></button>
+ <button class="nav protected-nav is-locked" data-action="new-project" aria-haspopup="dialog"><svg><use href="#i-plus"/></svg><span>新建设计</span><span class="nav-lock" aria-label="需要访问权限"><svg><use href="#i-lock"/></svg></span></button>
  <button class="nav protected-nav is-locked" data-view="files" aria-haspopup="dialog"><svg><use href="#i-image"/></svg><span>文件</span><span class="nav-lock" aria-label="需要访问权限"><svg><use href="#i-lock"/></svg></span></button>
  <button id="admin-nav" class="nav admin-nav" data-view="admin" hidden><svg><use href="#i-shield"/></svg><span>管理后台</span></button>
 </aside>
 <div class="app-shell">
  <header class="topbar">
-  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.3.0</span></div>
+  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.4.0</span></div>
   <div class="top-actions"><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
  </header>
  <main id="studio" class="workspace" hidden>
   <section class="setup" aria-label="母版与生成设置">
-   <div class="panel-heading"><h1>新建设计</h1><p>按规范制作单个或多个运营资源位</p></div>
+   <div class="panel-heading"><h1>设计编辑</h1><p>按规范制作单个或多个运营资源位</p></div>
    <div class="setup-scroll" tabindex="0" role="region" aria-label="母版设置，独立滚动">
-   <label class="field-label" for="project-name">文件名称</label><input id="project-name" value="礼盒活动 · 延展测试" maxlength="80">
+   <label class="field-label" for="project-name">文件名称</label><input id="project-name" value="未命名设计" maxlength="80">
    <details id="visual-settings" class="settings-group" open>
     <summary><span>主视觉</span><span class="small-tag">原图保真</span></summary>
     <div class="settings-group-body">
@@ -232,15 +232,15 @@
   </section>
  </section>
  <section id="files" class="library files-library" hidden>
-  <div class="library-hero"><span class="eyebrow">YOUR FILES</span><h1>文件</h1><p>查找、打开和管理你的设计文件。</p></div>
+  <div class="library-hero"><span class="eyebrow">YOUR FILES</span><h1>文件</h1><p>查看、打开和管理你的全部设计文件。</p></div>
   <div class="file-toolbar">
-   <div class="file-tabs" role="tablist" aria-label="文件范围"><button class="active" role="tab" aria-selected="true" data-file-scope="recent">最近</button><button role="tab" aria-selected="false" data-file-scope="all">所有文件</button><button role="tab" aria-selected="false" data-file-scope="trash"><svg><use href="#i-trash"/></svg>回收站</button></div>
-   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="import-project" class="secondary"><svg><use href="#i-upload"/></svg>导入备份</button><input id="project-upload" type="file" accept="application/json,.json" hidden></div>
+   <div class="file-tabs" role="tablist" aria-label="文件范围"><button role="tab" aria-selected="false" data-file-scope="recent">最近</button><button class="active" role="tab" aria-selected="true" data-file-scope="all">所有文件</button><button role="tab" aria-selected="false" data-file-scope="trash"><svg><use href="#i-trash"/></svg>回收站</button></div>
+   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="create-project" class="primary"><svg><use href="#i-plus"/></svg>新建设计</button></div>
   </div>
-  <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件尚未启用</strong><p>你仍可在本机继续设计和导入备份。</p></div></div>
+  <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件尚未启用</strong><p>你仍可在本机继续设计，网络恢复后再同步。</p></div></div>
   <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号同步文件</strong><p>登录后默认自动保存到云端；本机仍保留恢复副本。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
   <div id="cloud-signed-in" hidden>
-   <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div><strong id="cloud-user-name"></strong><p><span id="cloud-admin-badge" class="small-tag" hidden>管理员</span><span id="cloud-sync-status">正在确认同步状态…</span></p></div></div><div class="account-actions"><button id="backup-draft" class="quiet">下载当前备份</button><button id="cloud-save-current" class="primary">开启云端同步</button><button id="cloud-refresh" class="quiet">刷新</button><button id="cloud-logout" class="quiet">退出登录</button></div></div>
+   <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div class="cloud-profile-copy"><div class="cloud-profile-name"><strong id="cloud-user-name"></strong><span id="cloud-admin-badge" class="small-tag compact-status-tag" hidden>管理员</span></div><p><span id="cloud-sync-status">正在确认同步状态…</span></p></div></div><div class="account-actions"><button id="cloud-save-current" class="primary">开启云端同步</button><button id="cloud-refresh" class="quiet">刷新</button><button id="cloud-logout" class="quiet">退出登录</button></div></div>
   </div>
   <div id="file-project-list" class="project-grid" aria-live="polite"><p class="hint">正在读取文件…</p></div>
  </section>
@@ -249,7 +249,7 @@
   <div id="admin-denied" class="cloud-message"><div><strong>仅管理员可访问</strong><p>请使用具有管理员权限的飞书账号登录。</p></div></div>
   <div id="admin-content" hidden>
    <div class="admin-metrics"><article><span>用户</span><strong id="admin-users">0</strong></article><article><span>有效文件</span><strong id="admin-projects">0</strong></article><article><span>回收站</span><strong id="admin-trashed">0</strong></article><article><span>存储占用</span><strong id="admin-storage">0 KB</strong></article></div>
-   <div class="admin-panel"><div class="admin-heading"><div><h2>成员与访问权限</h2><p>飞书登录后默认等待审核；批准后才能使用运营设计和个人文件。</p></div><button id="admin-refresh" class="secondary">刷新</button></div><div id="admin-members" class="admin-members" aria-live="polite"></div></div>
+   <div class="admin-panel"><div class="admin-heading"><div><h2>成员与访问权限</h2><p>飞书登录后默认等待审核；批准后才能新建设计和访问个人文件。</p></div><button id="admin-refresh" class="secondary">刷新</button></div><div id="admin-members" class="admin-members" aria-live="polite"></div></div>
    <div class="admin-panel"><div class="admin-heading"><div><h2>文件归属</h2><p>管理员只查看文件元数据与归属，不打开成员的设计内容。</p></div></div><div id="admin-files" class="admin-files" aria-live="polite"></div></div>
    <div class="admin-panel system-panel"><h2>系统状态</h2><div class="system-items"><span><i></i>云端存储已连接</span><span><i></i>设计权限需管理员确认</span><span><i></i>回收站保留 30 天</span></div></div>
   </div>
@@ -260,7 +260,7 @@
  <div class="access-visual"><img src="assets/access-lock.png" alt="抱着锁的 PixVerse 品牌形象"></div>
  <span class="eyebrow">ACCESS REQUIRED</span>
  <h2 id="access-gate-title" tabindex="-1">需要访问权限</h2>
- <p id="access-gate-copy">运营设计仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。</p>
+ <p id="access-gate-copy">设计功能仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。</p>
  <p id="access-gate-account" class="access-gate-account" hidden></p>
  <div class="access-gate-actions">
   <a id="access-gate-login" class="primary button-link" href="/api/auth/feishu/start?next=studio">申请权限</a>

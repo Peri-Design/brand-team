@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   let session = { configured: false, user: null };
-  let intendedView = 'studio';
+  let intendedView = 'new';
 
   function toast(message) {
     const node = $('#toast');
@@ -26,7 +26,7 @@
     });
   }
 
-  function openGate(target = 'studio') {
+  function openGate(target = 'new') {
     intendedView = target;
     const dialog = $('#access-gate');
     const user = session.user;
@@ -39,16 +39,16 @@
     $('#access-gate-refresh').hidden = !user;
     if (status === 'pending') {
       $('#access-gate-title').textContent = '申请已提交，等待管理员确认';
-      $('#access-gate-copy').textContent = '管理员批准后，你才能进入运营设计和个人文件。审核期间仍可浏览和下载品牌素材。';
+      $('#access-gate-copy').textContent = '管理员批准后，你才能新建设计和访问个人文件。审核期间仍可浏览和下载品牌素材。';
     } else if (status === 'suspended') {
       $('#access-gate-title').textContent = '设计权限暂不可用';
       $('#access-gate-copy').textContent = '你的设计权限已被停用。如需恢复，请联系管理员重新开通。';
     } else if (!session.configured) {
       $('#access-gate-title').textContent = '需要申请访问权限';
-      $('#access-gate-copy').textContent = '运营设计需要管理员确认。当前为本地预览，线上环境可通过飞书提交申请。';
+      $('#access-gate-copy').textContent = '设计功能需要管理员确认。当前为本地预览，线上环境可通过飞书提交申请。';
     } else {
       $('#access-gate-title').textContent = '需要访问权限';
-      $('#access-gate-copy').textContent = '运营设计仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。';
+      $('#access-gate-copy').textContent = '设计功能仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。';
     }
     if (!dialog.open) {
       dialog.showModal();
@@ -61,7 +61,7 @@
     if (!response.ok) throw new Error('无法读取登录状态');
     const data = await response.json();
     session = { configured: Boolean(data.configured), user: data.authenticated ? data.user : null };
-    $$('[data-view="studio"],[data-view="files"]').forEach(button => {
+    $$('[data-action="new-project"],[data-view="files"]').forEach(button => {
       button.classList.add('is-locked');
       button.setAttribute('aria-haspopup', 'dialog');
     });
@@ -93,6 +93,7 @@
   $$('[data-view]').forEach(button => {
     button.onclick = () => button.dataset.view === 'assets' ? showAssets() : openGate(button.dataset.view);
   });
+  $('[data-action="new-project"]').onclick = () => openGate('new');
   $('#access-gate-close').onclick = () => $('#access-gate').close();
   $('#access-gate-dismiss').onclick = () => $('#access-gate').close();
   $('#access-gate-login').onclick = event => {
@@ -111,7 +112,7 @@
       location.reload();
       return;
     }
-    if (requested === 'studio' || requested === 'files') openGate(requested);
+    if (requested === 'new' || requested === 'studio' || requested === 'files') openGate(requested);
     if (auth === 'pending') toast('申请已提交，等待管理员确认。');
     else if (auth === 'suspended') toast('当前账号的设计权限已停用。');
     else if (auth === 'cancelled') toast('已取消飞书登录。');
@@ -119,6 +120,6 @@
     if (auth) history.replaceState({}, '', location.pathname);
   }).catch(() => {
     session = { configured: false, user: null };
-    if (requested === 'studio' || requested === 'files') openGate(requested);
+    if (requested === 'new' || requested === 'studio' || requested === 'files') openGate(requested);
   });
 })();
