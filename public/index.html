@@ -3,38 +3,49 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>PixVerse 品牌工作台</title>
-  <meta name="description" content="选择资源位和语言，在本机适配、微调和导出品牌 Banner。">
+  <meta name="description" content="选择资源位和语言，在线适配、微调、保存并导出 PixVerse 品牌素材。">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
-  <link rel="stylesheet" href="style.css?v=20260930-project-grid">
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-project-grid"></script>
+  <link rel="stylesheet" href="style.css?v=20260930-icon-system-1">
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-access-approval-2"></script>
 </head>
-<body data-view="studio">
+<body data-view="assets">
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
-<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
 <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 9 5v9l-9 5-9-5V8zm0 10v9M3 8l9 5 9-5M7.5 5.5l9 5v4"/></symbol>
 <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 17V3m-5 5 5-5 5 5M4 16v5h16v-5"/></symbol>
-<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
 <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h5m5 0h6M4 12h10m5 0h1M4 18h3m5 0h8"/><circle cx="11.5" cy="6" r="2.5"/><circle cx="16.5" cy="12" r="2.5"/><circle cx="9.5" cy="18" r="2.5"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6z"/><path d="m9 12 2 2 4-5"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M4 12h10a6 6 0 0 1 6 6"/></symbol>
+<symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 7 5 5-5 5m5-5H10a6 6 0 0 0-6 6"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 12V5a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v7c0 4-2 6-6 6h-1c-2 0-3-1-4-2L4 14a1.5 1.5 0 0 1 2-2l2 2"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
 </defs></svg>
 <aside class="rail" aria-label="主要功能">
  <div class="monogram" aria-label="PixVerse 品牌工作台"><img src="assets/ghost-logo.svg" alt=""></div>
- <button class="nav active" data-view="studio"><svg><use href="#i-grid"/></svg><span>设计延展</span></button>
- <button class="nav" data-view="assets"><svg><use href="#i-box"/></svg><span>品牌素材</span></button>
- <button class="nav" data-view="draft"><svg><use href="#i-image"/></svg><span>我的工程</span></button>
+ <button class="nav active" data-view="assets"><svg><use href="#i-box"/></svg><span>品牌素材</span></button>
+ <button class="nav protected-nav" data-view="studio"><svg><use href="#i-grid"/></svg><span>运营设计</span><span class="nav-lock" aria-label="需要访问权限"><svg><use href="#i-lock"/></svg></span></button>
+ <button class="nav protected-nav" data-view="files"><svg><use href="#i-image"/></svg><span>文件</span><span class="nav-lock" aria-label="需要访问权限"><svg><use href="#i-lock"/></svg></span></button>
+ <button id="admin-nav" class="nav admin-nav" data-view="admin" hidden><svg><use href="#i-shield"/></svg><span>管理后台</span></button>
 </aside>
 <div class="app-shell">
  <header class="topbar">
-  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill">原型</span></div>
-  <div class="top-actions"><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled>↶ <span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled>↷ <span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
+  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.3.0</span></div>
+  <div class="top-actions"><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
  </header>
- <main id="studio" class="workspace">
+ <main id="studio" class="workspace" hidden>
   <section class="setup" aria-label="母版与生成设置">
-   <div class="panel-heading"><h1>创建设计</h1><p>一份主视觉，延展多个资源位</p></div>
+   <div class="panel-heading"><h1>新建设计</h1><p>按规范制作单个或多个运营资源位</p></div>
    <div class="setup-scroll" tabindex="0" role="region" aria-label="母版设置，独立滚动">
-   <label class="field-label" for="project-name">项目名称</label><input id="project-name" value="礼盒活动 · 延展测试" maxlength="80">
+   <label class="field-label" for="project-name">文件名称</label><input id="project-name" value="礼盒活动 · 延展测试" maxlength="80">
    <details id="visual-settings" class="settings-group" open>
     <summary><span>主视觉</span><span class="small-tag">原图保真</span></summary>
     <div class="settings-group-body">
@@ -43,7 +54,7 @@
    <label class="field-label background-toggle" for="background-enabled"><span>左侧补色</span><span class="switch-control"><span id="background-status" aria-hidden="true">已关闭</span><input id="background-enabled" type="checkbox" role="switch" aria-describedby="background-hint"></span></label>
    <label class="field-label" for="background">左侧补边色 <input id="background" type="color" value="#3022bb" disabled></label>
    <button id="background-match" class="secondary full">重新自动取色</button>
-   <p class="hint">替换主视觉时自动从左侧取色，可用色板微调。刷新与打开工程保留已选颜色。</p>
+   <p class="hint">替换主视觉时自动从左侧取色，可用色板微调。刷新与重新打开文件后仍保留已选颜色。</p>
    <p id="background-hint" class="hint">开启后同步补色至全部设计，并启用左侧渐变。关闭时保留颜色与渐变设置；原图未铺满处透明，可用缩放铺满。</p>
     </div>
    </details>
@@ -62,7 +73,7 @@
     <div class="text-color-inputs"><input id="text-color-picker" type="color" value="#ffffff" aria-label="选择文字颜色"><input id="text-color-hex" type="text" value="#FFFFFF" maxlength="7" spellcheck="false" autocomplete="off" aria-describedby="text-color-error text-color-hint"></div>
     <p id="text-color-error" class="hint error" role="alert" hidden>色值尚未应用，请输入 6 位十六进制色值，如 #FFFFFF。</p>
    </div>
-   <p id="text-color-hint" class="hint">仅应用于当前选中的单张设计，随工程保存。</p>
+   <p id="text-color-hint" class="hint">仅应用于当前选中的单张设计，随文件保存。</p>
     </div>
    </details>
    <details id="slot-settings" class="settings-group">
@@ -104,8 +115,8 @@
     <div id="canvas-space"><div id="results" class="results"><div class="empty">正在载入原图与字体…</div></div></div>
    </div>
    <div class="canvas-toolbar" aria-label="画布观看控制">
-    <button id="view-hand" aria-label="手型工具，拖动画布" aria-pressed="false" title="手型工具；也可按住空格临时使用"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V5a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v7c0 4-2 6-6 6h-1c-2 0-3-1-4-2L4 14a1.5 1.5 0 0 1 2-2l2 2"/></svg>手型</button>
-    <div class="view-scale"><span>观看缩放</span><button id="view-zoom-out" aria-label="缩小画布">−</button><label class="view-percent" title="100% 对应模板规范的 1× 显示尺寸；导出仍为 4×"><input id="view-zoom" type="number" min="10" max="400" step="1" value="100" aria-label="画布观看比例，百分比"><span>%</span></label><button id="view-zoom-in" aria-label="放大画布">＋</button></div>
+    <button id="view-hand" aria-label="手型工具，拖动画布" aria-pressed="false" title="手型工具；也可按住空格临时使用"><svg aria-hidden="true"><use href="#i-hand"/></svg>手型</button>
+    <div class="view-scale"><span>观看缩放</span><button id="view-zoom-out" aria-label="缩小画布"><svg aria-hidden="true"><use href="#i-minus"/></svg></button><label class="view-percent" title="100% 对应模板规范的 1× 显示尺寸；导出仍为 4×"><input id="view-zoom" type="number" min="10" max="400" step="1" value="100" aria-label="画布观看比例，百分比"><span>%</span></label><button id="view-zoom-in" aria-label="放大画布"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
     <div class="view-presets"><button id="view-fit" aria-pressed="true">适应窗口</button><button id="view-all" aria-pressed="false">查看全部</button><button id="view-selected" aria-pressed="false">放大选中</button></div>
    </div>
    <p id="view-status" class="view-status" role="status">仅改变观看大小 · 图片在本机处理</p>
@@ -153,7 +164,7 @@
    </div>
   </aside>
  </main>
- <section id="assets" class="library assets-library" hidden>
+ <section id="assets" class="library assets-library">
   <div class="library-hero"><span class="eyebrow">BRAND LIBRARY</span><h1>品牌素材</h1><p>使用已有规范素材，保持品牌一致。</p></div>
   <section class="asset-section pixverse-assets" aria-labelledby="pixverse-logo-title">
    <h2 id="pixverse-logo-title">PixVerse Logo</h2>
@@ -163,8 +174,8 @@
     <h3>PixVerse · 黑色</h3>
     <p>PNG 透明背景 · 适用于浅色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="PixVerse 黑色 Logo 下载">
-     <a class="secondary" href="assets/PixVerse-black.svg" download="PixVerse-black.svg" aria-label="下载黑色 PixVerse Logo SVG">下载 SVG</a>
-     <a class="secondary" href="assets/PixVerse-black.png" download="PixVerse-black.png" aria-label="下载黑色 PixVerse Logo PNG">下载 PNG</a>
+     <a class="secondary" href="assets/PixVerse-black.svg" download="PixVerse-black.svg" aria-label="下载黑色 PixVerse Logo SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-black.png" download="PixVerse-black.png" aria-label="下载黑色 PixVerse Logo PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    <article>
@@ -172,8 +183,8 @@
     <h3>PixVerse · 白色</h3>
     <p>PNG 透明背景 · 适用于深色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="PixVerse 白色 Logo 下载">
-     <a class="secondary" href="assets/PixVerse-white.svg" download="PixVerse-white.svg" aria-label="下载白色 PixVerse Logo SVG">下载 SVG</a>
-     <a class="secondary" href="assets/PixVerse-white.png" download="PixVerse-white.png" aria-label="下载白色 PixVerse Logo PNG">下载 PNG</a>
+     <a class="secondary" href="assets/PixVerse-white.svg" download="PixVerse-white.svg" aria-label="下载白色 PixVerse Logo SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-white.png" download="PixVerse-white.png" aria-label="下载白色 PixVerse Logo PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    <article>
@@ -181,8 +192,8 @@
     <h3>PixVerse Icon · 浅色底</h3>
     <p>完整方形画布 · 适用于浅色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="PixVerse 浅色底 Icon 下载">
-     <a class="secondary" href="assets/PixVerse-icon-light.svg" download="PixVerse-Icon-Light.svg" aria-label="下载 PixVerse 浅色底 Icon SVG">下载 SVG</a>
-     <a class="secondary" href="assets/PixVerse-icon-light.png" download="PixVerse-Icon-Light.png" aria-label="下载 PixVerse 浅色底 Icon PNG">下载 PNG</a>
+     <a class="secondary" href="assets/PixVerse-icon-light.svg" download="PixVerse-Icon-Light.svg" aria-label="下载 PixVerse 浅色底 Icon SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-icon-light.png" download="PixVerse-Icon-Light.png" aria-label="下载 PixVerse 浅色底 Icon PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    <article>
@@ -190,12 +201,11 @@
     <h3>PixVerse Icon · 深色底</h3>
     <p>完整方形画布 · 适用于深色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="PixVerse 深色底 Icon 下载">
-     <a class="secondary" href="assets/PixVerse-icon-dark.svg" download="PixVerse-Icon-Dark.svg" aria-label="下载 PixVerse 深色底 Icon SVG">下载 SVG</a>
-     <a class="secondary" href="assets/PixVerse-icon-dark.png" download="PixVerse-Icon-Dark.png" aria-label="下载 PixVerse 深色底 Icon PNG">下载 PNG</a>
+     <a class="secondary" href="assets/PixVerse-icon-dark.svg" download="PixVerse-Icon-Dark.svg" aria-label="下载 PixVerse 深色底 Icon SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/PixVerse-icon-dark.png" download="PixVerse-Icon-Dark.png" aria-label="下载 PixVerse 深色底 Icon PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    </div>
-   <p class="hint">来源：PixVerse Logo 与新版本 Icon 官方素材。常规 App Banner 不放 Logo；其他活动按专项规范处理。</p>
   </section>
   <section class="asset-section" aria-labelledby="aisphere-logo-title">
    <h2 id="aisphere-logo-title">爱诗科技 Logo</h2>
@@ -205,8 +215,8 @@
     <h3>爱诗科技 · 黑色</h3>
     <p>PNG 透明背景 · 适用于浅色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="爱诗科技黑色 Logo 下载">
-     <a class="secondary" href="assets/AIsphere-black.svg" download="AIsphere-black.svg" aria-label="下载爱诗科技黑色 Logo SVG">下载 SVG</a>
-     <a class="secondary" href="assets/AIsphere-black.png" download="AIsphere-black.png" aria-label="下载爱诗科技黑色 Logo PNG">下载 PNG</a>
+     <a class="secondary" href="assets/AIsphere-black.svg" download="AIsphere-black.svg" aria-label="下载爱诗科技黑色 Logo SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/AIsphere-black.png" download="AIsphere-black.png" aria-label="下载爱诗科技黑色 Logo PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    <article>
@@ -214,39 +224,49 @@
     <h3>爱诗科技 · 白色</h3>
     <p>PNG 透明背景 · 适用于深色背景 · 保持比例使用</p>
     <div class="asset-downloads" role="group" aria-label="爱诗科技白色 Logo 下载">
-     <a class="secondary" href="assets/AIsphere-white.svg" download="AIsphere-white.svg" aria-label="下载爱诗科技白色 Logo SVG">下载 SVG</a>
-     <a class="secondary" href="assets/AIsphere-white.png" download="AIsphere-white.png" aria-label="下载爱诗科技白色 Logo PNG">下载 PNG</a>
+     <a class="secondary" href="assets/AIsphere-white.svg" download="AIsphere-white.svg" aria-label="下载爱诗科技白色 Logo SVG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 SVG</a>
+     <a class="secondary" href="assets/AIsphere-white.png" download="AIsphere-white.png" aria-label="下载爱诗科技白色 Logo PNG"><svg aria-hidden="true"><use href="#i-download"/></svg>下载 PNG</a>
     </div>
    </article>
    </div>
-   <p class="hint">来源：爱诗科技官方 Logo 素材包。</p>
   </section>
  </section>
- <section id="draft" class="library draft-library" hidden>
-  <div class="library-hero"><span class="eyebrow">YOUR WORKSPACE</span><h1>我的工程</h1><p>未登录也可在本机继续编辑；使用飞书登录后可将工程同步到云端。</p></div>
-  <section class="draft-section" aria-labelledby="local-draft-title">
-   <div class="section-title"><div><h2 id="local-draft-title">本地草稿</h2><p>自动保存在当前设备与浏览器中。</p></div><span class="storage-badge">本机</span></div>
-   <div class="project-grid local-project-grid">
-    <article class="project-tile local-project-card">
-     <div class="project-tile-preview"><img id="draft-preview" src="assets/demo.png" alt="当前本地工程预览"></div>
-     <div class="project-tile-footer"><div class="project-tile-copy"><h3 id="draft-name">礼盒活动 · 延展测试</h3><p id="draft-detail">当前工程</p></div><button id="continue-draft" class="secondary">继续编辑</button></div>
-    </article>
-   </div>
-  </section>
-  <section class="draft-section cloud-section" aria-labelledby="cloud-project-title">
-   <div class="section-title"><div><h2 id="cloud-project-title">云端工程</h2><p>登录后跨设备打开工程；品牌素材和本地设计功能始终公开。</p></div><span class="storage-badge cloud">云端</span></div>
-   <div id="cloud-disabled" class="cloud-message" hidden><strong>云端工程尚未启用</strong><p>网站仍可正常使用本地草稿、品牌素材和图片下载。</p></div>
-   <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号保存工程</strong><p>飞书只用于确认身份；工程数据保存在本网站的云端存储中。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
-   <div id="cloud-signed-in" hidden>
-    <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div><strong id="cloud-user-name"></strong><p><span id="cloud-admin-badge" class="small-tag" hidden>管理员</span><span>已通过飞书登录</span></p></div></div><button id="cloud-logout" class="quiet">退出登录</button></div>
-    <div class="cloud-actions"><div><strong>当前本地工程</strong><p id="cloud-sync-status">尚未保存到云端</p></div><button id="cloud-save-current" class="primary">保存到云端</button></div>
-    <div class="cloud-list-heading"><h3>我的云端工程</h3><button id="cloud-refresh" class="quiet">刷新</button></div>
-    <div id="cloud-project-list" class="cloud-project-list" aria-live="polite"><p class="hint">正在读取云端工程…</p></div>
-    <aside id="cloud-admin-panel" class="cloud-admin-panel" hidden><strong>管理员概览</strong><p id="cloud-admin-summary">正在读取…</p><p class="hint">管理员可以查看使用规模，不会在此页面打开其他成员的工程内容。</p></aside>
-   </div>
-  </section>
-  <section class="project-file-box" aria-labelledby="project-file-title"><div><h2 id="project-file-title">工程文件</h2><p>工程文件用于备份或换电脑继续编辑，包含图片、文案和调整参数，不是最终交付图片。</p></div><div class="project-file-actions" role="group" aria-label="工程文件操作"><button id="backup-draft" class="secondary"><svg><use href="#i-download"/></svg>备份工程</button><button id="import-project" class="secondary"><svg><use href="#i-upload"/></svg>打开工程</button></div><input id="project-upload" type="file" accept="application/json,.json" hidden></section>
+ <section id="files" class="library files-library" hidden>
+  <div class="library-hero"><span class="eyebrow">YOUR FILES</span><h1>文件</h1><p>查找、打开和管理你的设计文件。</p></div>
+  <div class="file-toolbar">
+   <div class="file-tabs" role="tablist" aria-label="文件范围"><button class="active" role="tab" aria-selected="true" data-file-scope="recent">最近</button><button role="tab" aria-selected="false" data-file-scope="all">所有文件</button><button role="tab" aria-selected="false" data-file-scope="trash"><svg><use href="#i-trash"/></svg>回收站</button></div>
+   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="import-project" class="secondary"><svg><use href="#i-upload"/></svg>导入备份</button><input id="project-upload" type="file" accept="application/json,.json" hidden></div>
+  </div>
+  <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件尚未启用</strong><p>你仍可在本机继续设计和导入备份。</p></div></div>
+  <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号同步文件</strong><p>登录后默认自动保存到云端；本机仍保留恢复副本。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
+  <div id="cloud-signed-in" hidden>
+   <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div><strong id="cloud-user-name"></strong><p><span id="cloud-admin-badge" class="small-tag" hidden>管理员</span><span id="cloud-sync-status">正在确认同步状态…</span></p></div></div><div class="account-actions"><button id="backup-draft" class="quiet">下载当前备份</button><button id="cloud-save-current" class="primary">开启云端同步</button><button id="cloud-refresh" class="quiet">刷新</button><button id="cloud-logout" class="quiet">退出登录</button></div></div>
+  </div>
+  <div id="file-project-list" class="project-grid" aria-live="polite"><p class="hint">正在读取文件…</p></div>
+ </section>
+ <section id="admin" class="library admin-library" hidden>
+  <div class="library-hero"><span class="eyebrow">ADMIN CONSOLE</span><h1>管理后台</h1><p>查看平台使用情况与系统状态，不打开成员的设计内容。</p></div>
+  <div id="admin-denied" class="cloud-message"><div><strong>仅管理员可访问</strong><p>请使用具有管理员权限的飞书账号登录。</p></div></div>
+  <div id="admin-content" hidden>
+   <div class="admin-metrics"><article><span>用户</span><strong id="admin-users">0</strong></article><article><span>有效文件</span><strong id="admin-projects">0</strong></article><article><span>回收站</span><strong id="admin-trashed">0</strong></article><article><span>存储占用</span><strong id="admin-storage">0 KB</strong></article></div>
+   <div class="admin-panel"><div class="admin-heading"><div><h2>成员与访问权限</h2><p>飞书登录后默认等待审核；批准后才能使用运营设计和个人文件。</p></div><button id="admin-refresh" class="secondary">刷新</button></div><div id="admin-members" class="admin-members" aria-live="polite"></div></div>
+   <div class="admin-panel"><div class="admin-heading"><div><h2>文件归属</h2><p>管理员只查看文件元数据与归属，不打开成员的设计内容。</p></div></div><div id="admin-files" class="admin-files" aria-live="polite"></div></div>
+   <div class="admin-panel system-panel"><h2>系统状态</h2><div class="system-items"><span><i></i>云端存储已连接</span><span><i></i>设计权限需管理员确认</span><span><i></i>回收站保留 30 天</span></div></div>
+  </div>
  </section>
 </div>
+<dialog id="access-gate" class="access-gate" aria-labelledby="access-gate-title" aria-describedby="access-gate-copy">
+ <button id="access-gate-close" class="access-gate-close" aria-label="关闭权限提示"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+ <div class="access-visual"><img src="assets/access-lock.png" alt="抱着锁的 PixVerse 品牌形象"></div>
+ <span class="eyebrow">ACCESS REQUIRED</span>
+ <h2 id="access-gate-title" tabindex="-1">需要访问权限</h2>
+ <p id="access-gate-copy">运营设计仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。</p>
+ <p id="access-gate-account" class="access-gate-account" hidden></p>
+ <div class="access-gate-actions">
+  <a id="access-gate-login" class="primary button-link" href="/api/auth/feishu/start?next=studio">申请权限</a>
+  <button id="access-gate-refresh" class="secondary" hidden>刷新审核状态</button>
+  <button id="access-gate-dismiss" class="quiet">暂不申请，继续浏览品牌素材</button>
+ </div>
+</dialog>
 <div id="toast" class="toast" role="status" hidden></div>
 </body></html>
