@@ -61,7 +61,10 @@
     if (!response.ok) throw new Error('无法读取登录状态');
     const data = await response.json();
     session = { configured: Boolean(data.configured), user: data.authenticated ? data.user : null };
-    $$('[data-view="studio"],[data-view="files"]').forEach(button => button.setAttribute('aria-disabled', 'true'));
+    $$('[data-view="studio"],[data-view="files"]').forEach(button => {
+      button.classList.add('is-locked');
+      button.setAttribute('aria-haspopup', 'dialog');
+    });
     return data;
   }
 

@@ -47,3 +47,9 @@ test('品牌素材页移除来源脚注并统一下载操作图标', () => {
   assert.equal(downloads.length, 12);
   for (const [, content] of downloads) assert.match(content, /href="#i-download"/);
 });
+
+test('受限导航保留点击能力并通过弹窗说明权限', () => {
+  assert.doesNotMatch(html, /class="nav protected-nav[^\"]*"[^>]*\bdisabled\b/);
+  assert.doesNotMatch(app, /protected-nav[^\n]*setAttribute\(['"]aria-disabled/);
+  assert.match(html, /class="nav protected-nav is-locked"[^>]*aria-haspopup="dialog"/);
+});
