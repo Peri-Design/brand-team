@@ -1,0 +1,40 @@
+.workspace-help-dialog{width:min(540px,calc(100vw - 32px));max-height:calc(100dvh - 40px);margin:auto;padding:0;overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 24px 80px #25163533}
+.workspace-help-dialog::backdrop{background:#21172f66;backdrop-filter:blur(3px)}
+.workspace-help-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:26px 28px 20px;border-bottom:1px solid var(--line)}
+.workspace-help-header h2{font-size:22px;line-height:1.35;margin:6px 0 8px;text-wrap:balance}
+.workspace-help-header h2:focus{outline:0}
+.workspace-help-header p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
+.workspace-help-kicker{display:flex;align-items:center;gap:6px;color:var(--purple);font-size:11px;font-weight:650;letter-spacing:.03em}
+.workspace-help-kicker svg{width:16px;height:16px}
+.workspace-help-close{width:38px;height:38px;flex:none;min-height:38px;padding:8px;border:0;background:#f6f3fa}
+.workspace-help-dialog svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:var(--icon-stroke,1.75);stroke-linecap:round;stroke-linejoin:round}
+.workspace-guide-nav{display:flex;list-style:none;gap:6px;margin:0;padding:22px 28px 0}
+.workspace-guide-nav li{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;min-height:38px;padding:7px 5px;border-radius:8px;background:#f6f5f8;color:var(--muted);font-size:12px;white-space:nowrap}
+.workspace-guide-nav li[aria-current=step]{background:var(--tint);color:var(--purple-dark);font-weight:650}
+.workspace-guide-nav li span{display:grid;place-items:center;width:18px;height:18px;flex:none;border-radius:50%;background:#fff;font-size:10px}
+.workspace-guide-step{padding:24px 28px;min-height:238px}
+.workspace-guide-step h3{font-size:19px;margin:0 0 14px;text-wrap:balance}
+.workspace-guide-step ol{margin:0;padding-left:20px;color:var(--ink);font-size:14px;line-height:1.8}
+.workspace-guide-step li+li{margin-top:8px}
+.workspace-guide-note{display:flex;align-items:flex-start;gap:8px;margin:20px 0 0;padding:12px 14px;border:1px solid #e8e0f2;border-radius:9px;background:#faf7ff;color:#635273;font-size:12px;line-height:1.75}
+.workspace-guide-note svg{width:16px;height:16px;flex:none;margin-top:3px;color:var(--purple)}
+.workspace-guide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 28px 24px;border-top:1px solid var(--line)}
+.workspace-guide-footer>div{display:flex;gap:8px;align-items:center}
+.workspace-guide-footer button,.workspace-help-footer button{min-height:40px}
+.workspace-guide-footer .quiet{border:0;color:var(--muted);padding-left:0}
+.workspace-guide-progress{font-size:11px;color:var(--muted);text-align:center;margin:0 0 12px}
+.workspace-help-overview{padding:8px 28px 0}
+.workspace-help-section{display:flex;align-items:flex-start;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}
+.workspace-help-section>span{display:grid;place-items:center;width:28px;height:28px;flex:none;background:var(--tint);border-radius:8px;color:var(--purple-dark);font-size:12px;font-weight:650}
+.workspace-help-section h3{margin:2px 0 7px;font-size:15px}
+.workspace-help-section p{margin:0;font-size:13px;color:var(--muted);line-height:1.8}
+.workspace-help-section p+p{margin-top:6px}
+.workspace-help-section strong{font-weight:600;color:var(--ink)}
+.workspace-help-scope{margin-top:18px;padding:14px 16px;border-radius:10px;background:#f8f6fb}
+.workspace-help-scope h3{font-size:13px;margin:0 0 8px}
+.workspace-help-scope ul{margin:0;padding-left:17px;color:var(--muted);font-size:12px;line-height:1.8}
+.workspace-help-scope li+li{margin-top:5px}
+.workspace-help-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 0 24px}
+.workspace-help-footer .quiet{font-size:12px;color:var(--purple);border:0;padding-left:0}
+.workspace-help-dialog [hidden]{display:none!important}
+@media(max-width:600px){.workspace-help-dialog{width:calc(100vw - 24px);max-height:calc(100dvh - 24px);border-radius:14px}.workspace-help-header{padding:20px 20px 16px}.workspace-help-header h2{font-size:20px}.workspace-guide-nav{padding:16px 20px 0;gap:4px}.workspace-guide-nav li{font-size:11px;gap:4px}.workspace-guide-step{padding:20px;min-height:230px}.workspace-guide-step h3{font-size:18px}.workspace-guide-step ol{font-size:13px}.workspace-guide-footer{padding:16px 20px 20px}.workspace-guide-footer button{padding:8px 10px;font-size:12px}.workspace-help-overview{padding:4px 20px 0}.workspace-help-footer{gap:8px}}

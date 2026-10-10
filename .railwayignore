@@ -1,0 +1,4 @@
+node_modules/
+验证/
+.DS_Store
+*.log

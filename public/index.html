@@ -4,11 +4,17 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>PixVerse 品牌工作台</title>
   <meta name="description" content="选择资源位和语言，在线适配、微调、保存并导出 PixVerse 品牌素材。">
+  <script>!function(){const view=new URLSearchParams(location.search).get('view');if(['new','studio','files','admin'].includes(view))document.documentElement.dataset.routePending=view}();</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
-  <link rel="stylesheet" href="style.css?v=20260930-new-design-1">
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20260930-new-design-1"></script>
+  <link rel="stylesheet" href="style.css?v=20261010-brand-guidelines-4">
+  <link rel="stylesheet" href="color-picker.css?v=20261010-1">
+  <link rel="stylesheet" href="workspace-help.css?v=20261010-2">
+  <script defer src="workspace-help.js?v=20261010-1"></script>
+  <script defer src="color-picker.js?v=20261010-2"></script>
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js?v=20261002-card-adjust-1"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="app.js?v=20261010-workspace-help-1"></script>
 </head>
 <body data-view="assets">
+<div class="route-loader" role="status" aria-live="polite"><span></span></div>
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
@@ -24,10 +30,15 @@
 <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
 <symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M4 12h10a6 6 0 0 1 6 6"/></symbol>
 <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 7 5 5-5 5m5-5H10a6 6 0 0 0-6 6"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5"/><path d="M18.5 11A7 7 0 0 0 6.7 7.4L4 10M5.5 13a7 7 0 0 0 11.8 3.6L20 14"/></symbol>
 <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 12V5a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v7c0 4-2 6-6 6h-1c-2 0-3-1-4-2L4 14a1.5 1.5 0 0 1 2-2l2 2"/></symbol>
+<symbol id="i-move" viewBox="0 0 24 24"><path d="M12 3v18m0-18-3 3m3-3 3 3m-3 15-3-3m3 3 3-3M3 12h18M3 12l3-3m-3 3 3 3m15-3-3-3m3 3-3 3"/></symbol>
+<symbol id="i-resize" viewBox="0 0 24 24"><path d="M9 4H4v5m0-5 6 6M15 20h5v-5m0 5-6-6"/></symbol>
 <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-eyedropper" viewBox="0 0 24 24"><path d="m14 5 5 5M12 7l5 5M14 9l4-4a2 2 0 0 1 3 3l-4 4M13 10 4 19v2h2l9-9"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1-1.5 2M12 17h.01"/></symbol>
 </defs></svg>
 <aside class="rail" aria-label="主要功能">
  <div class="monogram" aria-label="PixVerse 品牌工作台"><img src="assets/ghost-logo.svg" alt=""></div>
@@ -38,8 +49,8 @@
 </aside>
 <div class="app-shell">
  <header class="topbar">
-  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.4.0</span></div>
-  <div class="top-actions"><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
+  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.8.9</span></div>
+  <div class="top-actions"><button id="workspace-help-open" class="quiet" type="button" aria-haspopup="dialog" aria-controls="workspace-help-dialog"><svg aria-hidden="true"><use href="#i-help"/></svg><span>使用帮助</span></button><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
  </header>
  <main id="studio" class="workspace" hidden>
   <section class="setup" aria-label="母版与生成设置">
@@ -49,13 +60,48 @@
    <details id="visual-settings" class="settings-group" open>
     <summary><span>主视觉</span><span class="small-tag">原图保真</span></summary>
     <div class="settings-group-body">
-   <label class="upload" for="image-upload"><img id="source-preview" src="assets/demo.png" alt="当前主视觉：紫色礼盒"><span><svg><use href="#i-upload"/></svg>替换主视觉</span></label>
+   <label class="upload" for="image-upload"><img id="source-preview" src="assets/demo.png" alt="当前主视觉：紫色礼盒"><span><svg><use href="#i-upload"/></svg><span id="source-upload-label">更换主视觉</span></span></label>
    <input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden><p id="source-info" class="hint">正在读取示例原图</p>
    <label class="field-label background-toggle" for="background-enabled"><span>左侧补色</span><span class="switch-control"><span id="background-status" aria-hidden="true">已关闭</span><input id="background-enabled" type="checkbox" role="switch" aria-describedby="background-hint"></span></label>
-   <label class="field-label" for="background">左侧补边色 <input id="background" type="color" value="#3022bb" disabled></label>
-   <button id="background-match" class="secondary full">重新自动取色</button>
-   <p class="hint">替换主视觉时自动从左侧取色，可用色板微调。刷新与重新打开文件后仍保留已选颜色。</p>
-   <p id="background-hint" class="hint">开启后同步补色至全部设计，并启用左侧渐变。关闭时保留颜色与渐变设置；原图未铺满处透明，可用缩放铺满。</p>
+   <p id="background-hint" class="hint">开启后为 Web 和 App 启用左侧补色与补边融合；补边色在对应资源位中分别设置。关闭时保留所有颜色设置。</p>
+    </div>
+   </details>
+   <details id="slot-settings" class="settings-group" open>
+    <summary><span>资源位与版式</span><span id="slot-summary" class="setting-summary"></span></summary>
+    <div class="settings-group-body slot-config-list">
+   <section class="slot-config" data-slot-config="web">
+    <label class="choice"><input type="checkbox" name="slot" value="web" checked><span><strong>Web 首页 Banner</strong><small>1320 × 558 px</small></span><span class="slot-icon web-icon"></span></label>
+    <div class="slot-specific-settings">
+     <p class="slot-setting-title">Web 专属设置 <span>同步至全部 Web 语言</span></p>
+     <div class="slot-background-settings">
+      <label class="field-label" for="web-background">Web 左侧补边色 <input id="web-background" type="color" value="#3022bb"></label>
+      <button id="web-background-match" class="secondary full">按 Web 图片自动取色</button>
+     </div>
+     <details class="block-editor logo-editor">
+      <summary><span>Logo</span><span id="logo-summary" class="setting-summary">不添加</span></summary>
+      <label class="field-label" for="web-logo">Logo 样式</label>
+      <select id="web-logo"><option value="none">不添加 Logo</option><option value="white">PixVerse · 白色字标</option><option value="black">PixVerse · 黑色字标</option><option value="custom" disabled>自定义 Logo（上传后可选）</option></select>
+      <div id="custom-logo-controls"><button id="upload-logo" class="secondary full">上传／替换 Logo</button><input id="logo-upload" type="file" accept="image/png,image/webp,image/svg+xml,.svg" hidden><p class="hint">透明 PNG / WebP，或文字已转曲的 SVG，最大 5 MB。</p></div>
+      <div id="logo-preview-wrap" class="logo-preview" hidden><img id="logo-preview" alt="当前 Web Logo"></div>
+      <p id="logo-info" class="hint" hidden></p>
+     </details>
+     <details class="block-editor palette-editor">
+      <summary><span>模板色块</span><span class="setting-summary"><span id="block-summary">自动匹配</span><span id="block-swatches" aria-hidden="true"></span></span></summary>
+      <div class="palette-mode-row"><div class="palette-mode" role="group" aria-label="模板色块配色方式"><button type="button" data-block-mode="auto" aria-pressed="true">自动</button><button type="button" data-block-mode="custom" aria-pressed="false">自定义</button></div><button id="blocks-match" class="palette-rematch" title="按当前 Web 图片重新匹配"><svg aria-hidden="true"><use href="#i-refresh"/></svg><span>重新匹配</span></button></div>
+      <div id="block-controls"></div>
+     </details>
+    </div>
+   </section>
+   <section class="slot-config" data-slot-config="app">
+    <label class="choice"><input type="checkbox" name="slot" value="app" checked><span><strong>App 首页 Banner</strong><small>1524 × 480 px</small></span><span class="slot-icon app-icon"></span></label>
+    <div class="slot-specific-settings">
+     <div class="slot-background-settings">
+      <label class="field-label" for="app-background">App 左侧补边色 <input id="app-background" type="color" value="#3022bb"></label>
+      <button id="app-background-match" class="secondary full">按 App 图片自动取色</button>
+     </div>
+     <label class="field-label" for="app-variant">App 版式</label><select id="app-variant"><option value="primary">双行大标题</option><option value="secondary">主标题＋副标题</option></select>
+    </div>
+   </section>
     </div>
    </details>
    <details id="copy-settings" class="settings-group" open>
@@ -76,41 +122,11 @@
    <p id="text-color-hint" class="hint">仅应用于当前选中的单张设计，随文件保存。</p>
     </div>
    </details>
-   <details id="slot-settings" class="settings-group">
-    <summary><span>资源位与版式</span><span id="slot-summary" class="setting-summary"></span></summary>
-    <div class="settings-group-body">
-   <label class="choice"><input type="checkbox" name="slot" value="web" checked><span><strong>Web 首页 Banner</strong><small>1320 × 558 px</small></span><span class="slot-icon web-icon"></span></label>
-   <label class="choice"><input type="checkbox" name="slot" value="app" checked><span><strong>App 首页 Banner</strong><small>1524 × 480 px</small></span><span class="slot-icon app-icon"></span></label>
-   <label class="field-label" for="app-variant">App 版式</label><select id="app-variant"><option value="primary">双行大标题</option><option value="secondary">主标题＋副标题</option></select>
-    </div>
-   </details>
-<p class="settings-caption">品牌设置 · 同步至全部 Web 语言</p>
-   <details class="block-editor logo-editor">
-    <summary><span>Web Logo</span><span id="logo-summary" class="setting-summary">不添加</span></summary>
-    <label class="field-label" for="web-logo">Logo 样式</label>
-    <select id="web-logo"><option value="none">不添加 Logo</option><option value="white">PixVerse · 白色字标</option><option value="black">PixVerse · 黑色字标</option><option value="custom" disabled>自定义 Logo（上传后可选）</option></select>
-    <div id="custom-logo-controls"><button id="upload-logo" class="secondary full">上传／替换 Logo</button><input id="logo-upload" type="file" accept="image/png,image/webp,image/svg+xml,.svg" hidden><p class="hint">透明 PNG / WebP，或文字已转曲的 SVG，最大 5 MB。</p></div>
-    <div id="logo-preview-wrap" class="logo-preview" hidden><img id="logo-preview" alt="当前 Web Logo"></div>
-    <p id="logo-info" class="hint">常规 App Banner 不放 Logo。</p>
-    <p class="hint">位置锁定：右上角；距上 10 px、距右 12 px，整体高 14 px（1×）。按原比例缩放，自动去除透明留白。</p>
-   </details>
-   <details class="block-editor">
-    <summary><span>Web 模板色块</span><span class="setting-summary"><span id="block-summary">自动匹配</span><span id="block-swatches" aria-hidden="true"></span></span></summary>
-    <p class="hint">保留原模板的两层几何色块。仅调整颜色和透明度，形状与文字位置固定。</p>
-    <label class="field-label" for="block-preset">配色方案</label><select id="block-preset"><option value="auto">自动匹配主视觉</option><option value="custom">自定义</option></select>
-    <button id="blocks-match" class="secondary full">重新自动匹配色块</button>
-    <p class="hint">替换主视觉时自动生成同色系渐变，可继续微调；手动修改后刷新仍保留。</p>
-    <div id="block-controls"></div>
-   </details>
-   </div>
-   <div class="setup-footer">
-   <button id="generate" class="primary generate">更新设计预览 <span id="selection-count">4 张</span></button>
-   <p class="hint">点击后更新右侧画布，确认效果后再下载。中日英文案独立填写。</p>
    </div>
   </section>
   <section class="stage" aria-label="画布工作区">
-   <div class="stage-header"><div><div class="eyebrow">CAMPAIGN WORKSPACE</div><h2>画布工作区 <span id="result-count" class="count">0</span></h2></div><div class="stage-actions"><label class="guide-toggle"><input type="checkbox" id="show-guides">显示规范辅助线</label><button id="batch-toggle" class="secondary" aria-pressed="false">批量调整</button><button id="open-inspector" class="secondary" aria-controls="adjust-panel" aria-expanded="false">单张调整</button></div></div>
-   <div class="workspace-notice"><svg><use href="#i-check"/></svg><span>拖动空白处移动画布；按住空格或开启手型，可在图片上拖动视野。</span></div>
+   <div class="stage-header"><div><div class="eyebrow">CAMPAIGN WORKSPACE</div><h2>画布工作区 <span id="result-count" class="count">0</span></h2></div><div class="stage-actions"><label class="guide-toggle"><input type="checkbox" id="show-guides" checked>显示规范辅助线</label><button id="batch-toggle" class="secondary" aria-pressed="false">批量调整</button><button id="open-inspector" class="secondary" aria-controls="adjust-panel" aria-expanded="false">单张调整</button></div></div>
+   <div class="workspace-notice"><svg><use href="#i-check"/></svg><span>点击图片后拖动可调整位置，拖动四角等比缩放；捏合或 ⌘/Ctrl 滚轮缩放整个画布。</span></div>
    <div id="canvas-viewport" tabindex="0" role="region" aria-label="画布浏览区域，可横向或纵向滚动">
     <div id="canvas-space"><div id="results" class="results"><div class="empty">正在载入原图与字体…</div></div></div>
    </div>
@@ -129,7 +145,7 @@
     <div id="batch-controls" class="batch-controls" hidden>
      <strong id="batch-summary"></strong>
      <p class="hint">当前卡片是基准。只可选择相同资源位；缩放、位置及勾选项同步，退出后仍可逐张调整。</p>
-     <label class="batch-fade"><input id="batch-sync-fade" type="checkbox">同时同步左侧渐变</label>
+     <label class="batch-fade"><input id="batch-sync-fade" type="checkbox">同时同步补边融合</label>
      <label class="batch-fade"><input id="batch-sync-text-color" type="checkbox">同时同步文字颜色</label>
      <button id="sync-composition" class="primary full">同步基准设置</button>
      <button id="batch-done" class="secondary full">退出批量调整</button>
@@ -146,19 +162,10 @@
      <input id="slot-image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
      <button id="replace-slot-image" class="secondary full">替换此资源位图片</button>
      <button id="reset-slot-image" class="quiet full" hidden>恢复使用母版图</button>
-     <div id="slot-palette-controls" class="slot-palette-controls" hidden>
-      <label class="field-label" for="slot-background">资源位补边色 <input id="slot-background" type="color" value="#3022bb"></label>
-      <button id="match-slot-background" class="secondary full">按此资源位图片重新取色</button>
-     </div>
     </section>
-    <div class="mini-preview"><canvas id="detail-canvas" aria-label="选中图片预览"></canvas></div>
-    <p id="adjust-help" class="hint">以下设置改变当前图片的构图；观看大小请用画布底部的缩放。</p>
-    <label class="range-label" for="zoom">主视觉缩放 <output id="zoom-value">100%</output></label><input id="zoom" type="range" step="0.001" min="60" max="220" value="100">
-    <label class="range-label" for="pan-x">水平位置 <output id="pan-x-value">0</output></label><input id="pan-x" type="range" step="0.001" min="-50" max="50" value="0">
-    <label class="range-label" for="pan-y">垂直位置 <output id="pan-y-value">0</output></label><input id="pan-y" type="range" step="0.001" min="-50" max="50" value="0">
-    <label class="range-label" for="fade">自定义左侧渐变 <output id="fade-value">48%</output></label><input id="fade" type="range" min="0" max="80" value="48" disabled aria-describedby="fade-hint">
-    <p id="fade-hint" class="hint">请先在主视觉设置中开启「左侧补色」。</p>
-    <button id="reset-crop" class="secondary full">恢复自动适配</button>
+    <div id="direct-adjust" class="direct-adjust"><div class="direct-adjust-copy"><svg aria-hidden="true"><use href="#i-move"/></svg><div><strong>直接调整图片</strong><p>点击图片显示选框；拖动图片移动，拖动任一角点等比缩放。</p></div></div><button id="reset-crop" class="secondary full">恢复自动适配</button></div>
+    <label class="range-label" for="fade">补边融合范围 <output id="fade-value">48%</output></label><input id="fade" type="range" min="0" max="80" value="48" disabled aria-describedby="fade-hint">
+    <p id="fade-hint" class="hint">使用当前资源位的左侧补边色柔化图片接缝；0% 完全关闭融合。</p>
     <div class="locked-note"><svg><use href="#i-lock"/></svg><div><strong>文字位置已锁定</strong><p>修改文案请使用左侧母版。图片微调只影响当前这一张。</p></div></div>
     <div id="checks" class="checks" role="status"></div><button id="export-one" class="primary full"><svg><use href="#i-download"/></svg>下载这张 PNG</button>
    </div>
@@ -167,7 +174,7 @@
  <section id="assets" class="library assets-library">
   <div class="library-hero"><span class="eyebrow">BRAND LIBRARY</span><h1>品牌素材</h1><p>使用已有规范素材，保持品牌一致。</p></div>
   <section class="asset-section pixverse-assets" aria-labelledby="pixverse-logo-title">
-   <h2 id="pixverse-logo-title">PixVerse Logo</h2>
+   <div class="asset-section-heading"><h2 id="pixverse-logo-title">PixVerse Logo</h2><a class="asset-guidelines-link" href="brand-guidelines.html">查看使用规范</a></div>
    <div class="asset-grid">
    <article>
     <div class="asset-preview"><img src="assets/PixVerse-black.svg" alt="PixVerse 黑色 Logo"></div>
@@ -235,12 +242,13 @@
   <div class="library-hero"><span class="eyebrow">YOUR FILES</span><h1>文件</h1><p>查看、打开和管理你的全部设计文件。</p></div>
   <div class="file-toolbar">
    <div class="file-tabs" role="tablist" aria-label="文件范围"><button role="tab" aria-selected="false" data-file-scope="recent">最近</button><button class="active" role="tab" aria-selected="true" data-file-scope="all">所有文件</button><button role="tab" aria-selected="false" data-file-scope="trash"><svg><use href="#i-trash"/></svg>回收站</button></div>
-   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="create-project" class="primary"><svg><use href="#i-plus"/></svg>新建设计</button></div>
+   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="empty-trash" class="danger-action" hidden><svg aria-hidden="true"><use href="#i-trash"/></svg>清空回收站</button></div>
   </div>
-  <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件尚未启用</strong><p>你仍可在本机继续设计，网络恢复后再同步。</p></div></div>
-  <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号同步文件</strong><p>登录后默认自动保存到云端；本机仍保留恢复副本。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
+  <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件暂不可用</strong><p>品牌素材仍可正常浏览和下载；恢复连接后可继续使用设计功能。</p></div></div>
+  <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号访问设计文件</strong><p>登录并获得权限后，新建设计和编辑内容会自动保存到云端。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
   <div id="cloud-signed-in" hidden>
-   <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div class="cloud-profile-copy"><div class="cloud-profile-name"><strong id="cloud-user-name"></strong><span id="cloud-admin-badge" class="small-tag compact-status-tag" hidden>管理员</span></div><p><span id="cloud-sync-status">正在确认同步状态…</span></p></div></div><div class="account-actions"><button id="cloud-save-current" class="primary">开启云端同步</button><button id="cloud-refresh" class="quiet">刷新</button><button id="cloud-logout" class="quiet">退出登录</button></div></div>
+   <div class="cloud-account"><div class="cloud-profile"><img id="cloud-avatar" alt="" hidden><span id="cloud-avatar-fallback" aria-hidden="true">P</span><div class="cloud-profile-copy"><div class="cloud-profile-name"><strong id="cloud-user-name"></strong><span id="cloud-admin-badge" class="small-tag compact-status-tag" hidden>管理员</span></div><p><span id="cloud-sync-status">正在确认同步状态…</span></p></div></div><div class="account-actions"><button id="cloud-logout" class="quiet">退出登录</button></div></div>
+   <div id="sync-recovery" class="cloud-message sync-recovery" role="alert" hidden><div><strong>有未同步修改</strong><p>恢复副本已安全保留。请检查网络后重试同步，成功后会自动出现在文件列表中。</p></div><button id="sync-retry" class="primary"><svg aria-hidden="true"><use href="#i-refresh"/></svg>重试同步</button></div>
   </div>
   <div id="file-project-list" class="project-grid" aria-live="polite"><p class="hint">正在读取文件…</p></div>
  </section>
@@ -269,4 +277,38 @@
  </div>
 </dialog>
 <div id="toast" class="toast" role="status" hidden></div>
+<dialog id="workspace-help-dialog" class="workspace-help-dialog" aria-labelledby="workspace-help-title" aria-describedby="workspace-help-intro">
+ <header class="workspace-help-header">
+  <div><span class="workspace-help-kicker"><svg aria-hidden="true"><use href="#i-help"/></svg>工作台指南</span><h2 id="workspace-help-title" tabindex="-1">三步开始设计</h2><p id="workspace-help-intro">从准备素材到导出成品，先熟悉这三个步骤。</p></div>
+  <button id="workspace-help-close" class="workspace-help-close" type="button" aria-label="关闭使用帮助"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+ </header>
+ <div id="workspace-guide">
+  <ol class="workspace-guide-nav" aria-label="新手指引步骤"><li data-guide-index="0" aria-current="step"><span>1</span>准备设计</li><li data-guide-index="1"><span>2</span>微调效果</li><li data-guide-index="2"><span>3</span>保存与导出</li></ol>
+  <section class="workspace-guide-step" data-guide-step="0">
+   <h3>先准备主视觉和文案</h3>
+   <ol><li>在左侧「主视觉」上传 PNG、JPG 或 WebP 图片。</li><li>选择 Web／App 资源位、版式和需要的语言。</li><li>切换语言标签，分别填写文案，右侧会实时生成预览。</li></ol>
+   <p class="workspace-guide-note"><svg aria-hidden="true"><use href="#i-image"/></svg><span>每种语言的文案需要分别填写，工作台不会自动翻译。</span></p>
+  </section>
+  <section class="workspace-guide-step" data-guide-step="1" hidden>
+   <h3>选中一张，再调整效果</h3>
+   <ol><li>点击预览图，拖动图片移动位置，拖动四角等比缩放。</li><li>用左侧选色面板调整颜色；文字颜色只影响当前选中的一张。</li><li>要统一构图，使用「批量调整」，勾选同一资源位的图片后同步基准设置。</li></ol>
+   <p class="workspace-guide-note"><svg aria-hidden="true"><use href="#i-sliders"/></svg><span>补边色按 Web／App 分别设置，模板色块影响全部 Web 语言；图片微调默认只影响当前一张。</span></p>
+  </section>
+  <section class="workspace-guide-step" data-guide-step="2" hidden>
+   <h3>确认保存，再选择下载</h3>
+   <ol><li>修改会自动保存。离开前确认保存状态为「已保存到云端」。</li><li>点击顶部「选择下载」，勾选需要导出的设计。</li><li>下载一张得到 PNG，多张得到 ZIP；导出前核对文字和构图。</li></ol>
+   <p class="workspace-guide-note"><svg aria-hidden="true"><use href="#i-download"/></svg><span>「选择下载」只决定导出范围，不会同步图片设置。若出现「有未同步修改」，请先在「文件」页重试同步。</span></p>
+  </section>
+  <p id="workspace-guide-progress" class="workspace-guide-progress" role="status" aria-live="polite">第 1 步，共 3 步</p>
+  <footer class="workspace-guide-footer"><button id="workspace-guide-skip" class="quiet" type="button">跳过指引</button><div><button id="workspace-guide-back" class="secondary" type="button" hidden>上一步</button><button id="workspace-guide-next" class="primary" type="button">下一步</button></div></footer>
+ </div>
+ <div id="workspace-help-overview" class="workspace-help-overview" hidden>
+  <section class="workspace-help-section"><span aria-hidden="true">1</span><div><h3>准备设计</h3><p>在左侧上传主视觉，选择资源位、版式和语言，分别填写各语言文案。预览会实时更新；工作台不会自动翻译。</p></div></section>
+  <section class="workspace-help-section"><span aria-hidden="true">2</span><div><h3>微调效果</h3><p>选中预览图后，拖动图片移动，拖动四角等比缩放。点击色块可打开连续色板，也可输入 HEX 色值。</p><p>需要统一构图时，使用「批量调整」选择<strong>同一资源位</strong>的图片，再同步基准设置。补边融合和文字颜色可按需勾选同步。</p></div></section>
+  <section class="workspace-help-section"><span aria-hidden="true">3</span><div><h3>保存与导出</h3><p>文件自动保存到云端，离开前确认「已保存到云端」。出现「有未同步修改」时，在「文件」页点击「重试同步」。</p><p>顶部「选择下载」只选择导出范围：<strong>一张 PNG，多张 ZIP</strong>，可以跨资源位和语言。导出前请核对文字和构图。</p></div></section>
+  <aside class="workspace-help-scope" aria-label="设置的影响范围"><h3>这些设置会影响哪些设计？</h3><ul><li>主视觉和文案用于生成所选资源位、语言的设计；文案按语言分别填写。</li><li>补边色按 Web／App 分别设置；模板色块同步全部 Web 语言。</li><li>图片位置、缩放和文字颜色默认只影响当前选中的一张。</li><li>「批量调整」同步设置；「选择下载」只决定下载哪些图片。</li></ul></aside>
+  <footer class="workspace-help-footer"><button id="workspace-guide-restart" class="quiet" type="button">重新查看新手指引</button><button id="workspace-help-done" class="primary" type="button">知道了</button></footer>
+ </div>
+</dialog>
+
 </body></html>

@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const { createStore } = require('./cloud-store');
+const { createAccessNotifier } = require('./access-notifications');
 const { version: appVersion } = require('./package.json');
 
 const app = express();
@@ -37,6 +38,9 @@ app.use((req, res, next) => {
 const parseProjectJson = express.json({ limit: '165mb' });
 
 const ready = createStore(env);
+const notifierReady = ready.then(({ store }) => createAccessNotifier({
+  store, appId: devCloud ? '' : appId, appSecret, publicUrl, apiBase: feishuApi
+}));
 const cloudConfigured = async () => {
   const result = await ready;
   return Boolean(devCloud || result.configured && appId && appSecret && sessionSecret);
@@ -149,7 +153,7 @@ app.get('/api/auth/session', async (req, res, next) => {
 
 app.get('/api/auth/feishu/start', async (req, res, next) => {
   try {
-    const nextView = ['new', 'studio', 'files'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
+    const nextView = ['new', 'studio', 'files', 'admin'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
     setCookie(res, 'pv_auth_next', nextView, { maxAge: 10 * 60 * 1000 });
     if (devCloud) {
       const { store } = await ready;
@@ -174,7 +178,7 @@ app.get('/api/auth/feishu/start', async (req, res, next) => {
 
 app.get('/api/auth/feishu/callback', async (req, res, next) => {
   try {
-    const nextView = ['new', 'studio', 'files'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
+    const nextView = ['new', 'studio', 'files', 'admin'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
     clearCookie(res, 'pv_auth_next');
     const expectedState = cookies(req).pv_oauth_state;
     clearCookie(res, 'pv_oauth_state');
@@ -198,6 +202,8 @@ app.get('/api/auth/feishu/callback', async (req, res, next) => {
     if (!userResponse.ok || !profile?.open_id || !profile?.name) throw new Error(`无法读取飞书用户：${userResult?.msg || userResponse.status}`);
     const { store } = await ready;
     const user = await store.upsertUser({ openId: profile.open_id, unionId: profile.union_id, name: profile.name, avatarUrl: profile.avatar_url, email: profile.email });
+    // Run asynchronously; a periodic sweep also recovers from restarts or API failures.
+    void notifierReady.then(notifier => notifier.run()).catch(() => {});
     const token = await store.createSession(user.openId, sessionTtlMs);
     setCookie(res, 'pv_session', token, { maxAge: sessionTtlMs });
     const authResult = user.isAdmin || user.accessStatus === 'active' ? 'success' : user.accessStatus || 'pending';
@@ -248,6 +254,15 @@ app.post('/api/cloud/projects', sameOrigin, requireDesigner, parseProjectJson, a
     if (!parsed) return;
     const project = await (await ready).store.createProject(req.user.openId, parsed.name, parsed.project, parsed.sizeBytes, parsed.previewDataUrl);
     res.status(201).json({ project: { id: project.id, name: project.name, sizeBytes: project.sizeBytes, revision: project.revision, createdAt: project.createdAt, updatedAt: project.updatedAt } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/cloud/projects/trash', sameOrigin, requireDesigner, async (req, res, next) => {
+  try {
+    const deleted = await (await ready).store.purgeTrash(req.user.openId);
+    res.json({ deleted });
   } catch (error) {
     next(error);
   }
@@ -344,7 +359,7 @@ async function serveWorkspace(req, res, next) {
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20260930-new-design-1"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261010-admin-notify-1"></script>\n</head>');
     }
     res.set('Cache-Control', 'no-cache').type('html').send(html);
   } catch (error) {
@@ -357,7 +372,7 @@ app.get(['/', '/index.html'], serveWorkspace);
 app.use(express.static(staticDir, {
   etag: true,
   setHeaders(res, filePath) {
-    res.setHeader('Cache-Control', filePath.endsWith('index.html') ? 'no-cache' : 'public, max-age=86400');
+    res.setHeader('Cache-Control', filePath.endsWith('.html') ? 'no-cache' : 'public, max-age=86400');
   }
 }));
 
@@ -369,7 +384,10 @@ app.use((error, _req, res, _next) => {
 });
 
 if (require.main === module) {
-  ready.then(() => app.listen(port, host, () => console.log(`PixVerse brand workspace listening on ${host}:${port}`))).catch(error => {
+  ready.then(async () => {
+    (await notifierReady).start();
+    app.listen(port, host, () => console.log(`PixVerse brand workspace listening on ${host}:${port}`));
+  }).catch(error => {
     console.error('Server initialization failed', error);
     process.exitCode = 1;
   });

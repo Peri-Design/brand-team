@@ -112,7 +112,7 @@
       location.reload();
       return;
     }
-    if (requested === 'new' || requested === 'studio' || requested === 'files') openGate(requested);
+    if (['new', 'studio', 'files', 'admin'].includes(requested)) openGate(requested);
     if (auth === 'pending') toast('申请已提交，等待管理员确认。');
     else if (auth === 'suspended') toast('当前账号的设计权限已停用。');
     else if (auth === 'cancelled') toast('已取消飞书登录。');
@@ -120,6 +120,6 @@
     if (auth) history.replaceState({}, '', location.pathname);
   }).catch(() => {
     session = { configured: false, user: null };
-    if (requested === 'new' || requested === 'studio' || requested === 'files') openGate(requested);
-  });
+    if (['new', 'studio', 'files', 'admin'].includes(requested)) openGate(requested);
+  }).finally(() => document.documentElement.removeAttribute('data-route-pending'));
 })();

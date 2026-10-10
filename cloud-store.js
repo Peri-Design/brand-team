@@ -12,9 +12,43 @@ class MemoryStore {
     this.users = new Map();
     this.sessions = new Map();
     this.projects = new Map();
+    this.accessNotifications = new Map();
   }
 
   async init() {}
+
+  async enqueueAccessNotifications() {
+    for (const applicant of this.users.values()) {
+      if (applicant.isAdmin || applicant.accessStatus !== 'pending') continue;
+      for (const admin of this.users.values()) {
+        if (!admin.isAdmin) continue;
+        const key = `${applicant.openId}:${admin.openId}`;
+        if (!this.accessNotifications.has(key)) this.accessNotifications.set(key, {
+          id: crypto.randomUUID(), applicantOpenId: applicant.openId, adminOpenId: admin.openId,
+          attempts: 0, sentAt: null, nextAttemptAt: 0, lastError: null
+        });
+      }
+    }
+  }
+
+  async claimAccessNotification() {
+    for (const job of this.accessNotifications.values()) {
+      const applicant = this.users.get(job.applicantOpenId);
+      if (job.sentAt || job.nextAttemptAt > Date.now() || applicant?.isAdmin || applicant?.accessStatus !== 'pending' || !this.users.get(job.adminOpenId)?.isAdmin) continue;
+      job.attempts++;
+      job.nextAttemptAt = Date.now() + 60_000;
+      return clone({ ...job, applicantName: applicant.name });
+    }
+    return null;
+  }
+
+  async finishAccessNotification(id, error, attempts) {
+    const job = [...this.accessNotifications.values()].find(item => item.id === id);
+    if (!job || job.attempts !== attempts) return;
+    job.lastError = error;
+    if (!error) job.sentAt = new Date().toISOString();
+    else job.nextAttemptAt = Date.now() + Math.min(3600, 60 * 2 ** Math.min(job.attempts, 6)) * 1000;
+  }
 
   async upsertUser(profile) {
     const current = this.users.get(profile.openId);
@@ -128,6 +162,16 @@ class MemoryStore {
     return true;
   }
 
+  async purgeTrash(openId) {
+    let deleted = 0;
+    for (const [id, project] of this.projects) {
+      if (project.ownerOpenId !== openId || !project.deletedAt) continue;
+      this.projects.delete(id);
+      deleted += 1;
+    }
+    return deleted;
+  }
+
   async deleteProject(openId, id) { return this.moveProjectToTrash(openId, id); }
 
   async adminOverview() {
@@ -178,6 +222,16 @@ class PostgresStore {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS access_status text NOT NULL DEFAULT 'pending';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_by text;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_at timestamptz;
+      CREATE TABLE IF NOT EXISTS access_notifications (
+        id uuid PRIMARY KEY,
+        applicant_open_id text NOT NULL REFERENCES users(open_id) ON DELETE CASCADE,
+        admin_open_id text NOT NULL REFERENCES users(open_id) ON DELETE CASCADE,
+        attempts integer NOT NULL DEFAULT 0,
+        sent_at timestamptz,
+        next_attempt_at timestamptz NOT NULL DEFAULT now(),
+        last_error text,
+        UNIQUE(applicant_open_id, admin_open_id)
+      );
       UPDATE users SET access_status='active' WHERE is_admin=true AND access_status<>'active';
       CREATE TABLE IF NOT EXISTS sessions (
         token_hash text PRIMARY KEY,
@@ -240,6 +294,43 @@ class PostgresStore {
     } finally {
       client.release();
     }
+  }
+
+  async enqueueAccessNotifications() {
+    const result = await this.pool.query(`
+      SELECT u.open_id AS applicant, a.open_id AS admin
+      FROM users u CROSS JOIN users a
+      WHERE u.is_admin=false AND u.access_status='pending' AND a.is_admin=true
+        AND NOT EXISTS (SELECT 1 FROM access_notifications n WHERE n.applicant_open_id=u.open_id AND n.admin_open_id=a.open_id)
+    `);
+    for (const pair of result.rows) {
+      await this.pool.query(`INSERT INTO access_notifications(id,applicant_open_id,admin_open_id) VALUES($1,$2,$3)
+        ON CONFLICT(applicant_open_id,admin_open_id) DO NOTHING`, [crypto.randomUUID(), pair.applicant, pair.admin]);
+    }
+  }
+
+  async claimAccessNotification() {
+    const result = await this.pool.query(`
+      WITH candidate AS (
+        SELECT n.id FROM access_notifications n
+        JOIN users u ON u.open_id=n.applicant_open_id
+        JOIN users a ON a.open_id=n.admin_open_id
+        WHERE n.sent_at IS NULL AND n.next_attempt_at <= now()
+          AND u.access_status='pending' AND u.is_admin=false AND a.is_admin=true
+        ORDER BY n.next_attempt_at, n.id FOR UPDATE OF n SKIP LOCKED LIMIT 1
+      )
+      UPDATE access_notifications n SET attempts=n.attempts+1,next_attempt_at=now()+interval '60 seconds'
+      FROM candidate c, users u WHERE n.id=c.id AND u.open_id=n.applicant_open_id
+      RETURNING n.id,n.admin_open_id AS "adminOpenId",n.attempts,u.name AS "applicantName"
+    `);
+    return result.rows[0] || null;
+  }
+
+  async finishAccessNotification(id, error, attempts) {
+    const delay = Math.min(3600, 60 * 2 ** Math.min(attempts, 6));
+    await this.pool.query(`UPDATE access_notifications SET last_error=$2,
+      sent_at=CASE WHEN $2::text IS NULL THEN now() ELSE sent_at END,
+      next_attempt_at=now()+($3::int * interval '1 second') WHERE id=$1 AND attempts=$4`, [id, error, delay, attempts]);
   }
 
   async setUserAccess(openId, accessStatus, approvedBy) {
@@ -333,6 +424,11 @@ class PostgresStore {
   async purgeProject(openId, id) {
     const result = await this.pool.query('DELETE FROM cloud_projects WHERE owner_open_id=$1 AND id=$2 AND deleted_at IS NOT NULL', [openId, id]);
     return result.rowCount > 0;
+  }
+
+  async purgeTrash(openId) {
+    const result = await this.pool.query('DELETE FROM cloud_projects WHERE owner_open_id=$1 AND deleted_at IS NOT NULL', [openId]);
+    return result.rowCount;
   }
 
   async deleteProject(openId, id) { return this.moveProjectToTrash(openId, id); }
