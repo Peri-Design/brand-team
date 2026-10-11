@@ -143,6 +143,7 @@ app.get('/health', async (_req, res) => {
 
 app.get('/api/auth/session', async (req, res, next) => {
   try {
+    res.set('Cache-Control', 'no-store');
     const configured = await cloudConfigured();
     const user = configured ? await currentUser(req) : null;
     res.json({ configured, authenticated: Boolean(user), user: user ? { name: user.name, avatarUrl: user.avatarUrl, isAdmin: user.isAdmin, accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'pending' } : null });
@@ -154,6 +155,9 @@ app.get('/api/auth/session', async (req, res, next) => {
 app.get('/api/auth/feishu/start', async (req, res, next) => {
   try {
     const nextView = ['new', 'studio', 'files', 'admin'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
+    res.set('Cache-Control', 'no-store');
+    const existing = await currentUser(req);
+    if (existing) return res.redirect(`/?view=${nextView}`);
     setCookie(res, 'pv_auth_next', nextView, { maxAge: 10 * 60 * 1000 });
     if (devCloud) {
       const { store } = await ready;
@@ -177,6 +181,7 @@ app.get('/api/auth/feishu/start', async (req, res, next) => {
 });
 
 app.get('/api/auth/feishu/callback', async (req, res, next) => {
+  res.set('Cache-Control', 'no-store');
   try {
     const nextView = ['new', 'studio', 'files', 'admin'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
     clearCookie(res, 'pv_auth_next');
@@ -184,10 +189,10 @@ app.get('/api/auth/feishu/callback', async (req, res, next) => {
     clearCookie(res, 'pv_oauth_state');
     const receivedState = String(req.query.state || '');
     if (!expectedState || expectedState.length !== receivedState.length || !crypto.timingSafeEqual(Buffer.from(expectedState), Buffer.from(receivedState))) {
-      return res.redirect(`/?view=assets&auth=state_error`);
+      return res.redirect(`/?view=${nextView}&auth=state_error`);
     }
     const code = String(req.query.code || '');
-    if (!code) return res.redirect('/?view=assets&auth=cancelled');
+    if (!code) return res.redirect(`/?view=${nextView}&auth=cancelled`);
     const tokenResponse = await fetch(`${feishuApi}/open-apis/authen/v1/access_token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -210,7 +215,8 @@ app.get('/api/auth/feishu/callback', async (req, res, next) => {
     res.redirect(`/?view=${encodeURIComponent(nextView)}&auth=${encodeURIComponent(authResult)}`);
   } catch (error) {
     console.error('Feishu callback failed', error);
-    res.redirect('/?view=assets&auth=failed');
+    const target = cookies(req).pv_auth_next === 'admin' ? 'admin' : 'assets';
+    res.redirect(`/?view=${target}&auth=failed`);
   }
 });
 
@@ -355,13 +361,18 @@ app.get(privateDesignScripts, requireDesigner, (_req, _res, next) => next());
 async function serveWorkspace(req, res, next) {
   try {
     const user = await currentUser(req);
-    const allowed = Boolean(user && (user.isAdmin || user.accessStatus === 'active'));
+    const adminEntry = req.query.view === 'admin';
+    res.set('Cache-Control', 'no-store');
+    if (adminEntry && !user && !req.query.auth && await cloudConfigured()) {
+      return res.redirect('/api/auth/feishu/start?next=admin');
+    }
+    const allowed = Boolean(user && (user.isAdmin || user.accessStatus === 'active') && (!adminEntry || user.isAdmin));
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261010-admin-notify-1"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261011-admin-login-1"></script>\n</head>');
     }
-    res.set('Cache-Control', 'no-cache').type('html').send(html);
+    res.type('html').send(html);
   } catch (error) {
     next(error);
   }
