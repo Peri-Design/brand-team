@@ -32,10 +32,28 @@
    this.chain=this.chain.catch(()=>{}).then(work);return this.chain;
   }
  }
- if(typeof module==='object'&&module.exports){module.exports={CloudFile};return;}
+ function createLeaveHandler({isReady,save,flush,navigate,busy,error}){
+  let leaving=false;
+  return async url=>{
+   if(leaving)return false;
+   leaving=true;busy(true);
+   try{
+    if(isReady()){await save();if(!await flush()){error('修改尚未同步，请先重试同步或保存为副本。');return false;}}
+    navigate(url);return true;
+   }catch(e){error('暂时无法返回：'+e.message+'。当前修改仍保留在此页面。');return false;}
+   finally{leaving=false;busy(false);}
+  };
+ }
+ function createRequest(fetchImpl,timeoutMs=30000){return async(url,options={})=>{
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+  try{const response=await fetchImpl(url,{...options,signal:controller.signal,headers:{'Content-Type':'application/json'}});const data=await response.json();if(!response.ok){const e=Error(data.error||'云端服务暂不可用');e.status=response.status;throw e;}return data;}
+  catch(e){if(e.name==='AbortError')throw Error('云端连接超时，请重试');throw e;}
+  finally{clearTimeout(timer);}
+ };}
+ if(typeof module==='object'&&module.exports){module.exports={CloudFile,createLeaveHandler,createRequest};return;}
  const doc=root.document,label=doc.querySelector('#save-status'),retry=doc.querySelector('#cloud-retry');
  let file,timer,staging=Promise.resolve(),storageReady=true;
- const request=async(url,options={})=>{const response=await fetch(url,{...options,headers:{'Content-Type':'application/json'}});const data=await response.json();if(!response.ok){const e=Error(data.error||'云端服务暂不可用');e.status=response.status;throw e;}return data;};
+ const request=createRequest(root.fetch.bind(root));
  function status(value,error){label.dataset.error=String(['error','conflict'].includes(value));label.textContent={saved:'已保存到云端',pending:'有修改待同步',saving:'正在同步云端…',error:'同步失败 · 本机副本已保留',conflict:'云端已有新版本 · 当前修改未覆盖'}[value];label.title=error||'';retry.hidden=!['error','conflict'].includes(value);retry.textContent=value==='conflict'?'保存为副本':'重试同步';}
  async function open(fresh){
   const session=await request('/api/auth/session');if(!session.authenticated||!session.user||!session.user.isAdmin&&session.user.accessStatus!=='active'){location.href='/?view=new';throw Error('请登录并开通设计权限');}
@@ -54,5 +72,5 @@
  }
  async function flush(asCopy=false){clearTimeout(timer);await staging;clearTimeout(timer);const result=await file.flush(asCopy);if(result&&!file.pending)storageReady=true;return result&&storageReady&&!file.pending;}
  root.addEventListener('beforeunload',e=>{if(file?.pending){e.preventDefault();e.returnValue='';}});
- root.MaterialCloud={open,save,flush};
+ root.MaterialCloud={open,save,flush,createLeaveHandler};
 })(typeof window==='undefined'?globalThis:window);
