@@ -288,3 +288,19 @@ html[data-route-pending="new"] .route-loader span::before{content:'正在创建�
 .asset-guidelines-link{display:inline-flex;align-items:center;min-height:44px;color:var(--purple-dark);font-size:14px;text-decoration:underline;text-underline-offset:4px}
 .asset-guidelines-link:hover{color:var(--purple)}
 @media(max-width:600px){.asset-section-heading h2{font-size:20px}}
+
+/* Export validation: compact summaries, scoped to the selected images. */
+.export-review{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 48px);padding:26px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);box-shadow:0 20px 80px #25233026;overflow:auto}
+.export-review::backdrop{background:#25233066}
+.export-review h2{font-size:21px;line-height:1.4;margin:0 0 8px}
+.export-review-intro{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 18px}
+.export-review-list section{border-top:1px solid var(--line);padding:14px 0}
+.export-review-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.export-review h3{font-size:15px;margin:0}
+.export-review button{min-height:44px}
+.export-review-row button{flex-shrink:0;font-size:13px;color:var(--purple)}
+.export-review-level{font-size:12px;font-weight:600;margin:8px 0 4px}
+.export-review-level.error{color:#a33333}.export-review-level.warning{color:#80500d}
+.export-review ul{margin:0;padding-left:20px;font-size:14px;line-height:1.7}
+.export-review-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);padding-top:18px}
+@media(max-width:600px){.export-review{padding:20px}.export-review h2{font-size:19px}}

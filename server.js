@@ -16,6 +16,7 @@ const sessionTtlMs = 7 * 24 * 60 * 60 * 1000;
 const staticDir = env.STATIC_DIR
   ? path.resolve(env.STATIC_DIR)
   : path.join(__dirname, fs.existsSync(path.join(__dirname, 'public')) ? 'public' : 'dist');
+const materialModel = require(path.join(staticDir, 'materials/model'));
 const appId = env.FEISHU_APP_ID || '';
 const appSecret = env.FEISHU_APP_SECRET || '';
 const publicUrl = (env.PUBLIC_URL || '').replace(/\/$/, '');
@@ -110,10 +111,11 @@ function requireAdmin(req, res, next) {
 
 function projectBody(req, res) {
   const project = req.body?.project;
-  if (!project || typeof project !== 'object' || Array.isArray(project) || project.version !== 1 || typeof project.name !== 'string' || project.name.length > 80) {
+  if (!project || typeof project !== 'object' || Array.isArray(project) || ![1,2].includes(project.version) || typeof project.name !== 'string' || project.name.length > 80) {
     res.status(400).json({ error: '文件数据格式不正确。' });
     return null;
   }
+  if (project.version === 2) {try {materialModel.validate(project);} catch(error) {res.status(400).json({error:error.message});return null;}}
   const json = JSON.stringify(project);
   const sizeBytes = Buffer.byteLength(json);
   if (sizeBytes > 160 * 1024 * 1024) {
@@ -355,7 +357,10 @@ app.patch('/api/admin/users/:openId/access', sameOrigin, requireAuth, requireAdm
   }
 });
 
-const privateDesignScripts = ['/app.js', '/font-coverage.js', '/templates.js', '/web-blocks.js', '/history.js', '/logo.js', '/canvas-view.js', '/palette.js'];
+app.get(['/materials', '/materials/', '/materials/index.html'], async (req,res,next)=>{try{const user=await currentUser(req);if(!user||!user.isAdmin&&user.accessStatus!=='active')return res.redirect('/?view=new');if(req.path==='/materials')return res.redirect('/materials/'+(req.url.includes('?')?req.url.slice(req.url.indexOf('?')):''));res.set('Cache-Control','no-store');res.sendFile(path.join(staticDir,'materials/index.html'));}catch(e){next(e);}});
+app.use('/materials',requireDesigner,(_req,res,next)=>{res.set('Cache-Control','no-store');next();});
+
+const privateDesignScripts = ['/app.js', '/font-coverage.js', '/templates.js', '/web-blocks.js', '/history.js', '/logo.js', '/canvas-view.js', '/palette.js', '/export-preflight.js'];
 app.get(privateDesignScripts, requireDesigner, (_req, _res, next) => next());
 
 async function serveWorkspace(req, res, next) {
@@ -369,7 +374,7 @@ async function serveWorkspace(req, res, next) {
     const allowed = Boolean(user && (user.isAdmin || user.accessStatus === 'active') && (!adminEntry || user.isAdmin));
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
-      html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette)\.js[^"]*"><\/script>/g, '');
+      html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
       html = html.replace('</head>', '  <script defer src="access-public.js?v=20261011-admin-login-1"></script>\n</head>');
     }
     res.type('html').send(html);

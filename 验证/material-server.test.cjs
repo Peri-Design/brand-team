@@ -1,0 +1,22 @@
+'use strict';
+process.env.ENABLE_DEV_AUTH='true';
+const test=require('node:test'),assert=require('node:assert/strict'),request=require('supertest');
+const {app,ready}=require('../server');const M=require('../public/materials/model');
+test('新版编辑器保护入口，旧项目与新项目共存并保持用户隔离',async()=>{
+ const {store}=await ready;
+ assert.equal((await request(app).get('/materials/')).status,302);
+ assert.equal((await request(app).get('/materials/app.js')).status,401);
+ const u=await store.upsertUser({openId:'ou_material_active',name:'测试设计师'});await store.setUserAccess(u.openId,'active');
+ const cookie='pv_session='+await store.createSession(u.openId,60000);
+ const page=await request(app).get('/materials/').set('Cookie',cookie);assert.equal(page.status,200);assert.match(page.text,/cloud.js/);assert.doesNotMatch(page.text,/本地体验版|未连接云端/);
+ const project=M.fresh();M.add(project,'app',['en']);project.items[0].adjustments.en={fade:100,textOpacity:50};
+ const created=await request(app).post('/api/cloud/projects').set('Cookie',cookie).send({project});assert.equal(created.status,201);const id=created.body.project.id;
+ const reopened=await request(app).get('/api/cloud/projects/'+id).set('Cookie',cookie);assert.deepEqual(reopened.body.project.payload,project);
+ const stranger=await store.upsertUser({openId:'ou_material_other',name:'另一设计师'});await store.setUserAccess(stranger.openId,'active');const other='pv_session='+await store.createSession(stranger.openId,60000);
+ assert.equal((await request(app).get('/api/cloud/projects/'+id).set('Cookie',other)).status,404);
+ assert.equal((await request(app).put('/api/cloud/projects/'+id).set('Cookie',cookie).send({project,baseRevision:1})).status,200);
+ assert.equal((await request(app).put('/api/cloud/projects/'+id).set('Cookie',cookie).send({project,baseRevision:1})).status,409);
+ project.items[0].backgroundOpacity=101;assert.equal((await request(app).post('/api/cloud/projects').set('Cookie',cookie).send({project})).status,400);
+ assert.equal((await request(app).post('/api/cloud/projects').set('Cookie',cookie).send({project:{version:1,name:'旧文件'}})).status,201);
+ const pending=await store.upsertUser({openId:'ou_material_pending',name:'待审批'});const pc='pv_session='+await store.createSession(pending.openId,60000);assert.equal((await request(app).get('/materials/model.js').set('Cookie',pc)).status,403);
+});

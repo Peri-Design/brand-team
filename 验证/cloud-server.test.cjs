@@ -33,7 +33,7 @@ test('未完成部署配置时登录入口给出明确状态', async () => {
   assert.equal(login.status, 503);
   assert.match(login.text, /尚未完成飞书与数据库配置/);
   const health = await request(app).get('/health');
-  assert.deepEqual(health.body, { ok: true, cloud: 'disabled', version: '1.8.10' });
+  assert.deepEqual(health.body, { ok: true, cloud: 'disabled', version: require('../package.json').version });
 });
 
 test('基础安全响应头已启用', async () => {
