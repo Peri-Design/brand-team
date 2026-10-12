@@ -51,7 +51,8 @@
  function updateSwatch(record) {
   record.button.style.setProperty('--picked-color',record.input.value);
   record.button.disabled=record.input.disabled;
-  const name=record.input.getAttribute('aria-label') || doc.querySelector(`label[for="${record.input.id}"]`)?.textContent.trim() || '选择颜色';
+  const label=doc.querySelector(`label[for="${record.input.id}"]`),ui=root.PixVerseUI;
+  const name=(ui?ui.originalAttribute(record.input,'aria-label'):record.input.getAttribute('aria-label')) || (ui?ui.originalText(label):label?.textContent)?.trim() || '选择颜色';
   record.button.setAttribute('aria-label',`${name}，当前 ${record.input.value.toUpperCase()}`);
  }
  function draw() {

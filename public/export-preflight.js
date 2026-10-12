@@ -32,14 +32,14 @@
         const header = document.createElement('div');
         header.className = 'export-review-row';
         const title = document.createElement('h3');
-        title.textContent = row.label;
+        if(row.name!==undefined){const name=document.createElement('span');name.setAttribute('data-ui-content','');name.textContent=row.name;title.append(name,document.createTextNode(' · '+row.language));}else title.textContent = row.label;
         header.append(title);
         if (row.key) {
           const jump = document.createElement('button');
           jump.type = 'button';
           jump.className = 'quiet';
           jump.textContent = '去调整';
-          jump.setAttribute('aria-label', `调整 ${row.label}`);
+          jump.setAttribute('aria-label', '去调整');
           jump.onclick = () => { target = row.key; dialog.close(); };
           header.append(jump);
         }

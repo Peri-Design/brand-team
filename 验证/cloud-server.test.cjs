@@ -52,7 +52,10 @@ test('PixVerse 使用规范入口和全文无需登录，复用公开 Logo 文�
   assert.equal(page.headers['cache-control'], 'no-cache');
   assert.match(page.text, /PixVerse 品牌使用规范/);
   assert.match(page.text, /发布前检查/);
-  assert.doesNotMatch(page.text, /<script|<iframe|access-gate/);
+  assert.doesNotMatch(page.text, /<iframe|access-gate/);
+  const scripts=[...page.text.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1].split('?')[0]);
+  assert.deepEqual(scripts, ['ui-messages.js','ui-i18n.js']);
+  assert.match(page.text, /禁止使用 AI 生成的 Logo/);
   const localUrls = [...page.text.matchAll(/(?:src|href)="([^"#][^"]*)"/g)]
     .map(match => match[1]).filter(url => !url.startsWith('./?'));
   for (const url of new Set(localUrls)) {

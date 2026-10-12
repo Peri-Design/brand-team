@@ -1,0 +1,23 @@
+.ui-language{display:inline-flex!important;align-items:center;gap:1px;flex:none;white-space:nowrap;font:400 13px/1 system-ui,sans-serif;color:#aaa4b5}
+.ui-language button[data-ui-language]{display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:auto!important;min-width:36px;min-height:36px;height:36px;margin:0;padding:0 7px!important;border:0!important;border-radius:6px;background:transparent!important;box-shadow:none!important;color:#827b8f;font:400 13px/1 system-ui,sans-serif!important;letter-spacing:normal;cursor:pointer}
+.ui-language button[data-ui-language][aria-pressed=true]{color:#302a3c;font-weight:600!important}
+.ui-language button[data-ui-language]:hover{color:#6f32cc;background:#f5f1fb!important}
+.ui-language button[data-ui-language]:focus-visible{outline:2px solid #7c35ed;outline-offset:2px}
+.ui-language>span{font-size:12px;line-height:1;user-select:none}
+.site-header .ui-language{margin-left:auto;margin-right:20px}
+html[lang=en] .top-actions{gap:8px}
+html[lang=en] .stage-toolbar,html[lang=en] .dialog-actions{flex-wrap:wrap}
+html[lang=en] #inspector .row{flex-wrap:wrap}
+html[lang=en] .catalog-item strong,html[lang=en] .catalog-item small{overflow-wrap:anywhere}
+html[lang=en] #inspector .colors{gap:6px}
+@media(max-width:1000px){html[lang=en] header>strong span{font-size:13px}html[lang=en] .topbar{gap:12px;flex-wrap:wrap}}
+@media(max-width:640px){.site-header .ui-language{margin-right:8px}html[lang=en] .site-header{flex-wrap:wrap;gap:12px}}
+
+.topbar>.ui-language{margin-left:auto}
+
+/* Loading copy lives in existing CSS pseudo-elements, outside the DOM translator. */
+html[lang=en][data-route-pending] .route-loader span::before{content:'Restoring this page…'}
+html[lang=en][data-route-pending=studio] .route-loader span::before{content:'Opening your file…'}
+html[lang=en][data-route-pending=files] .route-loader span::before{content:'Loading files…'}
+html[lang=en][data-route-pending=admin] .route-loader span::before{content:'Opening admin…'}
+html[lang=en][data-route-pending=new] .route-loader span::before{content:'Creating a blank design…'}

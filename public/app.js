@@ -1,5 +1,6 @@
 'use strict';
 (() => {
+ const confirm=message=>window.confirm(window.PixVerseUI?.t(message)||message),prompt=(message,value)=>window.prompt(window.PixVerseUI?.t(message)||message,value);
  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
  const REV = '2026-09-28-v2', LEGACY_REVS = new Set(['2026-09-23-v1']), LANG = {zh:'中文',en:'English',ja:'日本語'}, SLOT = {web:'Web 首页 Banner',app:'App 首页 Banner'};
  const FONT = {zh:'BannerSC',en:'BannerEN',ja:'BannerJP'};

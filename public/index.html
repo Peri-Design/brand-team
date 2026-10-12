@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="color-picker.css?v=20261011-eyedropper">
   <link rel="stylesheet" href="workspace-help.css?v=20261010-2">
   <script defer src="workspace-help.js?v=20261010-1"></script>
-  <script defer src="color-picker.js?v=20261011-eyedropper"></script>
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js?v=20261002-card-adjust-1"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="export-preflight.js?v=20261011-1"></script><script defer src="app.js?v=1.9.0"></script>
-</head>
+  <script defer src="color-picker.js?v=20261012-ui-5"></script>
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js?v=20261002-card-adjust-1"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="export-preflight.js?v=20261012-ui-5"></script><script defer src="app.js?v=1.9.4-ui-2"></script>
+<link rel="stylesheet" href="ui-i18n.css?v=20261012-language-toggle-1"><script src="ui-messages.js?v=20261012-ui-5"></script><script src="ui-i18n.js?v=20261012-language-toggle-1"></script></head>
 <body data-view="assets">
 <div class="route-loader" role="status" aria-live="polite"><span></span></div>
-<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><symbol id="i-language" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/></symbol>
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
 <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 5 5 3-3 4 4"/></symbol>
 <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 9 5v9l-9 5-9-5V8zm0 10v9M3 8l9 5 9-5M7.5 5.5l9 5v4"/></symbol>
@@ -50,7 +50,7 @@
 <div class="app-shell">
  <header class="topbar">
   <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.9.4</span></div>
-  <div class="top-actions"><button id="workspace-help-open" class="quiet" type="button" aria-haspopup="dialog" aria-controls="workspace-help-dialog"><svg aria-hidden="true"><use href="#i-help"/></svg><span>使用帮助</span></button><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
+  <div class="ui-language" role="group" aria-label="界面语言" translate="no"><button type="button" data-ui-language="zh" lang="zh-CN" aria-pressed="true">中文</button><span aria-hidden="true">/</span><button type="button" data-ui-language="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div><div class="top-actions"><button id="workspace-help-open" class="quiet" type="button" aria-haspopup="dialog" aria-controls="workspace-help-dialog"><svg aria-hidden="true"><use href="#i-help"/></svg><span>使用帮助</span></button><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
  </header>
  <main id="studio" class="workspace" hidden>
   <section class="setup" aria-label="母版与生成设置">
@@ -242,7 +242,7 @@
   <div class="library-hero"><span class="eyebrow">YOUR FILES</span><h1>文件</h1><p>查看、打开和管理你的全部设计文件。</p></div>
   <div class="file-toolbar">
    <div class="file-tabs" role="tablist" aria-label="文件范围"><button role="tab" aria-selected="false" data-file-scope="recent">最近</button><button class="active" role="tab" aria-selected="true" data-file-scope="all">所有文件</button><button role="tab" aria-selected="false" data-file-scope="trash"><svg><use href="#i-trash"/></svg>回收站</button></div>
-   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="empty-trash" class="danger-action" hidden><svg aria-hidden="true"><use href="#i-trash"/></svg>清空回收站</button></div>
+   <div class="file-tools"><label class="file-search" for="file-search"><svg><use href="#i-search"/></svg><input id="file-search" type="search" aria-label="搜索文件" placeholder="搜索文件" autocomplete="off"><kbd>⌘K</kbd></label><button id="empty-trash" class="danger-action" hidden><svg aria-hidden="true"><use href="#i-trash"/></svg>清空回收站</button></div>
   </div>
   <div id="cloud-disabled" class="cloud-message" hidden><div><strong>云端文件暂不可用</strong><p>品牌素材仍可正常浏览和下载；恢复连接后可继续使用设计功能。</p></div></div>
   <div id="cloud-signed-out" class="cloud-message" hidden><div><strong>使用飞书账号访问设计文件</strong><p>登录并获得权限后，新建设计和编辑内容会自动保存到云端。</p></div><a id="feishu-login" class="primary button-link" href="/api/auth/feishu/start">使用飞书登录</a></div>
