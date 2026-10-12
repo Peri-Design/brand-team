@@ -5,6 +5,7 @@ const blocks=()=>({preset:'auto',layers:[{colors:['#6453ed','#5140df','#302084']
 const emptyCopy=()=>({title:'',appSecondaryTitle:'',subtitle:''});
 function fresh(){return {version:2,name:'未命名项目',image:null,imageName:'',serial:0,copy:Object.fromEntries(Object.keys(LANG).map(l=>[l,emptyCopy()])),items:[]};}
 function add(s,type,languages){if(!RES[type])throw Error('资源位不存在');const langs=type==='social'?['zh']:Object.keys(LANG).filter(l=>languages.includes(l));if(!langs.length)throw Error('请至少选择一种语言');const m={id:'m'+(++s.serial),type,name:RES[type].name,variant:'primary',languages:langs,image:null,imageName:'',background:'#FFFFFF',backgroundEnabled:true,webBlocks:blocks(),webLogo:{kind:'none',image:null},adjustments:{},socialCopy:{title:'',series:''}};s.items.push(m);return m;}
+function addMany(s,types,languages){const chosen=[...new Set(types)];if(!chosen.length)throw Error('请至少选择一种物料');if(chosen.some(t=>!RES[t]))throw Error('资源位不存在');if(chosen.some(t=>t!=='social')&&!Object.keys(LANG).some(l=>languages.includes(l)))throw Error('请为 Web / App 至少选择一种语言');return chosen.map(type=>add(s,type,languages));}
 const adj=(m,l)=>({zoom:100,x:0,y:0,fade:48,textColorMode:'white',textColor:'#FFFFFF',...m.adjustments[l]});
 function copyField(m){return m.type==='social'?'title':m.type==='app'&&m.variant==='secondary'?'appSecondaryTitle':'title';}
 function setCopy(s,m,l,field,value){if(m.type==='social')m.socialCopy[field]=value;else s.copy[l][field]=value;}
@@ -28,5 +29,5 @@ function validate(s){
  }
  return s;
 }
-const api={LANG,RES,fresh,add,adj,copyField,setCopy,outputs,remove,batch,resize,validate};if(typeof module!=='undefined')module.exports=api;else root.MaterialModel=api;
+const api={LANG,RES,fresh,add,addMany,adj,copyField,setCopy,outputs,remove,batch,resize,validate};if(typeof module!=='undefined')module.exports=api;else root.MaterialModel=api;
 })(typeof window==='undefined'?globalThis:window);

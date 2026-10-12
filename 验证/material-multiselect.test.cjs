@@ -1,0 +1,4 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const M=require('../public/materials/model');
+test('mixed selection creates one material per resource and keeps social Chinese only',()=>{const s=M.fresh();s.copy.en.title='NEW\nFEATURE';const added=M.addMany(s,['web','app','social','web'],['en','ja']);assert.deepEqual(added.map(m=>m.type),['web','app','social']);assert.deepEqual(added.map(m=>m.languages),[['en','ja'],['en','ja'],['zh']]);assert.equal(s.serial,3);assert.equal(s.copy.en.title,'NEW\nFEATURE');M.validate(s);});
+test('invalid bulk selection does not create a partial project',()=>{const s=M.fresh();for(const args of [[['social','web'],[]],[['web','unknown'],['en']],[[],['zh']]]){assert.throws(()=>M.addMany(s,...args));assert.equal(s.items.length,0);assert.equal(s.serial,0);}const [social]=M.addMany(s,['social'],[]);assert.deepEqual(social.languages,['zh']);});
