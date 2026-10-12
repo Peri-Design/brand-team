@@ -17,3 +17,28 @@ header{gap:12px;padding:10px 18px}header strong{display:inline-flex;align-items:
 @media(max-width:760px){header strong{display:none}#project-name{width:120px}header{gap:4px}#save-status{max-width:110px;overflow:hidden;text-overflow:ellipsis}}
 
 .workspace-back[aria-busy=true]{opacity:.5;cursor:progress}#return-status{position:absolute;top:58px;left:18px;z-index:50;background:#33283f;color:#fff;font-size:12px;padding:7px 12px;border-radius:7px;box-shadow:0 3px 12px #24152e18}
+
+/* Undo and redo share the navigation icon style. */
+header .history-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:36px;height:36px;padding:0;color:#665d72}header .history-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}header .history-icon:disabled:hover{background:#fff;border-color:transparent}
+
+/* Keep editing controls in the viewport, with independent scroll regions. */
+html,body{height:100%;overflow:hidden}#workspace{height:calc(100dvh - 64px);min-height:0;grid-template-rows:minmax(0,1fr)}#workspace>main,#sidebar,#inspector{min-height:0}#sidebar,#inspector{overscroll-behavior:contain}main{overflow:hidden}.stage-toolbar,footer{flex-shrink:0}.card-head .single-edit{margin-left:auto;font-size:11px;color:#7440ad;border-color:#e2ddea}.single-view #stage{min-height:100%;justify-content:center;padding:24px}.single-view .single-edit{display:none}#exit-focus{font-size:12px;color:#7440ad}#viewport{overscroll-behavior:contain}
+@media(max-width:1000px){#workspace.inspecting{grid-template-columns:150px minmax(150px,1fr) 260px}#inspector{position:static;width:auto;box-shadow:none}.stage-toolbar{flex-wrap:wrap;gap:8px;padding:8px 12px}}
+
+/* Restored canvas navigation: 100% = spec 1x. View state is separate from artwork. */
+#stage-space{position:relative;min-width:100%;min-height:100%}#stage{position:absolute;min-width:0;width:max-content;padding:0;align-items:flex-start;gap:28px;transform-origin:0 0}.material-row{display:flex;align-items:flex-start;gap:24px;width:max-content}.single-view #stage{min-height:0;padding:0;justify-content:flex-start}.card-head{gap:4px;flex-wrap:wrap}.card-head h3{flex:1;min-width:100px}.card-head .enlarge-view{font-size:11px;color:#7440ad}.view-only .image-frame{display:none!important}.view-only .enlarge-view{display:none}.card-foot{gap:8px}.card-foot span{min-width:0}.zoom-field{display:flex;align-items:center;border:1px solid #e2ddea;border-radius:6px;padding-right:8px;background:white;font-size:12px}#zoom-value{width:65px;border:0;background:transparent;padding:5px 2px 5px 8px;text-align:right;min-height:32px}#view-status{position:absolute;bottom:60px;left:16px;background:#f6f5f8dd;padding:3px 6px;pointer-events:none;font-size:11px}footer{height:auto;min-height:56px;flex-wrap:wrap}footer #hand{margin-right:auto}#viewport.hand-mode,#viewport.hand-mode canvas{cursor:grab}#viewport.is-panning,#viewport.is-panning canvas{cursor:grabbing}#viewport:focus-visible{outline:2px solid #ba97ed;outline-offset:-2px}.download-selection{display:flex;gap:8px}#download-one{margin:16px 0 8px}#guide-dialog{width:min(540px,92vw)}#guide-content{min-height:140px;padding:18px 0}#guide-content h3{font-size:20px;margin:0 0 14px}#guide-content p{line-height:1.9}#guide-skip{margin-right:auto}
+
+/* Keep image instructions separate from the guide toggle. */
+.stage-toolbar .guides-toggle{display:inline-flex;align-items:center;gap:8px;min-height:36px;margin:0;cursor:pointer;line-height:20px}.guides-toggle #guides{appearance:auto;flex:none;width:12px;height:12px;margin:0;vertical-align:middle}.guides-toggle span{display:block;line-height:20px}.canvas-hints{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;padding:8px 20px;background:#fbfafc;border-top:1px solid #e6e1ec;color:#7c7688;font-size:11px;line-height:18px}.canvas-hints #view-status{position:static;background:none;padding:0;font-size:inherit;margin-left:auto}.view-only #image-adjust-hint{display:none}@media(max-width:1000px){.canvas-hints{padding:7px 12px}.canvas-hints #view-status{margin-left:0}}
+
+/* Align checkbox and disclosure icons with their label line boxes. */
+input[type=checkbox]{appearance:auto;flex:none;width:12px;height:12px;margin:0;vertical-align:middle}
+label:has(>input[type=checkbox]){display:inline-flex;align-items:center;gap:8px;min-height:28px;line-height:20px;cursor:pointer}
+label:has(>input[type=checkbox])>span{min-width:0}
+label.row:has(>input[type=checkbox]),#download-list label{display:flex}
+#inspector>.row>h2{margin:0}
+#close-inspector,.material .remove{display:inline-flex;align-items:center;justify-content:center;flex:none;width:28px;height:28px;min-height:28px;padding:0;line-height:1}
+summary{display:flex;align-items:center;gap:8px;min-height:28px;line-height:20px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'';flex:none;width:6px;height:6px;margin:0 2px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-45deg)}
+details[open]>summary::before{transform:translateY(-1.5px) rotate(45deg)}
