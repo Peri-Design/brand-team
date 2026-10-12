@@ -5,10 +5,12 @@
  const messages=root.PixVerseEnglish||{};
  let storage;try{storage=root.localStorage;}catch{}
  let locale;try{locale=storage?.getItem(KEY);}catch{}
- if(!['zh','en'].includes(locale))locale=/^zh\b/i.test(root.navigator?.language||'zh')?'zh':'en';
+ if(!['zh','en'].includes(locale))locale='en';
  const records=new WeakMap();
  const protectedSelector='script,style,[contenteditable], [data-ui-content], [translate="no"],.project-title-row h4,.admin-member-profile strong,.admin-file>strong,.admin-file-owner-name,.material .choose strong,.card-head h3,#inspector>.row>h2,#cloud-user-name,#cloud-avatar-fallback';
- const patterns=[];
+ const patterns=[
+  [/^打开文件：(.*)$/,name=>`Open file: ${name}`]
+ ];
  function t(source,language=locale){
   if(language==='zh'||typeof source!=='string')return source;
   const text=source.trim();let result=Object.prototype.hasOwnProperty.call(messages,text)?messages[text]:undefined;

@@ -179,7 +179,15 @@ body[data-view="assets"] .topbar,body[data-view="files"] .topbar,body[data-view=
 .project-tile{position:relative;min-width:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px #39265305;transition:border-color .16s,box-shadow .16s}
 .project-tile:hover{border-color:#d3c6e4;box-shadow:0 8px 22px #39265310}
 .project-tile:focus-within{border-color:#a770ee;box-shadow:0 0 0 3px #9257e822}
-.project-tile.current{border-color:#a770ee}
+.project-tile.opening{border-color:#a770ee;box-shadow:0 0 0 2px #9257e822}
+.project-tile.opening .project-tile-preview{opacity:.65;cursor:progress}
+.project-tile-preview[aria-disabled=true]{cursor:progress}
+.project-tile-preview:focus-visible{outline:2px solid #7c35ed;outline-offset:-3px}
+.project-open-feedback{padding:0 14px 12px;display:flex;align-items:center;gap:10px}
+.project-open-feedback:has(.project-open-status[hidden]){display:none}
+.project-open-feedback .project-open-status{white-space:normal;margin:0;color:#7440ad}
+.project-tile.open-failed .project-open-status{color:#a0343b}
+.project-open-retry{min-height:32px;padding:4px 9px;font-size:12px}
 .project-tile-preview{aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;background:#f3f1f6;border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;cursor:pointer}
 .project-tile-preview img{display:block;width:100%;height:100%;object-fit:cover}
 .project-preview-placeholder{display:grid;place-items:center;width:100%;height:100%;color:#81788f;font-size:12px;background:radial-gradient(circle at 65% 30%,#eadfff 0,transparent 46%),linear-gradient(135deg,#f6f4f9,#efedf4)}

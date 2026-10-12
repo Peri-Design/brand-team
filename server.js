@@ -360,6 +360,13 @@ app.patch('/api/admin/users/:openId/access', sameOrigin, requireAuth, requireAdm
 app.get(['/materials', '/materials/', '/materials/index.html'], async (req,res,next)=>{try{const user=await currentUser(req);if(!user||!user.isAdmin&&user.accessStatus!=='active')return res.redirect('/?view=new');if(req.path==='/materials')return res.redirect('/materials/'+(req.url.includes('?')?req.url.slice(req.url.indexOf('?')):''));res.set('Cache-Control','no-store');res.sendFile(path.join(staticDir,'materials/index.html'));}catch(e){next(e);}});
 app.use('/materials',requireDesigner,(_req,res,next)=>{res.set('Cache-Control','no-store');next();});
 
+// Authorize the underlying assets as well as their download UI.
+app.use('/assets', (req,res,next)=>{
+  let name;try{name=path.posix.basename(path.posix.normalize(decodeURIComponent(req.path)));}catch{return res.sendStatus(400);}
+  if(/^AIsphere-/i.test(name)){res.set('Cache-Control','private, no-store');return requireDesigner(req,res,next);}
+  next();
+});
+
 const privateDesignScripts = ['/app.js', '/font-coverage.js', '/templates.js', '/web-blocks.js', '/history.js', '/logo.js', '/canvas-view.js', '/palette.js', '/export-preflight.js'];
 app.get(privateDesignScripts, requireDesigner, (_req, _res, next) => next());
 
@@ -374,9 +381,11 @@ async function serveWorkspace(req, res, next) {
     const allowed = Boolean(user && (user.isAdmin || user.accessStatus === 'active') && (!adminEntry || user.isAdmin));
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
+      html = html.replace(/<!-- restricted-brand-assets:start -->[\s\S]*?<!-- restricted-brand-assets:end -->/, '');
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
       html = html.replace('</head>', '  <script defer src="access-public.js?v=20261011-admin-login-1"></script>\n</head>');
     }
+    if(allowed) html=html.replace('id="aisphere-assets" aria-labelledby="aisphere-logo-title" hidden','id="aisphere-assets" aria-labelledby="aisphere-logo-title"');
     res.type('html').send(html);
   } catch (error) {
     next(error);
@@ -388,7 +397,7 @@ app.get(['/', '/index.html'], serveWorkspace);
 app.use(express.static(staticDir, {
   etag: true,
   setHeaders(res, filePath) {
-    res.setHeader('Cache-Control', filePath.endsWith('.html') ? 'no-cache' : 'public, max-age=86400');
+    res.setHeader('Cache-Control', /^AIsphere-/i.test(path.basename(filePath)) ? 'private, no-store' : filePath.endsWith('.html') ? 'no-cache' : 'public, max-age=86400');
   }
 }));
 

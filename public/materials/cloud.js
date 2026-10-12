@@ -61,6 +61,7 @@
   const backup={read:id=>new Promise((resolve,reject)=>{const r=db.transaction('files').objectStore('files').get(id);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);}),write:(id,value)=>new Promise((resolve,reject)=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').put(value,id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||Error('恢复副本写入失败'));})};
   file=new CloudFile({request,backup,status,linked:id=>{const url=new URL(location.href);url.searchParams.set('project',id);history.replaceState({},'',url);}});
   const state=await file.open(new URL(location.href).searchParams.get('project'),fresh);
+  try{localStorage.setItem('pixverse-last-opened-project-id',file.id);}catch{}
   if(file.pending&&!file.conflict)timer=setTimeout(()=>file.flush(),1000);
   retry.onclick=()=>flush(file.conflict);
   return state;

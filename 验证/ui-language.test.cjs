@@ -7,9 +7,9 @@ function boot({saved,language='zh-CN',blocked=false}={}){
  for(const file of ['ui-messages.js','ui-i18n.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
  return {ui:window.PixVerseUI,values,events,messages:window.PixVerseEnglish};
 }
-test('UI language follows browser initially, then the explicit saved choice',()=>{
- assert.equal(boot({language:'en-US'}).ui.locale,'en');assert.equal(boot({language:'zh-TW'}).ui.locale,'zh');
- assert.equal(boot({language:'en-US',saved:'zh'}).ui.locale,'zh');assert.equal(boot({saved:'invalid'}).ui.locale,'zh');
+test('UI language defaults to English regardless of browser, while preserving an explicit choice',()=>{
+ assert.equal(boot({language:'en-US'}).ui.locale,'en');assert.equal(boot({language:'zh-TW'}).ui.locale,'en');
+ assert.equal(boot({language:'en-US',saved:'zh'}).ui.locale,'zh');assert.equal(boot({saved:'invalid'}).ui.locale,'en');
  const {ui,values,events}=boot();ui.setLocale('en');assert.equal(values.get(ui.KEY),'en');assert.equal(events[0].detail.locale,'en');
  ui.setLocale('ja');assert.equal(ui.locale,'en');assert.equal(events.length,1);
 });

@@ -7,7 +7,7 @@ const { app, ready } = require('../server');
 
 test.before(async () => { await ready; });
 
-test('静态网页和品牌素材保持公开', async () => {
+test('静态网页和 PixVerse 品牌素材保持公开', async () => {
   const page = await request(app).get('/');
   assert.equal(page.status, 200);
   assert.match(page.text, /PixVerse 品牌工作台/);
@@ -46,7 +46,7 @@ test('基础安全响应头已启用', async () => {
 test('PixVerse 使用规范入口和全文无需登录，复用公开 Logo 文件', async () => {
   const workspace = await request(app).get('/');
   assert.match(workspace.text, /class="asset-guidelines-link" href="brand-guidelines\.html">查看使用规范/);
-  assert.match(workspace.text, /爱诗科技 Logo/);
+  assert.doesNotMatch(workspace.text, /aisphere-logo-title|assets\/AIsphere-/);
   const page = await request(app).get('/brand-guidelines.html');
   assert.equal(page.status, 200);
   assert.equal(page.headers['cache-control'], 'no-cache');

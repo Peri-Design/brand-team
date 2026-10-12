@@ -107,7 +107,7 @@ class MemoryStore {
         const activity = project => Math.max(new Date(project.lastOpenedAt || 0).valueOf(), new Date(project.updatedAt || 0).valueOf());
         return trashed ? String(b.deletedAt).localeCompare(String(a.deletedAt)) : activity(b) - activity(a);
       })
-      .map(({ payload, ...metadata }) => clone(metadata));
+      .map(({ payload, ...metadata }) => ({ ...clone(metadata), projectVersion: payload?.version === 2 ? 2 : 1 }));
   }
 
   async createProject(openId, name, payload, sizeBytes, previewDataUrl = null) {
@@ -365,7 +365,7 @@ class PostgresStore {
   async listProjects(openId, { trashed = false } = {}) {
     await this.pool.query("DELETE FROM cloud_projects WHERE owner_open_id=$1 AND deleted_at < now() - interval '30 days'", [openId]);
     const result = await this.pool.query(`
-      SELECT id::text,name,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt",last_opened_at AS "lastOpenedAt",deleted_at AS "deletedAt"
+      SELECT id::text,name,size_bytes AS "sizeBytes",preview_data_url AS "previewDataUrl",revision,created_at AS "createdAt",updated_at AS "updatedAt",last_opened_at AS "lastOpenedAt",deleted_at AS "deletedAt", CASE WHEN payload->>'version'='2' THEN 2 ELSE 1 END AS "projectVersion"
       FROM cloud_projects
       WHERE owner_open_id=$1 AND deleted_at IS ${trashed ? 'NOT NULL' : 'NULL'}
       ORDER BY ${trashed ? 'deleted_at' : 'greatest(coalesce(last_opened_at,updated_at),updated_at)'} DESC

@@ -17,6 +17,11 @@ li+li{margin-top:7px}
 .shell{max-width:1160px;margin:auto;padding:0 48px}
 .site-header{min-height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line)}
 .site-header img{width:142px}
+.header-brand{display:flex;align-items:center;gap:16px;flex:none}
+.workspace-back{display:inline-flex;align-items:center;justify-content:center;flex:none;width:40px;height:40px;border-radius:8px;color:var(--muted);text-decoration:none}
+.workspace-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.workspace-back:hover{color:var(--purple);background:var(--soft)}
+.shell>.site-header>.ui-language{margin-right:0}
 .back{display:inline-flex;align-items:center;min-height:44px;font-size:14px;text-decoration:none;color:var(--muted)}
 .skip{position:absolute;top:8px;left:8px;transform:translateY(-200%);background:white;padding:10px;z-index:10}
 .skip:focus{transform:none}
@@ -82,7 +87,7 @@ li+li{margin-top:7px}
 .footer time{font-variant-numeric:tabular-nums}
 .footer a{font-size:13px;min-height:44px;display:flex;align-items:center}
 @media(max-width:680px){
- .shell{padding:0 22px}.site-header{min-height:72px}.site-header img{width:118px}
+ .shell{padding:0 22px}.site-header{min-height:72px;gap:12px}.header-brand{gap:10px}.site-header img{width:118px}
  .hero{padding:44px 0 38px}.hero>p{font-size:20px;margin-top:20px}.hero .scope{font-size:14px}
  .guide-section{padding:32px 0 38px}.section-heading{margin-bottom:16px}.intro{margin-bottom:22px}
  .pair,.three,.checks,.contact-section{grid-template-columns:minmax(0,1fr)}

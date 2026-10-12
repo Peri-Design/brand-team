@@ -1,5 +1,10 @@
 /* Reviewed interface copy. Never applied to project or design content. */
 window.PixVerseEnglish={
+  "上次打开": "Last opened",
+  "正在打开…": "Opening…",
+  "打开失败，请重试。": "Could not open. Please try again.",
+  "重试打开": "Try again",
+  "打开超时，请检查网络后重试。": "Opening timed out. Check your connection and try again.",
   "品牌工作台": "Brand Studio",
   "物料工作台": "Material Studio",
   "PixVerse · 物料工作台": "PixVerse · Material Studio",
