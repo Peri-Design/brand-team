@@ -3,7 +3,7 @@
  const SEEN_KEY='pixverse-studio-guide-v1-seen';
  const steps=[
   ['准备设计','添加需要的资源位和语言，再上传项目主视觉。也可以为某张物料单独换图；各语言文案独立填写。'],
-  ['微调画面','点击“单张编辑”，图片居中、右侧设置独立滚动。拖动图片调整位置，拉动四角等比缩放；“预览”用于查看完整成品。'],
+  ['微调画面','点击“聚焦编辑”，图片居中、右侧设置独立滚动。拖动图片调整位置，拉动四角等比缩放；返回全部物料时恢复原来的浏览位置。'],
   ['保存与下载','修改会自动保存，请留意顶部保存状态。右侧可下载当前 PNG，顶部“下载”可多选打包；下载前会检查文字、漏边和清晰度。']
  ];
  function createState(storage){let step=0;return {get step(){return step;},seen(){try{return storage?.getItem(SEEN_KEY)==='1';}catch{return false;}},reset(){step=0;},move(delta){step=Math.max(0,Math.min(2,step+delta));},dismiss(){try{storage?.setItem(SEEN_KEY,'1');}catch{}}};}
