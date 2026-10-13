@@ -1,0 +1,29 @@
+/* One download interface for both editors. Loaded after page styles. */
+.export-review,#download-dialog{width:min(640px,calc(100vw - 32px));max-height:calc(100dvh - 48px);padding:24px;border:1px solid #e4ddea;border-radius:16px;background:#fff;color:#282431;box-shadow:0 20px 80px #25233026;overflow:auto}
+.export-review::backdrop{background:#25233066}
+.export-review-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}
+.export-review h2{font-size:20px;line-height:28px;margin:0}
+.export-review-intro{font-size:13px;line-height:1.7;color:#716e7e;margin:0 0 16px}
+.export-review-list section{padding:16px 0 0;border-top:1px solid #e9e7ef}
+.export-review-list section+section{margin-top:16px}
+.export-review-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
+.export-review h3{min-width:0;font-size:14px;line-height:22px;margin:0;overflow-wrap:anywhere}
+.export-review-row button{flex:none;min-height:32px;padding:4px 0;border:0;background:transparent;color:#7440ad;font-size:12px;line-height:20px}
+.export-review-row button:hover{text-decoration:underline}
+.export-review-level,.export-review-level.warning{padding:0;background:none;border-radius:0;margin:8px 0 4px;font-size:12px;line-height:20px;color:#80500d}
+.export-review-level.error{color:#a33333}
+.export-review ul{padding-left:20px;margin:0;font-size:13px;line-height:1.7}
+.export-review .publish-reminder{font-size:13px;line-height:1.7;margin:20px 0 0;padding:12px 14px}
+.export-review-actions{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(112px,1fr);width:max-content;max-width:100%;gap:12px;margin:16px 0 0 auto;padding:0;border:0}
+.export-review-actions button{display:inline-flex;justify-content:center;align-items:center;min-height:44px;min-width:0;padding:10px 16px;line-height:22px;font-size:14px;border:1px solid #e2ddea;border-radius:8px;background:#fff;color:#282431;font-weight:500}
+.export-review-actions button.primary{background:#7934ea;color:#fff;border-color:#7934ea}
+.export-review-actions button.primary:hover{background:#6725ce}
+#download-dialog .dialog-head{margin-bottom:12px}
+.download-selection{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px;font-size:12px;color:#7c7688}
+.download-selection-actions{display:flex;align-items:center;gap:12px}
+.download-selection-actions button{min-height:32px;padding:4px 0;border:0;background:transparent;color:#7440ad;font-size:12px;line-height:20px}
+.download-selection-actions button:hover:not(:disabled){text-decoration:underline}
+#download-list label{align-items:flex-start;gap:10px;line-height:22px}
+#download-list input{margin-top:5px}
+#download-list label>span{overflow-wrap:anywhere}
+@media(max-width:480px){.export-review,#download-dialog{padding:18px}.export-review-actions{width:100%;grid-auto-columns:minmax(0,1fr)}.export-review-actions button{padding:10px 8px}}

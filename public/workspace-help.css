@@ -6,7 +6,7 @@
 .workspace-help-header p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
 .workspace-help-kicker{display:flex;align-items:center;gap:6px;color:var(--purple);font-size:11px;font-weight:650;letter-spacing:.03em}
 .workspace-help-kicker svg{width:16px;height:16px}
-.workspace-help-close{width:38px;height:38px;flex:none;min-height:38px;padding:8px;border:0;background:#f6f3fa}
+.workspace-help-close{width:32px;height:32px;flex:none;min-height:32px;padding:0;border:0;border-radius:8px;background:transparent}.workspace-help-close:hover{background:#f4effc}.workspace-help-close:focus-visible{outline:2px solid #7b36e9;outline-offset:3px}
 .workspace-help-dialog svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:var(--icon-stroke,1.75);stroke-linecap:round;stroke-linejoin:round}
 .workspace-guide-nav{display:flex;list-style:none;gap:6px;margin:0;padding:22px 28px 0}
 .workspace-guide-nav li{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;min-height:38px;padding:7px 5px;border-radius:8px;background:#f6f5f8;color:var(--muted);font-size:12px;white-space:nowrap}

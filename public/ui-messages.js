@@ -1,5 +1,7 @@
 /* Reviewed interface copy. Never applied to project or design content. */
 window.PixVerseEnglish={
+  "定位到此物料": "Go to this material",
+  "温馨提醒：图片务必在「设计图审核」话题群完成审图并通过后，再进行发布。请勿私自发未审核图片，避免出现品牌 / 内容风险。": "Friendly reminder: Before publishing, all images must be reviewed and approved in the “设计图审核” (Design Review) topic group. Do not publish unreviewed images, to avoid brand or content risks.",
   "上次打开": "Last opened",
   "正在打开…": "Opening…",
   "打开失败，请重试。": "Could not open. Please try again.",
@@ -34,6 +36,8 @@ window.PixVerseEnglish={
   "选择下载": "Select downloads",
   "项目名称": "Project name",
   "项目主视觉": "Project image",
+  "上传项目主视觉": "Upload project image",
+  "返回全部物料": "Back to all materials",
   "＋ 上传项目主视觉": "＋ Upload project image",
   "更换项目主视觉": "Replace project image",
   "供关联物料使用，各张构图独立。": "Shared by linked materials. Each composition is independent.",

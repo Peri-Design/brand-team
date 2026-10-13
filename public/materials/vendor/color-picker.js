@@ -30,7 +30,7 @@
  const panel=doc.createElement('section');
  panel.id='brand-color-panel'; panel.className='brand-color-panel'; panel.hidden=true;
  panel.setAttribute('role','dialog'); panel.setAttribute('aria-label','选择颜色');
- panel.innerHTML=`<div class="brand-color-heading"><strong>选择颜色</strong><button type="button" class="brand-color-close" aria-label="关闭选色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+ panel.innerHTML=`<div class="brand-color-heading"><strong>选择颜色</strong><button type="button" class="brand-color-close" aria-label="关闭选色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8M16 8l-8 8"/></svg></button></div>
   <div class="brand-color-sv" role="group" aria-label="饱和度和亮度色板，点击或拖动选色，也可在下方输入数值"><span class="brand-color-point"></span></div>
   <div class="brand-color-hue-row"><button type="button" class="brand-color-eyedropper" aria-label="吸管取色" title="吸管取色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M12 7l5 5M14 9l4-4a2 2 0 0 1 3 3l-4 4M13 10 4 19v2h2l9-9"/></svg></button><label class="brand-color-hue-label"><span class="brand-color-sr">色相</span><input class="brand-color-hue" type="range" min="0" max="360" step="1" aria-label="色相" value="0"></label></div>
   <div class="brand-color-alpha-wrap" hidden><label class="brand-color-alpha-label" for="brand-color-alpha"><span class="brand-color-alpha-title">不透明度</span><span><input class="brand-color-alpha-number" type="number" min="0" max="100" aria-label="不透明度百分比"> %</span></label><div class="brand-color-alpha-track"><input id="brand-color-alpha" type="range" min="10" max="100" aria-label="色块整层不透明度"></div></div>

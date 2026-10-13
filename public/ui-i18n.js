@@ -19,6 +19,7 @@
   return result===undefined?source:source.slice(0,source.indexOf(text))+result+source.slice(source.indexOf(text)+text.length);
  }
  patterns.push(
+  [/^已选 (\d+) 项$/, n=>`${n} selected`],
   [/^第 (\d+) 步，共 (\d+) 步$/, (n,total)=>`Step ${n} of ${total}`],
   [/^已选 (\d+) 种物料$/, n=>`${n} format${n==='1'?'':'s'} selected`],
   [/^添加 (\d+) 种物料$/, n=>`Add ${n} format${n==='1'?'':'s'}`],
@@ -38,6 +39,7 @@
   [/^(.+)（⌘(.*)）$/, (s,k)=>`${t(s)} (⌘${k})`]
  );
  patterns.push(
+  [/^已选 (\d+) 项$/, n=>`${n} selected`],
   [/^将“(.*)”移到回收站？可在 30 天内恢复。$/, name=>`Move “${name}” to trash? You can restore it within 30 days.`],
   [/^永久删除“(.*)”？此操作无法撤销。$/, name=>`Permanently delete “${name}”? This cannot be undone.`],
   [/^永久删除回收站内的 (\d+) 个文件？此操作无法撤销。$/, n=>`Permanently delete ${n} files from trash? This cannot be undone.`],

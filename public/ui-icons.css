@@ -1,0 +1,21 @@
+/* Shared UI stroke and glyph rules; loaded after each page stylesheet. */
+svg :is(path,line,polyline,polygon,rect,circle,ellipse,use){stroke-linecap:round;stroke-linejoin:round;stroke-width:1.75}
+.ui-icon{display:block;flex:none;width:18px;height:18px;fill:none;stroke:currentColor}
+.icon-label{display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:20px}
+/* Close controls share one glyph size and neutral color across editors and overlays. */
+:is(button.dialog-close,button.workspace-help-close,button.access-gate-close,.brand-color-panel button.brand-color-close,.export-review button.review-close){display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:32px;height:32px;min-height:32px;padding:0;border:0;border-radius:50%;background:transparent;color:#666;line-height:1}
+:is(button.dialog-close,button.workspace-help-close,button.access-gate-close,.brand-color-panel button.brand-color-close,.export-review button.review-close):hover{background:#f2f2f2;color:#4a4a4a}
+:is(button.dialog-close,button.workspace-help-close,button.access-gate-close,.brand-color-panel button.brand-color-close,.export-review button.review-close) svg{display:block;flex:none;width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round}
+:is(button.dialog-close,button.workspace-help-close,button.access-gate-close,.brand-color-panel button.brand-color-close,.export-review button.review-close) svg :is(circle,path,use),#i-close :is(circle,path){stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round}
+.material .remove svg{width:16px;height:16px}
+#shared-upload>.icon-label{display:flex}
+#zoom-in,#zoom-out{display:inline-flex;align-items:center;justify-content:center;min-width:32px}
+.file-tabs button{gap:8px;line-height:20px}
+.file-tabs button>span{display:block;line-height:20px}
+.file-tabs button>svg{display:block;width:18px;height:18px}
+.header-save{margin-inline:8px}
+/* Rounded SVG disclosure, replacing border-drawn chevrons with square ends. */
+.settings-group>summary::before,.block-editor>summary::before,#workspace summary::before{content:'';display:block;width:14px;height:14px;flex:none;border:0;margin:0;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;transform:rotate(-90deg)}
+.settings-group[open]>summary::before,.block-editor[open]>summary::before,#workspace details[open]>summary::before{transform:none}
+
+.settings-group>summary::before,.block-editor>summary::before,#workspace summary::before{margin-top:3px}

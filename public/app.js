@@ -398,17 +398,18 @@
  function checkExportKeys(keys){const canvas=document.createElement('canvas');return window.ExportPreflight.summarize(keys.map(key=>{const result=paint(canvas,key);errors.set(key,result);return {key,label:`${SLOT[slotOf(key)]} · ${LANG[key.split(':')[1]]}`,issues:result.issues,warnings:result.upscaled?['原图分辨率不足，导出可能不够清晰；建议更换更大图片。']:[]};}));}
  async function exportSelected(){
   const keys=selectedExportKeys();if(!keys.length)return toast('请至少选择一张图片。');if(exportBusy)return;
+  const returnFocus=document.activeElement;let located=false;const locate=key=>{located=true;locateExportIssue(key);};
   exportBusy=true;updateExport();
   try{
-   try{await fontsReady();}catch(error){await window.ExportPreflight.review({total:keys.length,blocked:keys.length,warned:0,rows:[{key:null,label:'字体检查未通过',issues:[error.message+'。请刷新页面重试。'],warnings:[]}]},locateExportIssue);return;}
+   try{await fontsReady();}catch(error){await window.ExportPreflight.review({total:keys.length,blocked:keys.length,warned:0,rows:[{key:null,label:'字体检查未通过',issues:[error.message+'。请刷新页面重试。'],warnings:[]}]},locate);return;}
    const report=checkExportKeys(keys);
-   if(!await window.ExportPreflight.review(report,locateExportIssue))return;
+   if(!await window.ExportPreflight.review(report,locate))return;
    const name=safeName(state.name),frames=exportFrames(keys,name);
    const status=report.warned?'已确认清晰度提醒，':'基础规范检查通过，';
    if(frames.length===1){download(await blobOf(frames[0].canvas),frames[0].name);toast(status+'PNG 已开始下载，不包含辅助线。');return;}
    const files=[];for(const item of frames)files.push({name:item.name,data:new Uint8Array(await (await blobOf(item.canvas)).arrayBuffer())});
    download(zip(files),`${name}_所选${files.length}张.zip`);toast(status+`已开始下载所选 ${files.length} 张原生尺寸 PNG。`);
-  }finally{exportBusy=false;updateExport();}
+  }finally{exportBusy=false;updateExport();if(!located)returnFocus?.focus({preventScroll:true});}
  }
  function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open('pixverse-brand-studio-local',1);req.onupgradeneeded=()=>req.result.createObjectStore('projects');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
  function readDraft(){return new Promise((resolve,reject)=>{const req=db.transaction('projects').objectStore('projects').get('current');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}

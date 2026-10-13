@@ -9,7 +9,7 @@ test('新版编辑器保护入口，旧项目与新项目共存并保持用户�
  const u=await store.upsertUser({openId:'ou_material_active',name:'测试设计师'});await store.setUserAccess(u.openId,'active');
  const cookie='pv_session='+await store.createSession(u.openId,60000);
  const page=await request(app).get('/materials/').set('Cookie',cookie);assert.equal(page.status,200);assert.match(page.text,/cloud.js/);assert.doesNotMatch(page.text,/本地体验版|未连接云端/);
- const project=M.fresh();M.add(project,'app',['en']);project.items[0].adjustments.en={fade:100,textOpacity:50};
+ const project=M.fresh();M.add(project,'app',['en']);project.items[0].adjustments.en={fade:100,textOpacity:50};const social=M.add(project,'social',[]);social.socialLogoKind='black';social.socialOverlays.top={enabled:false,opacity:33,color:'#24345A'};social.adjustments.zh={textColorMode:'custom',textColor:'#20202A',textOpacity:100};
  const created=await request(app).post('/api/cloud/projects').set('Cookie',cookie).send({project});assert.equal(created.status,201);const id=created.body.project.id;
  const reopened=await request(app).get('/api/cloud/projects/'+id).set('Cookie',cookie);assert.deepEqual(reopened.body.project.payload,project);
  const stranger=await store.upsertUser({openId:'ou_material_other',name:'另一设计师'});await store.setUserAccess(stranger.openId,'active');const other='pv_session='+await store.createSession(stranger.openId,60000);
