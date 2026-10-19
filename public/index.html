@@ -6,15 +6,15 @@
   <meta name="description" content="选择资源位和语言，在线适配、微调、保存并导出 PixVerse 品牌素材。">
   <script>!function(){const view=new URLSearchParams(location.search).get('view');if(['new','studio','files','admin'].includes(view))document.documentElement.dataset.routePending=view}();</script>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260929">
-  <link rel="stylesheet" href="style.css?v=20261016-heading-1">
+  <link rel="stylesheet" href="style.css?v=20261019-review-1">
   <link rel="stylesheet" href="brand-character.css?v=20261019-login-1">
   <script defer src="brand-character.js?v=20261019-login-1"></script>
   <link rel="stylesheet" href="color-picker.css?v=20261011-eyedropper">
   <link rel="stylesheet" href="workspace-help.css?v=20261012-controls-2">
   <script defer src="workspace-help.js?v=20261010-1"></script>
   <script defer src="color-picker.js?v=20261012-round-1"></script>
-  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js?v=20261002-card-adjust-1"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="export-preflight.js?v=20261013-flow-1"></script><script defer src="app.js?v=20261016-folder-1"></script>
-<link rel="stylesheet" href="ui-i18n.css?v=20261012-language-toggle-1"><script src="ui-messages.js?v=20261016-pixlab-1"></script><script src="brand-entry.js?v=20261016-pixlab-1"></script><script src="ui-i18n.js?v=20261015-entry-1"></script><link rel="stylesheet" href="ui-icons.css?v=20261013-close-5"><link rel="stylesheet" href="export-preflight.css?v=20261015-actions-1"><script defer src="analytics-client.js?v=20261016-pixlab-1"></script><link rel="stylesheet" href="analytics-dashboard.css?v=20261014-disclosure-4"><script defer src="analytics-dashboard.js?v=20261016-pixlab-1"></script><script defer src="asset-account.js?v=20261015-actions-1"></script><link rel="stylesheet" href="asset-library.css?v=20261019-external-1"><script defer src="asset-catalog.js?v=20261019-a-1"></script><script defer src="asset-zip.js?v=20261019-a-1"></script><script defer src="asset-library.js?v=20261019-external-1"></script></head>
+  <script defer src="font-coverage.js?v=20260923-4"></script><script defer src="templates.js?v=20260928-v2"></script><script defer src="web-blocks.js?v=20260928-v2"></script><script defer src="history.js?v=20260924-slot-media"></script><script defer src="logo.js"></script><script defer src="canvas-view.js?v=20261002-card-adjust-1"></script><script defer src="palette.js?v=20260924-auto-palette"></script><script defer src="export-preflight.js?v=20261013-flow-1"></script><script defer src="app.js?v=20261019-review-1"></script>
+<link rel="stylesheet" href="ui-i18n.css?v=20261012-language-toggle-1"><script src="ui-messages.js?v=20261019-review-1"></script><script src="brand-entry.js?v=20261016-pixlab-1"></script><script src="ui-i18n.js?v=20261019-review-1"></script><link rel="stylesheet" href="ui-icons.css?v=20261013-close-5"><link rel="stylesheet" href="export-preflight.css?v=20261015-actions-1"><script defer src="analytics-client.js?v=20261016-pixlab-1"></script><link rel="stylesheet" href="analytics-dashboard.css?v=20261014-disclosure-4"><script defer src="analytics-dashboard.js?v=20261016-pixlab-1"></script><script defer src="asset-account.js?v=20261019-review-1"></script><link rel="stylesheet" href="asset-library.css?v=20261019-external-1"><script defer src="asset-catalog.js?v=20261019-a-1"></script><script defer src="asset-zip.js?v=20261019-a-1"></script><script defer src="asset-library.js?v=20261019-external-1"></script></head>
 <body data-view="assets">
 <div class="route-loader" role="status" aria-live="polite"><span></span></div>
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><symbol id="i-language" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/></symbol>
@@ -53,7 +53,7 @@
 </aside>
 <div class="app-shell">
  <header class="topbar">
-  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.10.2</span></div>
+  <div class="brand">PixVerse <span>品牌工作台</span><span class="pill" title="网站版本">v1.10.3</span></div>
   <div class="ui-language" role="group" aria-label="界面语言" translate="no"><button type="button" data-ui-language="zh" lang="zh-CN" aria-pressed="true">中文</button><span aria-hidden="true">/</span><button type="button" data-ui-language="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div><div class="top-actions"><button id="workspace-help-open" class="quiet" type="button" aria-haspopup="dialog" aria-controls="workspace-help-dialog"><svg aria-hidden="true"><use href="#i-help"/></svg><span>使用帮助</span></button><div class="history-actions" aria-label="编辑历史"><button id="undo" class="quiet" title="撤销（⌘Z / Ctrl+Z）" aria-label="撤销" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg><span>撤销</span></button><button id="redo" class="quiet" title="重做（⌘⇧Z / Ctrl+Shift+Z）" aria-label="重做" disabled><svg aria-hidden="true"><use href="#i-redo"/></svg><span>重做</span></button></div><span id="save-status" class="save-status" role="status">正在加载…</span><button id="download-toggle" class="primary" aria-pressed="false"><svg><use href="#i-download"/></svg>选择下载</button></div>
  </header>
  <main id="studio" class="workspace" hidden>
@@ -217,6 +217,7 @@
  <span class="eyebrow">ACCESS REQUIRED</span>
  <h2 id="access-gate-title" tabindex="-1">需要访问权限</h2>
  <p id="access-gate-copy">设计功能仅对已授权成员开放。使用飞书登录后提交申请，由管理员确认。</p>
+ <p id="access-gate-reason" class="access-gate-reason" hidden translate="no"></p>
  <p id="access-gate-account" class="access-gate-account" hidden></p>
  <div class="access-gate-actions">
   <a id="access-gate-login" class="primary button-link" href="/api/auth/feishu/start?next=studio">飞书登录</a>
@@ -224,6 +225,17 @@
   <button id="access-gate-refresh" class="secondary" hidden>刷新审核状态</button>
   <button id="access-gate-dismiss" class="quiet">继续浏览品牌素材</button>
  </div>
+</dialog>
+<dialog id="design-review" class="design-review" aria-labelledby="design-review-title" aria-describedby="design-review-copy">
+ <form>
+  <h2 id="design-review-title" tabindex="-1">不通过设计权限申请</h2>
+  <p id="design-review-member" translate="no"></p>
+  <p id="design-review-copy">申请人可查看审核结果并重新申请，品牌素材下载权限不受影响</p>
+  <label for="design-review-reason">原因（选填）</label>
+  <textarea id="design-review-reason" rows="3" maxlength="300" placeholder="说明原因，方便申请人了解结果"></textarea>
+  <small>最多 300 个字符，原因会向申请人展示</small>
+  <div class="design-review-actions"><button id="design-review-cancel" type="button" class="secondary">取消</button><button id="design-review-confirm" type="submit" class="secondary">确认不通过</button></div>
+ </form>
 </dialog>
 <div id="toast" class="toast" role="status" hidden></div>
 <dialog id="workspace-help-dialog" class="workspace-help-dialog" aria-labelledby="workspace-help-title" aria-describedby="workspace-help-intro">

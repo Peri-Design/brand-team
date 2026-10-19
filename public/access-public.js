@@ -38,9 +38,13 @@
     $('#access-gate-login').href = `/api/auth/feishu/start?next=${encodeURIComponent(target)}`;
     $('#access-gate-login').hidden = Boolean(user);
     $('#access-gate-refresh').hidden = !sessionError && (!user || status === 'none');
-    $('#access-gate-request').hidden = sessionError || !user || status !== 'none' || target === 'admin';
+    $('#access-gate-request').hidden = sessionError || !user || !['none','rejected'].includes(status) || target === 'admin';
     $('#access-gate-refresh').textContent = sessionError ? '重新读取登录状态' : '刷新权限状态';
     $('#access-gate-login').textContent = '飞书登录';
+    $('#access-gate-request').textContent = status === 'rejected' ? '重新申请设计权限' : '申请设计权限';
+    const reason = $('#access-gate-reason');
+    reason.hidden = status !== 'rejected' || !user?.accessReviewReason || target === 'admin';
+    reason.textContent = reason.hidden ? '' : user.accessReviewReason;
     if (sessionError) {
       $('#access-gate-title').textContent = '暂时无法读取登录状态';
       $('#access-gate-copy').textContent = '请重试，或使用飞书重新验证身份。';
@@ -59,6 +63,9 @@
     } else if (status === 'pending') {
       $('#access-gate-title').textContent = '设计权限待审核';
       $('#access-gate-copy').textContent = '全部品牌 Logo 下载权限已自动开通。设计申请通过后，才能制作、保存和导出运营物料。';
+    } else if (status === 'rejected') {
+      $('#access-gate-title').textContent = '设计权限未通过';
+      $('#access-gate-copy').textContent = '本次设计权限申请未通过，你仍可下载全部品牌素材，也可以重新申请设计权限';
     } else if (status === 'suspended') {
       $('#access-gate-title').textContent = '设计权限暂不可用';
       $('#access-gate-copy').textContent = '你的设计权限已被停用。如需恢复，请联系管理员重新开通。';
@@ -149,7 +156,7 @@
       $('#access-gate-refresh').hidden = false;
     } finally {
       button.disabled = false;
-      button.textContent = '申请设计权限';
+      button.textContent = session.user?.accessStatus === 'rejected' ? '重新申请设计权限' : '申请设计权限';
     }
   };
   $('#access-gate').addEventListener('click', event => { if (event.target === $('#access-gate')) $('#access-gate').close(); });

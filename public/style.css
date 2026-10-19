@@ -366,3 +366,19 @@ button.primary,button.secondary,a.secondary,.button-link.primary,.asset-download
 #asset-account-logout,#cloud-logout{min-height:var(--action-height);border:1px solid transparent;border-radius:var(--action-radius);background:transparent;color:var(--muted);padding:9px 12px;line-height:20px;font-weight:400;flex:0 0 auto}
 #asset-account-logout:hover,#cloud-logout:hover{color:var(--ink);background:#f5f3f8}
 @media(pointer:coarse){:root{--action-height:44px}}
+
+/* Design review decisions are separate from organization membership. */
+.admin-member{grid-template-columns:minmax(140px,1fr) minmax(108px,auto) 70px 80px 105px minmax(145px,auto);gap:12px}
+.admin-member-actions button{min-height:36px;white-space:nowrap}.admin-access-status[data-status=rejected]{background:#f1edf7;color:#665a75}
+.design-review{width:min(440px,calc(100vw - 32px));padding:28px;border:1px solid var(--line);border-radius:18px;color:var(--ink);background:#fff;box-shadow:0 24px 80px #21163333}
+.design-review::backdrop{background:#25203066;backdrop-filter:blur(4px)}.design-review h2{font-size:20px;margin:0 0 8px}.design-review h2:focus{outline:0}
+#design-review-member{font-weight:600;margin:0 0 12px}#design-review-copy{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 20px}
+.design-review label{display:block;font-size:13px;margin-bottom:8px}.design-review textarea{display:block;width:100%;resize:vertical;min-height:96px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px}.design-review small{display:block;color:var(--muted);font-size:12px;margin-top:6px}.design-review-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}.design-review-actions button{min-height:44px}
+.access-gate-reason{white-space:pre-wrap;overflow-wrap:anywhere;padding:10px 12px;border-left:2px solid var(--line);font-size:13px}
+@media(max-width:800px){.admin-member{grid-template-columns:minmax(0,1fr) auto;gap:8px}.admin-member-actions{flex-wrap:wrap}.admin-member-actions button{min-height:44px}.design-review{padding:24px}}
+
+@media(max-width:800px){.admin-member>:nth-child(2){display:inline-flex;grid-column:1;grid-row:2}.admin-member-actions{grid-column:2;grid-row:1 / span 2}}
+
+.access-gate[data-status=rejected]{max-height:calc(100svh - 32px);overflow-y:auto}
+
+@media(max-width:600px){.admin-member{grid-template-columns:minmax(0,1fr)}.admin-member-profile{grid-column:1;grid-row:1}.admin-member>:nth-child(2){grid-column:1;grid-row:2;max-width:100%;white-space:normal}.admin-member-actions{grid-column:1;grid-row:3;justify-content:flex-start}}

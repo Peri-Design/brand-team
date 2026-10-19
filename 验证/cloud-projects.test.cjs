@@ -257,5 +257,5 @@ test('页面切换写入 URL，刷新后恢复当前页面', () => {
   assert.match(css, /html\[data-route-pending="studio"\] \.route-loader span::before\{content:'正在打开当前文件…'\}/);
   assert.match(app, /finally\{document\.documentElement\.removeAttribute\('data-route-pending'\);\}/);
   assert.match(publicApp, /\.finally\(\(\) => document\.documentElement\.removeAttribute\('data-route-pending'\)\)/);
-  assert.match(fs.readFileSync(path.join(root, 'server.js'), 'utf8'), /access-public\.js\?v=20261016-folder-1/);
+  assert.match(fs.readFileSync(path.join(root, 'server.js'), 'utf8'), /access-public\.js\?v=20261019-review-1/);
 });

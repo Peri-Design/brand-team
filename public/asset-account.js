@@ -25,7 +25,7 @@
       design.hidden = !allowed || user.isAdmin || user.accessStatus === 'active';
       design.classList.toggle('primary', user?.accessStatus === 'none');
       design.classList.toggle('secondary', user?.accessStatus !== 'none');
-      design.textContent = user?.accessStatus === 'pending' ? '查看申请状态' : user?.accessStatus === 'suspended' ? '查看设计权限' : '申请设计权限';
+      design.textContent = user?.accessStatus === 'pending' ? '查看申请状态' : ['suspended','rejected'].includes(user?.accessStatus) ? '查看设计权限' : '申请设计权限';
       note.textContent = allowed ? '已开通全部品牌 Logo 下载权限' : '公司同事登录后，可下载全部品牌 Logo。';
     } catch {
       document.body.hidden = true;

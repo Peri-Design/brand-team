@@ -114,7 +114,7 @@ async function requireDesigner(req, res, next) {
     const user = await currentUser(req);
     if (!user) return res.status(401).json({ error: '请先使用飞书登录并申请访问权限。' });
     if (!user.isAdmin && user.accessStatus !== 'active') {
-      const message = user.accessStatus === 'suspended' ? '你的设计权限已停用，请联系管理员。' : user.accessStatus === 'none' ? '请先申请设计权限，由管理员确认。' : '访问申请正在等待管理员确认。';
+      const message = user.accessStatus === 'suspended' ? '你的设计权限已停用，请联系管理员。' : user.accessStatus === 'rejected' ? '设计权限申请未通过，可重新申请' : user.accessStatus === 'none' ? '请先申请设计权限，由管理员确认。' : '访问申请正在等待管理员确认。';
       return res.status(403).json({ error: message, accessStatus: user.accessStatus || 'none' });
     }
     req.user = user;
@@ -180,7 +180,7 @@ app.get('/api/auth/session', async (req, res, next) => {
     res.set('Cache-Control', 'no-store');
     const configured = await cloudConfigured();
     const user = configured ? await currentUser(req) : null;
-    res.json({ configured, authenticated: Boolean(user), user: user ? { name: user.name, avatarUrl: user.avatarUrl, canDownloadAllLogos: true, isAdmin: user.isAdmin, accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none' } : null });
+    res.json({ configured, authenticated: Boolean(user), user: user ? { name: user.name, avatarUrl: user.avatarUrl, canDownloadAllLogos: true, isAdmin: user.isAdmin, accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', accessReviewReason: user.accessReviewReason || null } : null });
   } catch (error) {
     next(error);
   }
@@ -429,11 +429,14 @@ app.get('/api/admin/overview', requireAuth, requireAdmin, async (req, res, next)
 app.patch('/api/admin/users/:openId/access', sameOrigin, requireAuth, requireAdmin, express.json({ limit: '8kb' }), async (req, res, next) => {
   try {
     const accessStatus = String(req.body?.accessStatus || '');
-    if (!['pending', 'active', 'suspended'].includes(accessStatus)) return res.status(400).json({ error: '权限状态不正确。' });
-    const user = await (await ready).store.setUserAccess(req.params.openId, accessStatus, req.user.openId);
+    if (!['pending', 'active', 'suspended', 'rejected'].includes(accessStatus)) return res.status(400).json({ error: '权限状态不正确。' });
+    const reason = req.body?.reason;
+    if (reason != null && (typeof reason !== 'string' || reason.trim().length > 300)) return res.status(400).json({ error: '原因最多 300 个字符' });
+    const user = await (await ready).store.setUserAccess(req.params.openId, accessStatus, req.user.openId, accessStatus === 'rejected' ? reason?.trim() || null : null);
     if (!user) return res.status(404).json({ error: '未找到可修改的成员。' });
     res.json({ user });
   } catch (error) {
+    if (error.status === 409) return res.status(409).json({ error: error.message });
     next(error);
   }
 });
@@ -454,7 +457,7 @@ async function serveWorkspace(req, res, next) {
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261016-folder-1"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261019-review-1"></script>\n</head>');
     }
     html=html.replace('id="aisphere-assets" aria-labelledby="aisphere-logo-title" hidden','id="aisphere-assets" aria-labelledby="aisphere-logo-title"');
     res.type('html').send(html);

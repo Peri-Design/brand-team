@@ -66,8 +66,12 @@ class MemoryStore {
 
   async requestDesignAccess(openId) {
     const user = this.users.get(openId);
-    if (user && !user.isAdmin && user.accessStatus === 'none') {
+    if (user && !user.isAdmin && ['none', 'rejected'].includes(user.accessStatus)) {
       user.accessStatus = 'pending';
+      user.accessReviewReason = null;
+      user.accessReviewedBy = null;
+      user.accessReviewedAt = null;
+      for (const [key, job] of this.accessNotifications) if (job.applicantOpenId === openId) this.accessNotifications.delete(key);
       user.updatedAt = new Date().toISOString();
     }
     return clone(user || null);
@@ -77,11 +81,15 @@ class MemoryStore {
     for (const [key, session] of this.sessions) if (session.openId === openId) this.sessions.delete(key);
   }
 
-  async setUserAccess(openId, accessStatus, approvedBy) {
+  async setUserAccess(openId, accessStatus, approvedBy, reason = null) {
     const user = this.users.get(openId);
     if (!user || user.isAdmin) return null;
+    if (accessStatus === 'rejected' && user.accessStatus !== 'pending') throw Object.assign(new Error('申请状态已变化，请刷新后重试'), { status: 409 });
     Object.assign(user, {
       accessStatus,
+      accessReviewReason: accessStatus === 'rejected' ? reason : null,
+      accessReviewedBy: approvedBy || null,
+      accessReviewedAt: new Date().toISOString(),
       approvedBy: accessStatus === 'active' ? approvedBy : null,
       approvedAt: accessStatus === 'active' ? new Date().toISOString() : null,
       updatedAt: new Date().toISOString()
@@ -197,7 +205,7 @@ class MemoryStore {
       storageBytes: projects.reduce((sum, item) => sum + item.sizeBytes, 0),
       members: [...this.users.values()].map(user => {
         const owned = projects.filter(project => project.ownerOpenId === user.openId);
-        return { openId: user.openId, name: user.name, avatarUrl: user.avatarUrl || null, isAdmin: Boolean(user.isAdmin), accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', projects: owned.filter(project => !project.deletedAt).length, storageBytes: owned.reduce((sum, project) => sum + project.sizeBytes, 0), updatedAt: user.updatedAt };
+        return { openId: user.openId, name: user.name, avatarUrl: user.avatarUrl || null, isAdmin: Boolean(user.isAdmin), accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', accessReviewReason: user.accessReviewReason || null, projects: owned.filter(project => !project.deletedAt).length, storageBytes: owned.reduce((sum, project) => sum + project.sizeBytes, 0), updatedAt: user.updatedAt };
       }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
       files: projects.map(project => {
         const owner = this.users.get(project.ownerOpenId);
@@ -238,6 +246,9 @@ class PostgresStore {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS tenant_key text;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_by text;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_at timestamptz;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS access_review_reason text;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS access_reviewed_by text;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS access_reviewed_at timestamptz;
       CREATE TABLE IF NOT EXISTS access_notifications (
         id uuid PRIMARY KEY,
         applicant_open_id text NOT NULL REFERENCES users(open_id) ON DELETE CASCADE,
@@ -352,23 +363,42 @@ class PostgresStore {
   }
 
   async requestDesignAccess(openId) {
-    const result = await this.pool.query(`UPDATE users SET
-      access_status=CASE WHEN access_status='none' AND is_admin=false THEN 'pending' ELSE access_status END,
-      updated_at=CASE WHEN access_status='none' THEN now() ELSE updated_at END
-      WHERE open_id=$1 RETURNING open_id AS "openId",is_admin AS "isAdmin",access_status AS "accessStatus"`, [openId]);
-    return result.rows[0] || null;
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      let result = await client.query(`UPDATE users SET access_status='pending',access_review_reason=NULL,
+        access_reviewed_by=NULL,access_reviewed_at=NULL,updated_at=now()
+        WHERE open_id=$1 AND is_admin=false AND access_status IN ('none','rejected')
+        RETURNING open_id AS "openId",is_admin AS "isAdmin",access_status AS "accessStatus"`, [openId]);
+      if (result.rows.length) {
+        // A new application gets a fresh notification UUID; repeated pending requests do not.
+        await client.query('DELETE FROM access_notifications WHERE applicant_open_id=$1', [openId]);
+      } else {
+        result = await client.query(`SELECT open_id AS "openId",is_admin AS "isAdmin",access_status AS "accessStatus"
+          FROM users WHERE open_id=$1`, [openId]);
+      }
+      await client.query('COMMIT');
+      return result.rows[0] || null;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally { client.release(); }
   }
 
   async revokeUserSessions(openId) {
     await this.pool.query('DELETE FROM sessions WHERE user_open_id=$1', [openId]);
   }
 
-  async setUserAccess(openId, accessStatus, approvedBy) {
+  async setUserAccess(openId, accessStatus, approvedBy, reason = null) {
     const result = await this.pool.query(`
-      UPDATE users SET access_status=$2,approved_by=CASE WHEN $2='active' THEN $3 ELSE NULL END,approved_at=CASE WHEN $2='active' THEN now() ELSE NULL END,updated_at=now()
-      WHERE open_id=$1 AND is_admin=false
+      UPDATE users SET access_status=$2,access_review_reason=CASE WHEN $2='rejected' THEN $4 ELSE NULL END,access_reviewed_by=$3,access_reviewed_at=now(),approved_by=CASE WHEN $2='active' THEN $3 ELSE NULL END,approved_at=CASE WHEN $2='active' THEN now() ELSE NULL END,updated_at=now()
+      WHERE open_id=$1 AND is_admin=false AND ($2<>'rejected' OR access_status='pending')
       RETURNING open_id AS "openId",name,avatar_url AS "avatarUrl",is_admin AS "isAdmin",access_status AS "accessStatus"
-    `, [openId, accessStatus, approvedBy]);
+    `, [openId, accessStatus, approvedBy, reason]);
+    if (!result.rows.length && accessStatus === 'rejected') {
+      const existing = await this.pool.query('SELECT 1 FROM users WHERE open_id=$1 AND is_admin=false', [openId]);
+      if (existing.rows.length) throw Object.assign(new Error('申请状态已变化，请刷新后重试'), { status: 409 });
+    }
     return result.rows[0] || null;
   }
 
@@ -381,7 +411,7 @@ class PostgresStore {
 
   async getSession(token) {
     const result = await this.pool.query(`
-      SELECT u.open_id AS "openId",u.union_id AS "unionId",u.name,u.avatar_url AS "avatarUrl",u.email,u.tenant_key AS "tenantKey",s.tenant_key AS "sessionTenantKey",u.is_admin AS "isAdmin",u.access_status AS "accessStatus"
+      SELECT u.open_id AS "openId",u.union_id AS "unionId",u.name,u.avatar_url AS "avatarUrl",u.email,u.tenant_key AS "tenantKey",s.tenant_key AS "sessionTenantKey",u.is_admin AS "isAdmin",u.access_status AS "accessStatus",u.access_review_reason AS "accessReviewReason"
       FROM sessions s JOIN users u ON u.open_id=s.user_open_id
       WHERE s.token_hash=$1 AND s.expires_at>now()
     `, [sessionHash(token)]);
@@ -472,7 +502,7 @@ class PostgresStore {
         (SELECT coalesce(sum(size_bytes),0)::bigint FROM cloud_projects) AS "storageBytes"
     `);
     const members = await this.pool.query(`
-      SELECT u.open_id AS "openId",u.name,u.avatar_url AS "avatarUrl",u.is_admin AS "isAdmin",u.access_status AS "accessStatus",u.updated_at AS "updatedAt",
+      SELECT u.open_id AS "openId",u.name,u.avatar_url AS "avatarUrl",u.is_admin AS "isAdmin",u.access_status AS "accessStatus",u.access_review_reason AS "accessReviewReason",u.updated_at AS "updatedAt",
         count(p.id) FILTER (WHERE p.deleted_at IS NULL)::int AS projects,
         coalesce(sum(p.size_bytes),0)::bigint AS "storageBytes"
       FROM users u LEFT JOIN cloud_projects p ON p.owner_open_id=u.open_id
