@@ -1,6 +1,6 @@
 {
   "name": "pixverse-brand-workspace",
-  "version": "1.10.3",
+  "version": "1.10.4",
   "packageManager": "pnpm@11.19.0",
   "private": true,
   "description": "PixVerse multilingual brand workspace with optional Feishu cloud projects",

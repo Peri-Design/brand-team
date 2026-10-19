@@ -382,3 +382,13 @@ button.primary,button.secondary,a.secondary,.button-link.primary,.asset-download
 .access-gate[data-status=rejected]{max-height:calc(100svh - 32px);overflow-y:auto}
 
 @media(max-width:600px){.admin-member{grid-template-columns:minmax(0,1fr)}.admin-member-profile{grid-column:1;grid-row:1}.admin-member>:nth-child(2){grid-column:1;grid-row:2;max-width:100%;white-space:normal}.admin-member-actions{grid-column:1;grid-row:3;justify-content:flex-start}}
+
+/* Approved compact member actions; account permissions and dialogs keep their behavior. */
+.admin-member,.admin-member-head{display:grid;grid-template-columns:minmax(140px,1fr) minmax(140px,1fr) 64px 70px 100px 136px;gap:12px;align-items:center}
+.admin-member-head{padding:0 0 12px;border-bottom:1px solid var(--line);color:#93899f;font-size:11px;font-weight:400}.admin-member-head>span:last-child{text-align:right;padding-right:12px}
+.admin-member{min-height:72px;padding:16px 0;border-color:#efecf3}.admin-access-status{font-size:11px;padding:2px 8px;line-height:20px}
+.admin-member-actions{gap:8px;align-items:center}.admin-member-actions .admin-action{display:inline-flex;align-items:center;justify-content:center;min-width:56px;min-height:32px;height:32px;line-height:20px;padding:6px 12px;border:0;border-radius:6px;background:transparent;box-shadow:none;color:#756c80;font-size:12px;font-weight:400;white-space:nowrap;transition:background .15s,color .15s}
+.admin-member-actions .admin-action:hover{background:#f5f3f7;color:#50475c}.admin-member-actions .admin-action.is-approve{background:#f0e8fc;color:#7734df;font-weight:550}.admin-member-actions .admin-action.is-approve:hover{background:#e7d9fa}.admin-member-actions .admin-action:focus-visible{outline:2px solid #a47adf;outline-offset:3px}.admin-action-none{padding-right:22px;color:#c6bfcd}
+@media(max-width:800px){.admin-member-head{display:none}.admin-member{grid-template-columns:minmax(0,1fr) auto;padding:16px 0}.admin-member-actions .admin-action{min-height:44px;height:44px}}
+@media(max-width:600px){.admin-member{grid-template-columns:minmax(0,1fr)}.admin-member-actions{justify-content:flex-start}}
+@media(prefers-reduced-motion:reduce){.admin-member-actions .admin-action{transition:none}}

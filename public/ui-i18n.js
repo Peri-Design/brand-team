@@ -19,6 +19,7 @@
   if(result===undefined&&/ · |；| \/ /.test(text)){const parts=text.split(/( · |；| \/ )/);const translated=parts.map(p=>p==='；'?'; ':t(p,language));if(translated.some((p,i)=>p!==parts[i]))result=translated.join('');}
   return result===undefined?source:source.slice(0,source.indexOf(text))+result+source.slice(source.indexOf(text)+text.length);
  }
+ patterns.push([/^(不通过|批准|停用|开通)“(.*)”的设计权限(?:申请)?$/, (action,name)=>`${t(action)} design access for “${name}”`]);
  patterns.push(
   [/^已选 (\d+) 项$/, n=>`${n} selected`],
   [/^第 (\d+) 步，共 (\d+) 步$/, (n,total)=>`Step ${n} of ${total}`],

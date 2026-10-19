@@ -13,7 +13,7 @@ window.PixVerseEnglish={
   "PNG / SVG 透明背景 · 适用于浅色背景 · 保持比例使用": "Transparent PNG / SVG \u00b7 For light backgrounds \u00b7 Preserve proportions",
   "PNG / SVG 透明背景 · 适用于深色背景 · 保持比例使用": "Transparent PNG / SVG \u00b7 For dark backgrounds \u00b7 Preserve proportions",
 
-  "设计权限待审核": "Design access awaiting approval",
+  "设计权限待审核": "Design access pending",
   "设计权限申请已提交，等待管理员确认。": "Design access requested. Awaiting administrator approval.",
   "全部品牌 Logo 下载权限已自动开通。设计申请通过后，才能制作、保存和导出运营物料。": "All brand logos are already available to download. Administrator approval is needed only to create, save, and export marketing materials.",
   "内部成员登录后自动开通全部 Logo 下载；设计权限需单独申请并人工审核。": "Company members can download all logos after signing in. Design access requires a separate request and manual approval.",
@@ -841,5 +841,10 @@ window.PixVerseEnglish={
   "申请状态已变化，请刷新后重试": "The request has changed; refresh and try again",
   "原因最多 300 个字符": "The reason must be 300 characters or fewer",
   "设计权限申请未通过，可重新申请": "Design access was not approved; you can reapply",
-  "取消": "Cancel"
+  "取消": "Cancel",
+  "成员": "Member",
+  "权限状态": "Access status",
+  "最近登录": "Last sign-in",
+  "设计权限": "Design access",
+  "开通": "Enable"
 };
