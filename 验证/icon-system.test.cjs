@@ -55,3 +55,13 @@ test('受限导航保留点击能力并通过弹窗说明权限', () => {
   assert.doesNotMatch(app, /protected-nav[^\n]*setAttribute\(['"]aria-disabled/);
   assert.match(html, /class="nav protected-nav is-locked"[^>]*aria-haspopup="dialog"/);
 });
+
+test('素材库官网外链使用外链图标，站内导航继续使用右箭头', () => {
+  const library=fs.readFileSync(path.join(root,'public/asset-library.js'),'utf8');
+  const footer=library.match(/<footer class="al-footer">[\s\S]*?<\/footer>/)[0];
+  assert.equal((footer.match(/icon\('external'\)/g)||[]).length,2);
+  assert.doesNotMatch(footer,/chevron/);
+  assert.match(html,/id="i-external"/);
+  const gate=require('../organization-gate').renderOrganizationGate({query:{}});
+  assert.equal((gate.match(/href="#i-external"/g)||[]).length,2);
+});
