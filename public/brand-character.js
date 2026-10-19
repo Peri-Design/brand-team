@@ -18,7 +18,7 @@
     const en = document.documentElement.lang.startsWith('en');
     const notice = document.createElement('section');
     notice.className = 'brand-auth-success';
-    notice.innerHTML = '<button type="button" aria-label="' + (en ? 'Dismiss sign-in confirmation' : '关闭认证提示') + '">×</button><div data-brand-character="success"></div><div role="status"><strong>' + (en ? 'Organization verified' : '组织认证通过') + '</strong><p>' + (en ? 'Internal brand assets are ready. Design access requires separate approval.' : '已可使用内部品牌素材，设计权限需单独申请。') + '</p></div>';
+    notice.innerHTML = '<button type="button" aria-label="' + (en ? 'Dismiss sign-in confirmation' : '关闭认证提示') + '">×</button><div data-brand-character="success"></div><div role="status"><strong>' + (en ? 'Organization verified' : '组织认证通过') + '</strong><p>' + (en ? 'Internal brand assets are ready — design access requires separate approval' : '已可使用内部品牌素材，设计权限需单独申请') + '</p></div>';
     document.body.append(notice);
     mount(notice.querySelector('[data-brand-character]'), 'success');
     let timer;

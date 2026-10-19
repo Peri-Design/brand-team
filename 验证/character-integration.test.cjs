@@ -25,3 +25,14 @@ test('identity denial and recoverable service failure keep distinct messages and
  assert.match(unavailable.text,/https:\/\/aishiai.com\/brand/);
  assert.doesNotMatch(unavailable.text,/建设中|aria-disabled="true"/);
 });
+
+test('short sign-in messages keep policy scope together without sentence-ending punctuation',()=>{
+ const {renderOrganizationGate}=require('../organization-gate');
+ for(const ui of ['zh','en']) for(const reason of ['', 'organization_denied','verification_unavailable','failed','state_error','cancelled','session_expired','unconfigured']) {
+  const html=renderOrganizationGate({query:{ui}},reason);
+  assert.doesNotMatch(html,/data-motion-toggle|Pause animation|暂停动画/);
+  const copy=html.match(/<p class="copy"[^>]*>(.*?)<\/p>/)[1];
+  assert.doesNotMatch(copy,/[。]|\.$/);
+  assert.match(html,/<p class="policy-scope">[^<]+<br>[^<]+<\/p><p class="policy-design">/);
+ }
+});
