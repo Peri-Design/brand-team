@@ -58,10 +58,23 @@ class MemoryStore {
       isAdmin = true;
     }
     if (this.bootstrapAdminOpenId === profile.openId) isAdmin = true;
-    const accessStatus = isAdmin ? 'active' : current?.accessStatus || 'pending';
-    const user = { ...current, ...profile, isAdmin, accessStatus, updatedAt: new Date().toISOString() };
+    const accessStatus = isAdmin ? 'active' : current?.accessStatus || 'none';
+    const user = { ...current, ...profile, createdAt: current?.createdAt || new Date().toISOString(), isAdmin, accessStatus, updatedAt: new Date().toISOString() };
     this.users.set(profile.openId, user);
     return clone(user);
+  }
+
+  async requestDesignAccess(openId) {
+    const user = this.users.get(openId);
+    if (user && !user.isAdmin && user.accessStatus === 'none') {
+      user.accessStatus = 'pending';
+      user.updatedAt = new Date().toISOString();
+    }
+    return clone(user || null);
+  }
+
+  async revokeUserSessions(openId) {
+    for (const [key, session] of this.sessions) if (session.openId === openId) this.sessions.delete(key);
   }
 
   async setUserAccess(openId, accessStatus, approvedBy) {
@@ -78,14 +91,15 @@ class MemoryStore {
 
   async createSession(openId, ttlMs) {
     const token = crypto.randomBytes(32).toString('base64url');
-    this.sessions.set(sessionHash(token), { openId, expiresAt: Date.now() + ttlMs });
+    this.sessions.set(sessionHash(token), { openId, tenantKey: this.users.get(openId)?.tenantKey || null, expiresAt: Date.now() + ttlMs });
     return token;
   }
 
   async getSession(token) {
     const item = this.sessions.get(sessionHash(token));
     if (!item || item.expiresAt <= Date.now()) return null;
-    return clone(this.users.get(item.openId) || null);
+    const user = this.users.get(item.openId);
+    return user ? clone({ ...user, sessionTenantKey: item.tenantKey }) : null;
   }
 
   async deleteSession(token) {
@@ -183,7 +197,7 @@ class MemoryStore {
       storageBytes: projects.reduce((sum, item) => sum + item.sizeBytes, 0),
       members: [...this.users.values()].map(user => {
         const owned = projects.filter(project => project.ownerOpenId === user.openId);
-        return { openId: user.openId, name: user.name, avatarUrl: user.avatarUrl || null, isAdmin: Boolean(user.isAdmin), accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'pending', projects: owned.filter(project => !project.deletedAt).length, storageBytes: owned.reduce((sum, project) => sum + project.sizeBytes, 0), updatedAt: user.updatedAt };
+        return { openId: user.openId, name: user.name, avatarUrl: user.avatarUrl || null, isAdmin: Boolean(user.isAdmin), accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', projects: owned.filter(project => !project.deletedAt).length, storageBytes: owned.reduce((sum, project) => sum + project.sizeBytes, 0), updatedAt: user.updatedAt };
       }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
       files: projects.map(project => {
         const owner = this.users.get(project.ownerOpenId);
@@ -220,6 +234,8 @@ class PostgresStore {
         updated_at timestamptz NOT NULL DEFAULT now()
       );
       ALTER TABLE users ADD COLUMN IF NOT EXISTS access_status text NOT NULL DEFAULT 'pending';
+      ALTER TABLE users ALTER COLUMN access_status SET DEFAULT 'none';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS tenant_key text;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_by text;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_at timestamptz;
       CREATE TABLE IF NOT EXISTS access_notifications (
@@ -239,6 +255,7 @@ class PostgresStore {
         expires_at timestamptz NOT NULL,
         created_at timestamptz NOT NULL DEFAULT now()
       );
+      ALTER TABLE sessions ADD COLUMN IF NOT EXISTS tenant_key text;
       CREATE INDEX IF NOT EXISTS sessions_expires_at_idx ON sessions(expires_at);
       CREATE TABLE IF NOT EXISTS cloud_projects (
         id uuid PRIMARY KEY,
@@ -274,18 +291,19 @@ class PostgresStore {
         isAdmin = true;
       }
       const result = await client.query(`
-        INSERT INTO users(open_id,union_id,name,avatar_url,email,is_admin,access_status)
-        VALUES($1,$2,$3,$4,$5,$6,$7)
+        INSERT INTO users(open_id,union_id,name,avatar_url,email,is_admin,access_status,tenant_key)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8)
         ON CONFLICT(open_id) DO UPDATE SET
           union_id=EXCLUDED.union_id,
           name=EXCLUDED.name,
           avatar_url=EXCLUDED.avatar_url,
           email=EXCLUDED.email,
+          tenant_key=EXCLUDED.tenant_key,
           is_admin=users.is_admin OR EXCLUDED.is_admin,
           access_status=CASE WHEN users.is_admin OR EXCLUDED.is_admin THEN 'active' ELSE users.access_status END,
           updated_at=now()
-        RETURNING open_id AS "openId", union_id AS "unionId", name, avatar_url AS "avatarUrl", email, is_admin AS "isAdmin", access_status AS "accessStatus"
-      `, [profile.openId, profile.unionId || null, profile.name, profile.avatarUrl || null, profile.email || null, isAdmin, isAdmin ? 'active' : 'pending']);
+        RETURNING open_id AS "openId", union_id AS "unionId", name, avatar_url AS "avatarUrl", email, tenant_key AS "tenantKey", is_admin AS "isAdmin", access_status AS "accessStatus"
+      `, [profile.openId, profile.unionId || null, profile.name, profile.avatarUrl || null, profile.email || null, isAdmin, isAdmin ? 'active' : 'none', profile.tenantKey || null]);
       await client.query('COMMIT');
       return result.rows[0];
     } catch (error) {
@@ -333,6 +351,18 @@ class PostgresStore {
       next_attempt_at=now()+($3::int * interval '1 second') WHERE id=$1 AND attempts=$4`, [id, error, delay, attempts]);
   }
 
+  async requestDesignAccess(openId) {
+    const result = await this.pool.query(`UPDATE users SET
+      access_status=CASE WHEN access_status='none' AND is_admin=false THEN 'pending' ELSE access_status END,
+      updated_at=CASE WHEN access_status='none' THEN now() ELSE updated_at END
+      WHERE open_id=$1 RETURNING open_id AS "openId",is_admin AS "isAdmin",access_status AS "accessStatus"`, [openId]);
+    return result.rows[0] || null;
+  }
+
+  async revokeUserSessions(openId) {
+    await this.pool.query('DELETE FROM sessions WHERE user_open_id=$1', [openId]);
+  }
+
   async setUserAccess(openId, accessStatus, approvedBy) {
     const result = await this.pool.query(`
       UPDATE users SET access_status=$2,approved_by=CASE WHEN $2='active' THEN $3 ELSE NULL END,approved_at=CASE WHEN $2='active' THEN now() ELSE NULL END,updated_at=now()
@@ -345,13 +375,13 @@ class PostgresStore {
   async createSession(openId, ttlMs) {
     const token = crypto.randomBytes(32).toString('base64url');
     await this.pool.query('DELETE FROM sessions WHERE expires_at <= now()');
-    await this.pool.query('INSERT INTO sessions(token_hash,user_open_id,expires_at) VALUES($1,$2,$3)', [sessionHash(token), openId, new Date(Date.now() + ttlMs)]);
+    await this.pool.query('INSERT INTO sessions(token_hash,user_open_id,expires_at,tenant_key) SELECT $1,open_id,$3,tenant_key FROM users WHERE open_id=$2', [sessionHash(token), openId, new Date(Date.now() + ttlMs)]);
     return token;
   }
 
   async getSession(token) {
     const result = await this.pool.query(`
-      SELECT u.open_id AS "openId",u.union_id AS "unionId",u.name,u.avatar_url AS "avatarUrl",u.email,u.is_admin AS "isAdmin",u.access_status AS "accessStatus"
+      SELECT u.open_id AS "openId",u.union_id AS "unionId",u.name,u.avatar_url AS "avatarUrl",u.email,u.tenant_key AS "tenantKey",s.tenant_key AS "sessionTenantKey",u.is_admin AS "isAdmin",u.access_status AS "accessStatus"
       FROM sessions s JOIN users u ON u.open_id=s.user_open_id
       WHERE s.token_hash=$1 AND s.expires_at>now()
     `, [sessionHash(token)]);
@@ -457,13 +487,16 @@ class PostgresStore {
   }
 }
 
+require('./analytics').installAnalytics(MemoryStore, PostgresStore);
+
 async function createStore(env = process.env) {
   const options = { bootstrapAdminName: env.FEISHU_BOOTSTRAP_ADMIN_NAME || '' };
-  if (!env.DATABASE_URL) return { configured: false, store: new MemoryStore(options) };
+  if (!env.DATABASE_URL) { const store = new MemoryStore(options); await store.initAnalytics(); return { configured: false, store }; }
   const { Pool } = require('pg');
   const pool = new Pool({ connectionString: env.DATABASE_URL, ssl: env.DATABASE_SSL === 'false' ? false : { rejectUnauthorized: false } });
   const store = new PostgresStore(pool, options);
   await store.init();
+  await store.initAnalytics();
   return { configured: true, store };
 }
 

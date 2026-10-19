@@ -5,6 +5,7 @@
  const messages=root.PixVerseEnglish||{};
  let storage;try{storage=root.localStorage;}catch{}
  let locale;try{locale=storage?.getItem(KEY);}catch{}
+ if(root.BrandEntry)locale=root.BrandEntry.locale;
  if(!['zh','en'].includes(locale))locale='en';
  const records=new WeakMap();
  const protectedSelector='script,style,[contenteditable], [data-ui-content], [translate="no"],.project-title-row h4,.admin-member-profile strong,.admin-file>strong,.admin-file-owner-name,.material .choose strong,.card-head h3,#inspector>.row>h2,#cloud-user-name,#cloud-avatar-fallback';
@@ -84,7 +85,7 @@
    button.setAttribute('aria-pressed',String(button.dataset.uiLanguage===locale));
   });
  }
- function setLocale(value){if(!['zh','en'].includes(value))return;locale=value;try{storage?.setItem(KEY,value);}catch{}refresh();root.dispatchEvent?.(new CustomEvent('ui-language-change',{detail:{locale}}));}
+ function setLocale(value){if(!['zh','en'].includes(value))return;locale=value;root.BrandEntry?.setLocale(value);try{storage?.setItem(KEY,value);}catch{}refresh();root.dispatchEvent?.(new CustomEvent('ui-language-change',{detail:{locale}}));}
  function originalText(node){if(!node)return '';if(node.nodeType===3)return records.get(node)?.get('text')?.source??node.data;return [...node.childNodes].map(originalText).join('');}
  function originalAttribute(node,key){return records.get(node)?.get(key)?.source??node.getAttribute(key);}
  root.PixVerseUI={t,setLocale,get locale(){return locale;},refresh,originalText,originalAttribute,KEY};
@@ -95,7 +96,7 @@
   refresh();
   new MutationObserver(changes=>{const targets=new Set();for(const change of changes){if(change.type==='childList')change.addedNodes.forEach(n=>targets.add(n));else targets.add(change.target);}for(const node of targets)if(node.isConnected)translateNode(node);}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['title','placeholder','aria-label','aria-valuetext','alt']});
   document.addEventListener('click',event=>{const button=event.target.closest('button[data-ui-language]');if(button&&button.dataset.uiLanguage!==locale)setLocale(button.dataset.uiLanguage);});
-  root.addEventListener('storage',event=>{if(event.key===KEY&&['zh','en'].includes(event.newValue)){locale=event.newValue;refresh();}});
+  root.addEventListener('storage',event=>{if(!root.BrandEntry&&event.key===KEY&&['zh','en'].includes(event.newValue)){locale=event.newValue;refresh();}});
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })(typeof window==='undefined'?globalThis:window);

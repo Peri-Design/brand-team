@@ -56,7 +56,7 @@
  const request=createRequest(root.fetch.bind(root));
  function status(value,error){label.dataset.error=String(['error','conflict'].includes(value));label.textContent={saved:'已保存到云端',pending:'有修改待同步',saving:'正在同步云端…',error:'同步失败 · 本机副本已保留',conflict:'云端已有新版本 · 当前修改未覆盖'}[value];label.title=error||'';retry.hidden=!['error','conflict'].includes(value);retry.textContent=value==='conflict'?'保存为副本':'重试同步';}
  async function open(fresh){
-  const session=await request('/api/auth/session');if(!session.authenticated||!session.user||!session.user.isAdmin&&session.user.accessStatus!=='active'){location.href='/?view=new';throw Error('请登录并开通设计权限');}
+  const session=await request('/api/auth/session');if(!session.authenticated||!session.user||!session.user.isAdmin&&session.user.accessStatus!=='active'){location.href=(typeof window!=='undefined'&&window.BrandEntry?window.BrandEntry.url('/?view=new'):'/?view=new');throw Error('请登录并开通设计权限');}
   const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('pixverse-material-cloud-recovery',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
   const backup={read:id=>new Promise((resolve,reject)=>{const r=db.transaction('files').objectStore('files').get(id);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);}),write:(id,value)=>new Promise((resolve,reject)=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').put(value,id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||Error('恢复副本写入失败'));})};
   file=new CloudFile({request,backup,status,linked:id=>{const url=new URL(location.href);url.searchParams.set('project',id);history.replaceState({},'',url);}});

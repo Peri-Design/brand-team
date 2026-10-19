@@ -13,6 +13,7 @@ async function render(response, fail = false) {
   let reloads = 0;
   const location = { search:'?view=admin&auth=cancelled', pathname:'/', reload(){reloads++;} };
   vm.runInNewContext(source, {
+    window: {},
     document: { querySelector:node, querySelectorAll:()=>[], body:node('body'), documentElement:{removeAttribute(){}} },
     location, URLSearchParams, AbortSignal, requestAnimationFrame: fn=>fn(), setTimeout:()=>1, clearTimeout(){},
     fetch:async()=>{if(fail)throw Error('network');return {ok:true,json:async()=>response};}

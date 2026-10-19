@@ -81,3 +81,7 @@ header strong{align-items:center;gap:16px;flex-shrink:0}header strong span{displ
 /* Keep language selection and its editing tabs in one visual group. */
 #inspector>.material-languages{padding-bottom:0}
 #inspector>.material-languages+.tabs{margin-top:12px}
+
+:root{--action-height:40px;--action-radius:8px}
+#download,.dialog-actions>button:not(.link),#guide-restart{min-height:var(--action-height);padding:9px 16px;line-height:20px;border-radius:var(--action-radius)}
+@media(pointer:coarse){:root{--action-height:44px}}

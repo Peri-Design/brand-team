@@ -43,9 +43,11 @@ test('可见界面不再用文本符号或临时内联路径充当图标', () =>
 test('品牌素材页移除来源脚注并统一下载操作图标', () => {
   assert.doesNotMatch(html, /来源：PixVerse Logo/);
   assert.doesNotMatch(html, /来源：爱诗科技官方 Logo/);
-  const downloads = [...html.matchAll(/<a class="secondary"[^>]+download=[^>]+>([\s\S]*?)<\/a>/g)];
-  assert.equal(downloads.length, 12);
-  for (const [, content] of downloads) assert.match(content, /href="#i-download"/);
+  const library = fs.readFileSync(path.join(root, 'public/asset-library.js'), 'utf8');
+  assert.match(html, /id="brand-asset-library"/);
+  assert.match(library, /icon\('download'\)/);
+  assert.match(html, /id="i-download"/);
+  assert.doesNotMatch(library, /<svg[^>]*>[\s\S]*?<(?:path|circle|rect)\b/);
 });
 
 test('受限导航保留点击能力并通过弹窗说明权限', () => {

@@ -1,0 +1,56 @@
+/* Approved folder character; scoped to avoid changing workspace styles. */
+.brand-character{width:100%;color:#050505}
+.brand-character .hero{width:350px;max-width:100%;height:auto;display:block;margin:0 auto 24px;overflow:visible}
+.brand-character .hero *{transform-box:view-box}
+.brand-character .figure,.brand-character .head,.brand-character .breath,.brand-character .eye-blink,.brand-character .card-rise,.brand-character .confetti-piece{will-change:transform}
+.brand-character .breath{transform-origin:205px 260px;animation:bc-breathe 3.2s ease-in-out infinite}
+.brand-character .eye-blink{transform-origin:190px 127px;animation:bc-blink 4.8s infinite}
+.brand-character .eye-state{opacity:0;transition:opacity .18s ease}
+.brand-character .welcome-eyes{opacity:1}
+.brand-character .success-eyes,.brand-character .sad-eyes{opacity:0}
+.brand-character.state-success .welcome-eyes,.brand-character.state-denied .welcome-eyes{opacity:0}
+.brand-character.state-success .success-eyes,.brand-character.state-denied .sad-eyes{opacity:1}
+.brand-character.state-success .eye-blink{animation:none}
+.brand-character .greeting{opacity:1;transition:opacity .2s}
+.brand-character.state-loading .greeting,.brand-character.state-success .greeting,.brand-character.state-denied .greeting{opacity:0}
+.brand-character.state-loading .eye-blink{animation:bc-blink 2s infinite}
+.brand-character.state-loading .figure{animation:bc-ponder 1.7s ease-in-out infinite;transform-origin:210px 285px}
+.brand-character.state-success .figure{animation:bc-celebrate 1.5s cubic-bezier(.23,.75,.3,1) both;transform-origin:200px 300px}
+.brand-character.state-success .breath,.brand-character.state-denied .breath{animation:none}
+.brand-character.state-denied .head{animation:bc-lower-head .95s cubic-bezier(.22,.7,.28,1) both;transform-origin:195px 230px}
+.brand-character .card-rise{transform:translateY(118px)}
+.brand-character.state-success .card-rise{transform:translateY(0);animation:bc-raise-card .85s .12s cubic-bezier(.2,.8,.3,1) both}
+.brand-character .check{stroke-dasharray:62;stroke-dashoffset:62}
+.brand-character.state-success .check{animation:bc-draw-check .45s .55s ease-out both}
+.brand-character .lock{opacity:0;transition:opacity .22s ease-out}
+.brand-character.state-denied .lock{opacity:1}
+.brand-character .picture{transition:opacity .2s}
+.brand-character.state-denied .picture{opacity:0}
+.brand-character .confetti{opacity:0;pointer-events:none}
+.brand-character.state-success .confetti{opacity:1}
+.brand-character .confetti-piece{opacity:0;transform-origin:var(--cx) var(--cy)}
+.brand-character.state-success .confetti-piece{animation:bc-paper 2.8s var(--delay) ease-out both}
+.brand-character .sparkle{opacity:0;transform-origin:302px 55px}
+.brand-character.state-success .sparkle{animation:bc-twinkle 2.5s .15s ease-out both}
+.brand-character.paused .hero *{animation-play-state:paused!important}
+.brand-character.paused .hero .card-rise,.brand-character.paused .hero .eye-state,.brand-character.paused .hero .lock{transition:none}
+.brand-character.still .hero *{animation:none!important;transition:none!important}
+.brand-character.still.state-success .check{stroke-dashoffset:0}
+.brand-character.still.state-success .confetti-piece,.brand-character.still.state-success .sparkle{opacity:1;transform:none}
+.brand-character.still.state-denied .head{transform:translate(-2px,12px) rotate(3deg)}
+@keyframes bc-breathe{0%,100%{transform:translateY(2px) rotate(.8deg) scale(1)}50%{transform:translateY(-13px) rotate(-1.4deg) scale(1.018)}}@keyframes bc-blink{0%,44%,48%,100%{transform:scaleY(1)}46%{transform:scaleY(.08)}}@keyframes bc-ponder{0%,100%{transform:rotate(0)}50%{transform:rotate(-2deg) translateY(-3px)}}@keyframes bc-celebrate{0%{transform:none}12%{transform:translateY(6px) scale(1.04,.95)}33%{transform:translateY(-43px) rotate(-4deg) scale(.98,1.025)}51%{transform:translateY(4px) scale(1.035,.97)}70%{transform:translateY(-23px) rotate(2deg)}88%{transform:translateY(2px) scale(1.015,.99)}100%{transform:none}}@keyframes bc-raise-card{0%{transform:translateY(118px) rotate(0)}75%{transform:translateY(-7px) rotate(-2deg)}100%{transform:none}}@keyframes bc-lower-head{0%,12%{transform:none}65%{transform:translate(-3px,16px) rotate(4deg)}100%{transform:translate(-2px,12px) rotate(3deg)}}@keyframes bc-draw-check{to{stroke-dashoffset:0}}@keyframes bc-paper{0%{opacity:0;transform:translate(calc(var(--dx) * -.22),24px) rotate(-10deg)}18%{opacity:1}55%{opacity:1;transform:translate(var(--dx),-16px) rotate(var(--rotate))}100%{opacity:0;transform:translate(var(--dx),48px) rotate(calc(var(--rotate) * 2))}}@keyframes bc-twinkle{0%,100%{opacity:0;transform:scale(.5)}25%,65%{opacity:1;transform:scale(1)}}@keyframes bc-spin{to{transform:rotate(360deg)}}
+
+.brand-character .hero{fill:#050505;stroke:none;max-width:100%;height:auto}
+.brand-character.document-hidden *{animation-play-state:paused!important}
+#access-gate:not([open]) .brand-character *{animation:none!important}
+#access-gate .access-visual{height:auto;margin:0 auto 12px;background:none}
+#access-gate .brand-character .hero{width:240px;margin:0 auto}
+.brand-auth-success{position:fixed;right:24px;bottom:24px;z-index:1000;width:300px;max-width:calc(100vw - 32px);padding:16px 20px 22px;text-align:center;background:#fff;color:#292632;border:1px solid #e8e4ef;border-radius:20px;box-shadow:0 12px 40px #29263218;font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+.brand-auth-success .hero{width:210px;margin:0 auto 8px}
+.brand-auth-success strong{display:block;font-size:18px}.brand-auth-success p{margin:6px 0 0;color:#716c7e}
+.brand-auth-success button{position:absolute;right:8px;top:8px;width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:#716c7e;font-size:23px;cursor:pointer}
+.brand-auth-success button:focus-visible{outline:2px solid #7734df;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.brand-character *{animation:none!important;transition:none!important}.brand-character.state-success .check{stroke-dashoffset:0}.brand-character.state-success .confetti-piece,.brand-character.state-success .sparkle{opacity:1}.brand-character.state-denied .head{transform:translate(-2px,12px) rotate(3deg)}}
+
+/* Keep illustration strokes independent from the small UI-icon stroke rule. */
+.brand-character .hero :is(path,line,polyline,polygon,rect,circle,ellipse,use){stroke-width:inherit}

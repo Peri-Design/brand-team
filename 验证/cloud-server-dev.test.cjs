@@ -81,6 +81,7 @@ test('飞书身份、管理员绑定和云端文件接口形成完整闭环', as
 
   const { store } = await ready;
   const pending = await store.upsertUser({ openId: 'ou_pending', name: '待审核成员' });
+  await store.requestDesignAccess(pending.openId);
   const pendingToken = await store.createSession(pending.openId, 60_000);
   const pendingRequest = path => request(app).get(path).set('Cookie', `pv_session=${pendingToken}`);
   const pendingSession = await pendingRequest('/api/auth/session');
@@ -101,28 +102,28 @@ test('飞书身份、管理员绑定和云端文件接口形成完整闭环', as
   assert.equal((await agent.get('/api/cloud/projects')).status, 401);
 });
 
-test('旧通知自动登录，已有管理员会话直达后台，取消授权不会循环跳转', async () => {
+test('旧通知显示登录入口，已有管理员会话直达后台，取消授权不会循环跳转', async () => {
   const entry = await request(app).get('/?view=admin');
-  assert.equal(entry.status, 302);
-  assert.equal(entry.headers.location, '/api/auth/feishu/start?next=admin');
-  assert.equal(entry.headers['cache-control'], 'no-store');
+  assert.equal(entry.status, 200);
+  assert.match(entry.text, /feishu\/start\?next=admin/);
+  assert.match(entry.headers['cache-control'], /no-store/);
   const admin = request.agent(app);
   await admin.get('/api/auth/feishu/start?next=admin');
   const reuse = await admin.get('/api/auth/feishu/start?next=admin');
-  assert.equal(reuse.headers.location, '/?view=admin');
+  assert.equal(reuse.headers.location, '/?view=admin&entry=international');
   const page = await admin.get('/?view=admin');
   assert.equal(page.status, 200);
   assert.match(page.text, /src="app\.js/);
   assert.equal((await admin.get('/api/admin/overview')).status, 200);
   assert.equal((await admin.get('/api/auth/session')).headers['cache-control'], 'no-store');
   const cancelled = await request(app).get('/api/auth/feishu/callback?state=test-state').set('Cookie', 'pv_auth_next=admin; pv_oauth_state=test-state');
-  assert.equal(cancelled.headers.location, '/?view=admin&auth=cancelled');
+  assert.equal(cancelled.headers.location, '/?view=admin&auth=cancelled&entry=international');
   const error = await request(app).get('/api/auth/feishu/callback?state=wrong').set('Cookie', 'pv_auth_next=admin; pv_oauth_state=test-state');
-  assert.equal(error.headers.location, '/?view=admin&auth=state_error');
+  assert.equal(error.headers.location, '/?view=admin&auth=state_error&entry=international');
   for (const result of [cancelled, error]) {
     const page = await request(app).get(result.headers.location);
     assert.equal(page.status, 200);
-    assert.match(page.text, /access-public\.js/);
+    assert.match(page.text, /organization-gate\.js/);
   }
 });
 

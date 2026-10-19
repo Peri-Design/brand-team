@@ -1,6 +1,8 @@
 (function(root){
 const LANG={en:'English',zh:'中文',ja:'日本語'};
-const RES={web:{name:'Web 首页 Banner',size:[330,139.5],variants:['primary'],thumb:'web',label:'标准版式'},app:{name:'App 首页 Banner',size:[381,120],variants:['primary','secondary'],thumb:'app',label:'2 种版式'},social:{name:'国内社媒封面',size:[270,360],variants:['primary','secondary'],thumb:'social',label:'2 种版式 · 中文'}};
+const RES={web:{name:'Web 首页 Banner',size:[330,139.5],exportScale:4,previewScale:1,variants:['primary'],thumb:'web',label:'标准版式'},app:{name:'App 首页 Banner',size:[381,120],exportScale:4,previewScale:1,variants:['primary','secondary'],thumb:'app',label:'2 种版式'},social:{name:'国内社媒封面',size:[1080,1440],exportScale:1,previewScale:.25,variants:['primary','secondary'],thumb:'social',label:'2 种版式 · 中文'}};
+const outputSize=type=>RES[type].size.map(n=>n*RES[type].exportScale);
+const previewSize=type=>RES[type].size.map(n=>n*RES[type].previewScale);
 const blocks=()=>({preset:'auto',layers:[{colors:['#6453ed','#5140df','#302084'],opacity:80},{colors:['#6550f5','#4935ec','#3223aa'],opacity:80}]});
 const emptyCopy=()=>({title:'',appSecondaryTitle:'',subtitle:''});
 function fresh(){return {version:2,name:'未命名项目',image:null,imageName:'',serial:0,copy:Object.fromEntries(Object.keys(LANG).map(l=>[l,emptyCopy()])),items:[]};}
@@ -31,5 +33,5 @@ function validate(s){
  }
  return s;
 }
-const api={LANG,RES,fresh,add,addMany,adj,copyField,setCopy,outputs,remove,batch,resize,validate};if(typeof module!=='undefined')module.exports=api;else root.MaterialModel=api;
+const api={LANG,RES,outputSize,previewSize,fresh,add,addMany,adj,copyField,setCopy,outputs,remove,batch,resize,validate};if(typeof module!=='undefined')module.exports=api;else root.MaterialModel=api;
 })(typeof window==='undefined'?globalThis:window);
