@@ -11,15 +11,16 @@ async function render(response, fail = false) {
     return nodes.get(key);
   };
   let reloads = 0;
+  const listeners = {};
   const location = { search:'?view=admin&auth=cancelled', pathname:'/', reload(){reloads++;} };
   vm.runInNewContext(source, {
-    window: {},
+    window: {addEventListener(type,listener){listeners[type]=listener;}},
     document: { querySelector:node, querySelectorAll:()=>[], body:node('body'), documentElement:{removeAttribute(){}} },
     location, URLSearchParams, AbortSignal, requestAnimationFrame: fn=>fn(), setTimeout:()=>1, clearTimeout(){},
     fetch:async()=>{if(fail)throw Error('network');return {ok:true,json:async()=>response};}
   });
   await new Promise(resolve=>setImmediate(resolve));
-  return { node, location, get reloads(){return reloads;} };
+  return { node, location, updateSession(data){listeners['workspace-session-updated']({detail:data});}, get reloads(){return reloads;} };
 }
 test('普通成员打开后台不会刷新循环，也不会误提示申请管理员权限', async()=>{
   const ui = await render({configured:true,authenticated:true,user:{name:'成员',accessStatus:'active',isAdmin:false}});
@@ -45,4 +46,12 @@ test('网络失败显示重试，不误判为本地预览或禁用登录',async(
 test('实际未配置时给出准确提示',async()=>{
   const ui=await render({configured:false,authenticated:false});
   assert.equal(ui.node('#access-gate-title').textContent,'登录服务尚未配置');
+});
+
+test('restored restricted shell uses refreshed design permission for navigation',async()=>{
+ const ui=await render({configured:true,authenticated:true,user:{name:'成员',accessStatus:'none',isAdmin:false}});
+ ui.updateSession({configured:true,authenticated:true,user:{name:'成员',accessStatus:'active',isAdmin:false}});
+ ui.node('[data-action="new-project"]').onclick();assert.equal(ui.location.href,'/?view=new');
+ ui.updateSession({configured:true,authenticated:true,user:{name:'成员',accessStatus:'suspended',isAdmin:false}});
+ ui.node('[data-action="new-project"]').onclick();assert.equal(ui.node('#access-gate-title').textContent,'设计权限暂不可用');
 });

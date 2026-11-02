@@ -5,6 +5,11 @@
   let session = { configured: null, user: null };
   let sessionError = false;
   let intendedView = 'new';
+  window.addEventListener('workspace-session-updated', event => {
+    const data = event.detail;
+    session = { configured: Boolean(data.configured), user: data.authenticated ? data.user : null };
+    sessionError = false;
+  });
 
   function toast(message) {
     const node = $('#toast');
@@ -88,10 +93,7 @@
     sessionError = false;
     window.dispatchEvent?.(new Event('brand-access-changed'));
     window.BrandEntry?.applyAccess(Boolean(data.user?.canDownloadAllLogos));
-    $$('[data-action="new-project"],[data-view="files"]').forEach(button => {
-      button.classList.add('is-locked');
-      button.setAttribute('aria-haspopup', 'dialog');
-    });
+    window.BrandEntry?.applySession(data);
     return data;
   }
 

@@ -29,7 +29,19 @@
    const section=root.document?.querySelector(selector);if(section)section.hidden=!visible;
   }
  }
- root.BrandEntry={entry,applyAccess,get locale(){return locale;},url,setLocale(value){
+ function initialSession(){
+  try{const node=root.document?.getElementById('workspace-session');return node?JSON.parse(node.textContent):null;}catch{return null;}
+ }
+ function applySession(session){
+  if(!session)return;
+  const user=session.authenticated?session.user:null,allowed=Boolean(user&&(user.isAdmin||user.accessStatus==='active'));
+  root.document?.querySelectorAll('.protected-nav').forEach(button=>{
+   button.classList.toggle('is-locked',!allowed);
+   if(allowed)button.removeAttribute('aria-haspopup');else button.setAttribute('aria-haspopup','dialog');
+  });
+  const admin=root.document?.querySelector('#admin-nav');if(admin)admin.hidden=!user?.isAdmin;
+ }
+ root.BrandEntry={entry,applyAccess,initialSession,applySession,get locale(){return locale;},url,setLocale(value){
   if(!['zh','en'].includes(value))return;
   locale=value;const target=new URL(root.location.href);target.searchParams.set('entry',entry);target.searchParams.set('ui',locale);
   root.history?.replaceState(root.history.state,'',target.pathname+target.search+target.hash);

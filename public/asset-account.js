@@ -16,6 +16,7 @@
       const session = await response.json(), user = session.user;
       const allowed = Boolean(session.authenticated && user?.canDownloadAllLogos);
       window.BrandEntry?.applyAccess(allowed);
+      window.BrandEntry?.applySession(session);
       panel.hidden = !session.configured;
       name.hidden = !allowed;
       name.textContent = allowed ? user.name : '';
@@ -27,6 +28,7 @@
       design.classList.toggle('secondary', user?.accessStatus !== 'none');
       design.textContent = user?.accessStatus === 'pending' ? '查看申请状态' : ['suspended','rejected'].includes(user?.accessStatus) ? '查看设计权限' : '申请设计权限';
       note.textContent = allowed ? '已开通全部品牌 Logo 下载权限' : '公司同事登录后，可下载全部品牌 Logo。';
+      if (allowed) window.dispatchEvent(new CustomEvent('workspace-session-updated', { detail: session }));
     } catch {
       document.body.hidden = true;
       location.replace(url('/?auth=verification_unavailable'));

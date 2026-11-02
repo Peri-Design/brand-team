@@ -175,12 +175,16 @@ app.get('/health', async (_req, res) => {
   }
 });
 
+function sessionPayload(user, configured) {
+  return { configured, authenticated: Boolean(user), user: user ? { name: user.name, avatarUrl: user.avatarUrl, canDownloadAllLogos: true, isAdmin: user.isAdmin, accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', accessReviewReason: user.accessReviewReason || null } : null };
+}
+
 app.get('/api/auth/session', async (req, res, next) => {
   try {
     res.set('Cache-Control', 'no-store');
     const configured = await cloudConfigured();
     const user = configured ? await currentUser(req) : null;
-    res.json({ configured, authenticated: Boolean(user), user: user ? { name: user.name, avatarUrl: user.avatarUrl, canDownloadAllLogos: true, isAdmin: user.isAdmin, accessStatus: user.isAdmin ? 'active' : user.accessStatus || 'none', accessReviewReason: user.accessReviewReason || null } : null });
+    res.json(sessionPayload(user, configured));
   } catch (error) {
     next(error);
   }
@@ -453,11 +457,17 @@ async function serveWorkspace(req, res, next) {
     const adminEntry = req.query.view === 'admin';
     res.set('Cache-Control', 'no-store');
     if (!user) return sendOrganizationGate(req, res);
-    const allowed = Boolean(user && (user.isAdmin || user.accessStatus === 'active') && (!adminEntry || user.isAdmin));
+    const designAllowed = Boolean(user.isAdmin || user.accessStatus === 'active');
+    const allowed = designAllowed && (!adminEntry || user.isAdmin);
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
+    // The first paint must use verified permissions, even when fonts/scripts/session fetches are slow.
+    if (designAllowed) html = html.replace(/<button\b[^>]*class="nav protected-nav is-locked"[^>]*>/g, tag => tag.replace(' is-locked', '').replace(' aria-haspopup="dialog"', ''));
+    if (user.isAdmin) html = html.replace(/<button id="admin-nav"[^>]*>/, tag => tag.replace(' hidden', ''));
+    const initialSession = JSON.stringify(sessionPayload(user, true)).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+    html = html.replace('<head>', () => '<head><script type="application/json" id="workspace-session">' + initialSession + '</script>');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261019-review-1"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261102-nav-1"></script>\n</head>');
     }
     html=html.replace('id="aisphere-assets" aria-labelledby="aisphere-logo-title" hidden','id="aisphere-assets" aria-labelledby="aisphere-logo-title"');
     res.type('html').send(html);
