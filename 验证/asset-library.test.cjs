@@ -5,7 +5,7 @@ const catalog=require('../public/asset-catalog'),{makeAssetZip}=require('../publ
 const {app,ready}=require('../server');
 const all=catalog.assets.flatMap(a=>catalog.files(a)),dist=path.resolve(__dirname,'../public');
 test('catalog exposes exactly the available originals, with compatible cross-brand filters',()=>{
- assert.equal(catalog.assets.length,7);assert.equal(all.length,22);assert.equal(new Set(all.map(f=>f.name)).size,22);
+ assert.equal(catalog.assets.length,8);assert.equal(all.length,28);assert.equal(new Set(all.map(f=>f.name)).size,28);
  for(const f of all)assert.ok(fs.existsSync(path.join(dist,f.url)),f.url);
  assert.equal(catalog.filter({brand:'拍我 AI',format:'svg'}).length,1);
  assert.equal(catalog.filter({type:'combo',format:'svg'}).length,0);
@@ -30,6 +30,17 @@ test('PixVerse downloads use tight artwork bounds while built-in templates retai
   }
  }
 });
+test('World is a separately searchable Logo with three paired SVG and transparent PNG variants',()=>{
+ const matches=catalog.filter({brand:'PixVerse',type:'logo',query:'World'});
+ assert.deepEqual(matches.map(a=>a.id),['pv-world']);
+ const items=catalog.files(matches[0]);
+ assert.deepEqual(items.map(f=>f.url),['black','white','reverse'].flatMap(kind=>['svg','png'].map(ext=>`/assets/PixVerse-world-${kind}.${ext}`)));
+ for(const {url,format} of items){
+  const bytes=fs.readFileSync(path.join(dist,url));
+  if(format==='png')assert.deepEqual([bytes.readUInt32BE(16),bytes.readUInt32BE(20),bytes[25]],[6229,806,6],url);
+  else assert.match(bytes.toString(),/viewBox="25\.28 5\.7866 1557\.0161 201\.4268"/);
+ }
+});
 test('a full cross-brand ZIP preserves every original byte, filename and CRC',async()=>{
  const loaded=all.map(f=>({...f,bytes:new Uint8Array(fs.readFileSync(path.join(dist,f.url)))}));
  const bytes=Buffer.from(await makeAssetZip(loaded).arrayBuffer());
@@ -37,7 +48,7 @@ test('a full cross-brand ZIP preserves every original byte, filename and CRC',as
 z=zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read()))
 assert z.testzip() is None
 print(json.dumps({n:hashlib.sha256(z.read(n)).hexdigest() for n in z.namelist()}))`],{input:bytes,maxBuffer:4*1024*1024}).toString());
- assert.equal(Object.keys(result).length,22);
+ assert.equal(Object.keys(result).length,28);
  for(const f of loaded)assert.equal(result[f.name],crypto.createHash('sha256').update(f.bytes).digest('hex'));
 });
 test('library scripts and all originals require membership, without requiring design approval',async()=>{

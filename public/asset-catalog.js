@@ -5,12 +5,14 @@
     {label:'黑色字标',en:'Black wordmark',file:stem+'-black',dark:false,exts},
     {label:'白色字标',en:'White wordmark',file:stem+'-white',dark:true,exts}
   ];
+  const pixverseVariants=stem=>[
+    {label:'彩色黑字',en:'Color symbol · Black wordmark',file:stem+'-black',exts:['svg','png']},
+    {label:'彩色浅字',en:'Color symbol · Light wordmark',file:stem+'-white',dark:true,exts:['svg','png']},
+    {label:'反白',en:'Reversed',file:stem+'-reverse',dark:true,exts:['svg','png']}
+  ];
   const assets=[
-    {id:'pv-logo',brand:'PixVerse',type:'logo',title:'标准 Logo',en:'Standard logo',variants:[
-      {label:'彩色黑字',en:'Color symbol · Black wordmark',file:'PixVerse-black',exts:['svg','png']},
-      {label:'彩色浅字',en:'Color symbol · Light wordmark',file:'PixVerse-white',dark:true,exts:['svg','png']},
-      {label:'反白',en:'Reversed',file:'PixVerse-reverse',dark:true,exts:['svg','png']}
-    ]},
+    {id:'pv-logo',brand:'PixVerse',type:'logo',title:'标准 Logo',en:'Standard logo',variants:pixverseVariants('PixVerse')},
+    {id:'pv-world',brand:'PixVerse',type:'logo',title:'PixVerse · World',en:'PixVerse · World',variants:pixverseVariants('PixVerse-world')},
     {id:'pv-icon',brand:'PixVerse',type:'icon',title:'品牌图标',en:'Brand icon',icon:true,variants:[
       {label:'白底图标',en:'Light icon',file:'PixVerse-icon-light',exts:['svg','png']},
       {label:'深底图标',en:'Dark icon',file:'PixVerse-icon-dark',dark:true,exts:['svg','png']}

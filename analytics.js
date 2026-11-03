@@ -5,7 +5,7 @@ const TYPES = ['web', 'app', 'social'];
 const LANGS = ['en', 'zh', 'ja'];
 const ISSUES = ['missing_copy', 'missing_image', 'text_layout', 'low_resolution', 'other'];
 const EVENTS = ['active', 'export_started', 'export_checked', 'export_generated', 'export_cancelled', 'export_failed', 'export_returned', 'export_confirmed', 'logo_download'];
-const ASSETS = ['PixLab-domestic','PixLab-international','PixVerse-black','PixVerse-white','PixVerse-reverse','PixVerse-icon-light','PixVerse-icon-dark','AIsphere-black','AIsphere-white','Paiwo-logo-black','Paiwo-logo-white','Paiwo-black','Paiwo-white','Paiwo-white-on-black'];
+const ASSETS = ['PixLab-domestic','PixLab-international','PixVerse-black','PixVerse-white','PixVerse-reverse','PixVerse-world-black','PixVerse-world-white','PixVerse-world-reverse','PixVerse-icon-light','PixVerse-icon-dark','AIsphere-black','AIsphere-white','Paiwo-logo-black','Paiwo-logo-white','Paiwo-black','Paiwo-white','Paiwo-white-on-black'];
 function normalizeEvent(body) {
   if (!body || !EVENTS.includes(body.kind) || typeof body.id !== 'string' || !/^[a-zA-Z0-9_-]{8,80}$/.test(body.id)) throw Error('Invalid event');
   const data = {};
