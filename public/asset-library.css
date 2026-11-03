@@ -72,6 +72,7 @@
 .al-choice-block legend{font-size:15px;font-weight:600;line-height:24px;margin-bottom:12px;padding:0}
 .al-choice-block .al-all{position:absolute;right:0;top:0;display:flex;gap:7px;align-items:center;color:#7c6c88;font-size:12px;line-height:24px;cursor:pointer}
 .al-version-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:650px){.al-version-grid:has(> :nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}}
 .al-version{border:1px solid #e4deeb;border-radius:10px;padding:8px;background:white;cursor:pointer;min-width:0}
 .al-version:has(input:checked){border-color:#bda2df}
 .al-version:hover{border-color:#9d75ce}

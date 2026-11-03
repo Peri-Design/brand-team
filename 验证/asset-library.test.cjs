@@ -5,12 +5,14 @@ const catalog=require('../public/asset-catalog'),{makeAssetZip}=require('../publ
 const {app,ready}=require('../server');
 const all=catalog.assets.flatMap(a=>catalog.files(a)),dist=path.resolve(__dirname,'../public');
 test('catalog exposes exactly the available originals, with compatible cross-brand filters',()=>{
- assert.equal(catalog.assets.length,7);assert.equal(all.length,20);assert.equal(new Set(all.map(f=>f.name)).size,20);
+ assert.equal(catalog.assets.length,7);assert.equal(all.length,22);assert.equal(new Set(all.map(f=>f.name)).size,22);
  for(const f of all)assert.ok(fs.existsSync(path.join(dist,f.url)),f.url);
  assert.equal(catalog.filter({brand:'拍我 AI',format:'svg'}).length,1);
  assert.equal(catalog.filter({type:'combo',format:'svg'}).length,0);
  assert.equal(catalog.filter({query:'Paiwo'}).length,3);
- const pv=catalog.assets[0];assert.equal(catalog.files(pv,[1],['png']).length,1);assert.equal(catalog.files(pv,[],['png']).length,0);
+ const pv=catalog.assets[0];
+ assert.deepEqual(catalog.files(pv).map(f=>f.url),['black','white','reverse'].flatMap(kind=>['svg','png'].map(ext=>`/assets/PixVerse-${kind}.${ext}`)));
+assert.equal(catalog.files(pv,[1],['png']).length,1);assert.equal(catalog.files(pv,[],['png']).length,0);
  assert.equal(catalog.files(catalog.assets.find(a=>a.id==='pixlab-cn'),[0],['svg']).length,0);
 });
 test('a full cross-brand ZIP preserves every original byte, filename and CRC',async()=>{
@@ -20,7 +22,7 @@ test('a full cross-brand ZIP preserves every original byte, filename and CRC',as
 z=zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read()))
 assert z.testzip() is None
 print(json.dumps({n:hashlib.sha256(z.read(n)).hexdigest() for n in z.namelist()}))`],{input:bytes,maxBuffer:4*1024*1024}).toString());
- assert.equal(Object.keys(result).length,20);
+ assert.equal(Object.keys(result).length,22);
  for(const f of loaded)assert.equal(result[f.name],crypto.createHash('sha256').update(f.bytes).digest('hex'));
 });
 test('library scripts and all originals require membership, without requiring design approval',async()=>{

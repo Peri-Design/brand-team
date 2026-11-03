@@ -34,7 +34,7 @@
   }
   function logoDownload(value){
     const url=new URL(value,location.href);if(url.origin!==location.origin)return;
-    const match=url.pathname.match(/^\/assets\/(PixVerse-(?:black|white|icon-light|icon-dark)|PixLab-(?:domestic|international)|AIsphere-(?:black|white)|Paiwo-(?:logo-black|logo-white|black|white|white-on-black))\.(svg|png)$/);
+    const match=url.pathname.match(/^\/assets\/(PixVerse-(?:black|white|reverse|icon-light|icon-dark)|PixLab-(?:domestic|international)|AIsphere-(?:black|white)|Paiwo-(?:logo-black|logo-white|black|white|white-on-black))\.(svg|png)$/);
     if(match)send({id:id(),kind:'logo_download',asset:match[1],format:match[2]});
   }
   root.BrandAnalytics={begin,logoDownload};
