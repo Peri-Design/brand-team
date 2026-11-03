@@ -4,7 +4,7 @@ const M=MaterialModel,R=MaterialRenderer,S=MaterialSocial,T=MaterialWorkspaceToo
 let state=window.MaterialTestConfig?.state||M.fresh(),selected=null,imageSelected=null,focusKey=null,overview=null,canvasView=null,db,ready=false,readFailed=false,editRevision=0,stagedRevision=0,queue=Promise.resolve(),saveTimer,history=[],historyIndex=-1,historyGroup=null,historyTime=0,images=new Map(),reports=new Map(),zoom=1,hand=false,space=false,uploadTarget=null,addTypes=new Set(['web']),downloadKeys=[],gesture=null,renderId=0;
 $('#workspace').inert=true;
 const socialSpec=await fetch('vendor/social-spec.json?v=20261014-native-1').then(r=>r.json());
-const blank=await R.loadImage('/assets/blank-visual.svg'),socialLogo=await R.loadImage('/assets/PixVerse-white.svg'),socialLogoDark=await R.loadImage('/assets/PixVerse-black.svg');
+const blank=await R.loadImage('/assets/blank-visual.svg'),socialLogo=await R.loadImage('vendor/PixVerse-white-template.svg'),socialLogoDark=await R.loadImage('vendor/PixVerse-black-template.svg');
 const toast=msg=>{$('#toast').textContent=msg;$('#toast').hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').hidden=true,4500);};
 const current=()=>{if(!selected)return null;const [id,l]=selected.split(':'),m=state.items.find(m=>m.id===id);return m&&m.languages.includes(l)?{m,l,key:selected}:null;};
 const photo=m=>images.get(m.image||state.image)||null;

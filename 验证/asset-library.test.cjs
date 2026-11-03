@@ -15,6 +15,21 @@ test('catalog exposes exactly the available originals, with compatible cross-bra
 assert.equal(catalog.files(pv,[1],['png']).length,1);assert.equal(catalog.files(pv,[],['png']).length,0);
  assert.equal(catalog.files(catalog.assets.find(a=>a.id==='pixlab-cn'),[0],['svg']).length,0);
 });
+test('PixVerse downloads use tight artwork bounds while built-in templates retain their authored framing',()=>{
+ for(const {url,format} of catalog.files(catalog.assets[0])){
+  const bytes=fs.readFileSync(path.join(dist,url));
+  if(format==='png'){
+   assert.deepEqual([bytes.readUInt32BE(16),bytes.readUInt32BE(20),bytes[25]],[8192,1696,6],url);
+  }else{
+   const svg=bytes.toString();
+   assert.match(svg,/viewBox="25\.28 5\.7866 973\.44 201\.4268"/);
+   if(url.includes('-reverse'))continue;
+   const frame=fs.readFileSync(path.join(dist,'materials/vendor',path.basename(url,'.svg')+'-template.svg'),'utf8');
+   assert.match(frame,/viewBox="0 0 1024 213"/);
+   assert.equal(frame.slice(frame.indexOf('xml:space=')),svg.slice(svg.indexOf('xml:space=')));
+  }
+ }
+});
 test('a full cross-brand ZIP preserves every original byte, filename and CRC',async()=>{
  const loaded=all.map(f=>({...f,bytes:new Uint8Array(fs.readFileSync(path.join(dist,f.url)))}));
  const bytes=Buffer.from(await makeAssetZip(loaded).arrayBuffer());

@@ -10,7 +10,7 @@
  ];
  const spec = window.BANNER_SPEC, blockSpec=window.WEB_BLOCK_SPEC, logoAPI=window.BrandLogo;
  const logoCache=new Map();let logoToken=0;
- function logoURL(config){return config.kind==='custom'?config.image:config.kind==='none'?null:`assets/PixVerse-${config.kind}.svg`;}
+ function logoURL(config){return config.kind==='custom'?config.image:config.kind==='none'?null:`/materials/vendor/PixVerse-${config.kind}-template.svg`;}
  async function prepareLogo(config){const url=logoURL(config);if(!url)return null;if(logoCache.has(url))return logoCache.get(url);
   if(url.startsWith('data:image/svg+xml'))logoAPI.checkSVG(new TextDecoder().decode(Uint8Array.from(atob(url.split(',')[1]),c=>c.charCodeAt(0))));
   const img=await loadImage(url);if(img.naturalWidth*img.naturalHeight>16000000)throw Error('Logo 像素过大，请控制在 1600 万像素内。');
