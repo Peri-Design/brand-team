@@ -192,7 +192,7 @@ app.get('/api/auth/session', async (req, res, next) => {
 
 app.get('/api/auth/feishu/start', async (req, res, next) => {
   try {
-    const nextView = ['new', 'studio', 'files', 'admin'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
+    const nextView = ['new', 'studio', 'files', 'admin', 'tools'].includes(String(req.query.next || '')) ? String(req.query.next) : 'assets';
     res.set('Cache-Control', 'no-store');
     const context = entryContext(req);
     const existing = await currentUser(req);
@@ -235,7 +235,7 @@ app.get('/api/auth/feishu/callback', async (req, res, next) => {
   clearCookie(res,'pv_auth_entry');clearCookie(res,'pv_auth_ui');
   res.set('Cache-Control', 'no-store');
   try {
-    const nextView = ['new', 'studio', 'files', 'admin'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
+    const nextView = ['new', 'studio', 'files', 'admin', 'tools'].includes(cookies(req).pv_auth_next) ? cookies(req).pv_auth_next : 'assets';
     clearCookie(res, 'pv_auth_next');
     const expectedState = cookies(req).pv_oauth_state;
     clearCookie(res, 'pv_oauth_state');
@@ -268,7 +268,7 @@ app.get('/api/auth/feishu/callback', async (req, res, next) => {
     res.redirect(entryUrl(`/?view=${encodeURIComponent(nextView)}&auth=${encodeURIComponent(authResult)}`,context));
   } catch (error) {
     console.error('Feishu callback failed', error);
-    const target = cookies(req).pv_auth_next === 'admin' ? 'admin' : 'assets';
+    const target = ['admin', 'tools'].includes(saved.pv_auth_next) ? saved.pv_auth_next : 'assets';
     res.redirect(entryUrl(`/?view=${target}&auth=${error.status === 503 ? 'verification_unavailable' : 'failed'}`,context));
   }
 });
@@ -467,7 +467,7 @@ async function serveWorkspace(req, res, next) {
     html = html.replace('<head>', () => '<head><script type="application/json" id="workspace-session">' + initialSession + '</script>');
     if (!allowed) {
       html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261102-nav-1"></script>\n</head>');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261104-tools-1"></script>\n</head>');
     }
     html=html.replace('id="aisphere-assets" aria-labelledby="aisphere-logo-title" hidden','id="aisphere-assets" aria-labelledby="aisphere-logo-title"');
     res.type('html').send(html);

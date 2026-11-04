@@ -19,14 +19,14 @@
     toast.timer = setTimeout(() => { node.hidden = true; }, 3200);
   }
 
-  function showAssets() {
-    document.body.dataset.view = 'assets';
-    for (const view of ['studio', 'assets', 'files', 'admin']) {
+  function showMemberView(target) {
+    document.body.dataset.view = target;
+    for (const view of ['studio', 'assets', 'tools', 'files', 'admin']) {
       const section = $('#' + view);
-      if (section) section.hidden = view !== 'assets';
+      if (section) section.hidden = view !== target;
     }
     $$('[data-view]').forEach(button => {
-      const active = button.dataset.view === 'assets';
+      const active = button.dataset.view === target;
       button.classList.toggle('active', active);
       button.setAttribute('aria-current', active ? 'page' : 'false');
     });
@@ -121,16 +121,27 @@
   }
 
   function navigate(target) {
+    if (target === 'tools' || target === 'assets' && document.body.dataset.view === 'tools') {
+      const url = new URL(location.href);
+      if (target === 'tools') url.searchParams.set('view', target);
+      else url.searchParams.delete('view');
+      url.hash = '';
+      history.replaceState(history.state, '', url.pathname + url.search);
+      showMemberView(target);
+      return;
+    }
     if (session.user?.isAdmin || (target !== 'admin' && session.user?.accessStatus === 'active')) {
       location.href=(typeof window!=='undefined'&&window.BrandEntry?window.BrandEntry.url(`/?view=${encodeURIComponent(target)}`):`/?view=${encodeURIComponent(target)}`);
-    } else if (target === 'assets') showAssets();
+    } else if (target === 'assets') showMemberView('assets');
     else openGate(target);
   }
   function dismissGate() {
     $('#access-gate').close();
     if (session.user?.accessStatus === 'active') location.href=(typeof window!=='undefined'&&window.BrandEntry?window.BrandEntry.url('/?view=assets'):'/?view=assets');
   }
-  showAssets();
+  const requested = new URLSearchParams(location.search).get('view');
+  showMemberView(requested === 'tools' ? 'tools' : 'assets');
+  if (requested === 'tools') document.documentElement.removeAttribute('data-route-pending');
   $$('[data-view]').forEach(button => {
     button.onclick = () => navigate(button.dataset.view);
   });
@@ -164,7 +175,6 @@
   $('#access-gate').addEventListener('click', event => { if (event.target === $('#access-gate')) $('#access-gate').close(); });
 
   const params = new URLSearchParams(location.search);
-  const requested = params.get('view');
   const auth = params.get('auth');
   loadSession().then(data => {
     if (data.user?.isAdmin || (requested !== 'admin' && data.user?.accessStatus === 'active')) {

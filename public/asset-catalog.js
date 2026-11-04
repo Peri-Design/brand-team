@@ -36,7 +36,9 @@
     return assets.filter(a=>(!brand||a.brand===brand)&&(!type||a.type===type)&&(!format||a.variants.some(v=>v.exts.includes(format)))&&
       [a.brand,brandName(a.brand,true),a.title,a.en,...a.variants.flatMap(v=>[v.label,v.en,...v.exts])].join(' ').toLowerCase().includes(q));
   }
-  const api={assets,brands,brandName,files,filter};
+  // Date of the latest asset addition or replacement on the live site.
+  const updatedOn='2026-11-04';
+  const api={assets,brands,brandName,files,filter,updatedOn};
   if(typeof module==='object'&&module.exports)module.exports=api;
   else root.BrandAssetCatalog=api;
 })(typeof window==='undefined'?globalThis:window);

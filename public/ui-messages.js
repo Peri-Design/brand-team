@@ -54,6 +54,7 @@ window.PixVerseEnglish={
   "PixVerse · 品牌工作台": "PixVerse · Brand Studio",
   "品牌素材": "Brand assets",
   "新建设计": "New design",
+  "设计工具": "Design tools",
   "文件": "Files",
   "管理后台": "Admin",
   "网站版本": "Website version",

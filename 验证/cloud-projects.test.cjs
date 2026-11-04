@@ -222,7 +222,7 @@ test('新建设计与文件入口职责分离，文件默认展示全部设计',
   assert.match(html, /捏合或 ⌘\/Ctrl 滚轮缩放整个画布/);
   assert.match(app, /nudgeImage\(key/);
   assert.match(publicApp, /\$\('\[data-action="new-project"\]'\)\.onclick = \(\) => navigate\('new'\)/);
-  assert.match(server, /\['new', 'studio', 'files', 'admin'\]/);
+  assert.match(server, /\['new', 'studio', 'files', 'admin', 'tools'\]/);
   assert.doesNotMatch(html, /导入备份|下载当前备份/);
   assert.doesNotMatch(app, /导入备份|下载备份|backupCloudProject|backup-draft|import-project/);
 });
@@ -250,12 +250,12 @@ test('页面切换写入 URL，刷新后恢复当前页面', () => {
   assert.match(app, /url\.searchParams\.set\('view',view\)/);
   assert.match(app, /url\.searchParams\.delete\('auth'\)/);
   assert.match(app, /function show\(view\)[\s\S]*?syncViewUrl\(view\)/);
-  assert.match(app, /\['studio','files','admin'\]\.includes\(view\)&&!\(view==='studio'&&requestedProjectLoaded\)\)show\(view\)/);
+  assert.match(app, /\['studio','files','admin','tools'\]\.includes\(view\)&&!\(view==='studio'&&requestedProjectLoaded\)\)show\(view\)/);
   assert.doesNotMatch(app, /window\.history\.replaceState\(\{\},'',location\.pathname\)/);
   assert.match(html, /document\.documentElement\.dataset\.routePending=view/);
   assert.match(html, /class="route-loader" role="status" aria-live="polite"/);
   assert.match(css, /html\[data-route-pending="studio"\] \.route-loader span::before\{content:'正在打开当前文件…'\}/);
   assert.match(app, /finally\{document\.documentElement\.removeAttribute\('data-route-pending'\);\}/);
   assert.match(publicApp, /\.finally\(\(\) => document\.documentElement\.removeAttribute\('data-route-pending'\)\)/);
-  assert.match(fs.readFileSync(path.join(root, 'server.js'), 'utf8'), /access-public\.js\?v=20261102-nav-1/);
+  assert.match(fs.readFileSync(path.join(root, 'server.js'), 'utf8'), /access-public\.js\?v=20261104-tools-1/);
 });

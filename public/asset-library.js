@@ -3,7 +3,7 @@
   'use strict';
   const root=document.getElementById('brand-asset-library'), catalog=window.BrandAssetCatalog;
   if(!root||!catalog)return;
-  const {assets,brands,files,filter,brandName}=catalog;
+  const {assets,brands,files,filter,brandName,updatedOn}=catalog;
   const $=s=>root.querySelector(s), $$=s=>[...root.querySelectorAll(s)];
   const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
   const en=()=>window.PixVerseUI?.locale==='en',t=(zh,english)=>en()?english:zh;
@@ -11,7 +11,7 @@
   const chevron=icon('chevron-right');
   const types=[['','全部类型','All types'],['logo','标准 Logo','Standard logo'],['icon','图标','Icons'],['combo','组合 Logo','Combination logo'],['lab','实验室标志','Lab logo']];
   const state={brand:'',type:'',format:'',query:'',page:1},chosen=new Set(),choices=new Map();
-  let dialogMode=null,detailId=null,busy=false,returnFocus=null;
+  let dialogMode=null,detailId=null,busy=false,returnFocus=null,category='logos';
   const dialog=document.createElement('dialog');
   dialog.className='asset-library-dialog';dialog.setAttribute('data-ui-content','');dialog.setAttribute('aria-labelledby','asset-dialog-title');
   document.body.append(dialog);
@@ -21,9 +21,31 @@
   const image=(a,v)=>`<img src="/assets/${v.file}.${v.exts[0]}" alt="${esc(brand(a)+' '+title(a)+' '+version(v))}" class="${a.icon?'is-icon':''}" loading="lazy">`;
   function menu(kind,label,options,current){return `<div class="al-select" data-filter="${kind}"><button type="button" class="al-trigger" aria-label="${esc(label)}" aria-haspopup="listbox" aria-expanded="false" aria-controls="asset-${kind}-options"><span>${esc(options.find(o=>o[0]===current)[1])}</span>${icon('chevron-down')}</button><div id="asset-${kind}-options" class="al-menu" role="listbox" aria-label="${esc(label)}" hidden>${options.map(([value,label])=>`<button type="button" role="option" tabindex="-1" aria-selected="${current===value}" data-value="${esc(value)}"><span>${esc(label)}</span>${icon('check')}</button>`).join('')}</div></div>`;}
   function card(a){return `<article class="al-card"><div class="al-visual ${a.variants[0].dark?'dark':''}"><label class="al-select-card"><input type="checkbox" data-select="${a.id}" aria-label="${esc(t('加入下载清单：','Add to download list: ')+brand(a)+' '+title(a))}" ${chosen.has(a.id)?'checked':''}></label>${image(a,a.variants[0])}<span class="al-version-count">${t(a.variants.length+' 个版本',a.variants.length+' version'+(a.variants.length===1?'':'s'))}</span></div><div class="al-card-info"><p>${esc(brand(a))}</p><h3>${esc(title(a))}</h3><button class="al-detail" data-detail="${a.id}">${t('查看与下载','View & download')}${chevron}</button></div></article>`;}
+  const fonts=[
+    {id:'alibaba-puhuiti',name:'阿里巴巴普惠体 3.0',englishName:'Alibaba PuHuiTi 3.0',zh:'简体中文 · 支持拉丁、希腊和西里尔字母',en:'Simplified Chinese · Latin, Greek & Cyrillic scripts',href:'https://www.alibabafonts.com/#/font'},
+    {id:'montserrat',name:'Montserrat',zh:'拉丁字母 · 静态及可变 TTF',en:'Latin · Static and variable TTF',file:'Montserrat.zip'},
+    {id:'poppins',name:'Poppins',zh:'拉丁字母 · 18 款静态 TTF',en:'Latin · 18 static TTF styles',file:'Poppins.zip'}
+  ];
+  function fontPanel(){
+    return `<section aria-label="${t('常用字体','Common fonts')}">
+      <p class="al-font-intro">${t('团队日常设计常用字体，按需下载','Fonts commonly used by the team, available to download as needed')}</p>
+      <ul class="al-font-list">${fonts.map(f=>{
+        const name=en()?(f.englishName||f.name):f.name;
+        const link=f.file
+          ? `<a href="/assets/common-fonts/${f.file}" download aria-label="${esc(t('下载 ','Download ')+name+' ZIP')}">${t('下载 ZIP','Download ZIP')} ${icon('download')}</a>`
+          : `<a href="${f.href}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t('前往官网下载 ','Open official download site for ')+name)}">${t('前往官网下载','Get from official site')} ${icon('external')}</a>`;
+        return `<li class="al-font-row"><div class="al-font-name"><h2>${esc(name)}</h2><p>${t(f.zh,f.en)}</p></div><img src="/assets/common-fonts/${f.id}.webp" alt="" width="260" height="60">${link}</li>`;
+      }).join('')}</ul>
+    </section>`;
+  }
+  function logoPanel(){return `<div class="al-toolbar"><label class="al-search">${icon('search')}<input type="search" id="asset-search" aria-label="${t('搜索素材','Search assets')}" placeholder="${t('搜索名称、品牌或版本…','Search name, brand or version…')}" value="${esc(state.query)}"></label>${menu('brand',t('按品牌筛选','Filter by brand'),[['',t('全部品牌','All brands')],...brands.map(b=>[b,brandName(b,en())])],state.brand)}${menu('format',t('按文件格式筛选','Filter by format'),[['',t('全部格式','All formats')],['svg','SVG'],['png','PNG']],state.format)}</div><div class="al-types" aria-label="${t('素材类型','Asset type')}">${types.map(([value,zh,english])=>`<button data-type="${value}" aria-pressed="${value===state.type}">${t(zh,english)}</button>`).join('')}</div><div id="asset-results" aria-live="polite"></div><footer class="al-footer"><span>${t('供外部团队使用的素材请前往官网','For assets to share externally, visit the official websites')}</span><div><a href="https://pixverse.ai/en/brand" target="_blank" rel="noopener noreferrer">PixVerse ${icon('external')}</a><a href="https://aishiai.com/brand" target="_blank" rel="noopener noreferrer">${t('爱诗科技及旗下品牌','AIsphere & product brands')} ${icon('external')}</a></div></footer>`;}
   function render(){
     closeMenus();
-    root.innerHTML=`<header class="al-heading"><div><p class="al-eyebrow">BRAND ASSET LIBRARY</p><h1>${t('品牌素材','Brand assets')}</h1><p class="al-sub">${t('找到合适的素材，让每一次表达保持一致','Find the right assets for a consistent brand expression')}</p></div><div class="al-heading-actions"><a class="al-guide" href="${esc(window.BrandEntry?.url('/brand-guidelines.html')||'/brand-guidelines.html')}">${t('查看使用规范','Usage guidelines')}${chevron}</a><button class="al-queue" data-open-batch>${t('下载清单','Download list')} <span data-chosen-count>${chosen.size}</span></button></div></header><div class="al-toolbar"><label class="al-search">${icon('search')}<input type="search" id="asset-search" aria-label="${t('搜索素材','Search assets')}" placeholder="${t('搜索名称、品牌或版本…','Search name, brand or version…')}" value="${esc(state.query)}"></label>${menu('brand',t('按品牌筛选','Filter by brand'),[['',t('全部品牌','All brands')],...brands.map(b=>[b,brandName(b,en())])],state.brand)}${menu('format',t('按文件格式筛选','Filter by format'),[['',t('全部格式','All formats')],['svg','SVG'],['png','PNG']],state.format)}</div><div class="al-types" aria-label="${t('素材类型','Asset type')}">${types.map(([value,zh,english])=>`<button data-type="${value}" aria-pressed="${value===state.type}">${t(zh,english)}</button>`).join('')}</div><div id="asset-results" aria-live="polite"></div><footer class="al-footer"><span>${t('供外部团队使用的素材请前往官网','For assets to share externally, visit the official websites')}</span><div><a href="https://pixverse.ai/en/brand" target="_blank" rel="noopener noreferrer">PixVerse ${icon('external')}</a><a href="https://aishiai.com/brand" target="_blank" rel="noopener noreferrer">${t('爱诗科技及旗下品牌','AIsphere & product brands')} ${icon('external')}</a></div></footer>`;
+    root.innerHTML=`<header class="al-heading"><div><p class="al-eyebrow">BRAND ASSET LIBRARY</p><h1>${t('品牌素材','Brand assets')}</h1><p class="al-sub">${t('找到合适的素材，让每一次表达保持一致','Find the right assets for a consistent brand expression')}</p><p class="al-updated">${t('素材更新于','Assets updated')} <time datetime="${updatedOn}">${updatedOn}</time></p></div>${category==='logos'?`<div class="al-heading-actions"><a class="al-guide" href="${esc(window.BrandEntry?.url('/brand-guidelines.html')||'/brand-guidelines.html')}">${t('查看使用规范','Usage guidelines')}${chevron}</a><button class="al-queue" data-open-batch>${t('下载清单','Download list')} <span data-chosen-count>${chosen.size}</span></button></div>`:''}</header><nav class="al-categories" aria-label="${t('资源分类','Resource categories')}">
+      <a href="#logo-assets" data-category="logos" ${category==='logos'?'aria-current="page"':''}>${t('Logo 与图标','Logos & icons')}</a>
+      <a href="#common-fonts" data-category="fonts" ${category==='fonts'?'aria-current="page"':''}>${t('常用字体','Common fonts')}</a>
+    </nav>${category==='fonts'?fontPanel():logoPanel()}`;
+    if(category==='fonts')return;
     $('#asset-search').oninput=e=>{state.query=e.target.value;state.page=1;renderResults();};
     $$('[data-type]').forEach(b=>b.onclick=()=>{state.type=b.dataset.type;state.page=1;$$('[data-type]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderResults();});
     $('[data-open-batch]').onclick=()=>openDialog('batch');
@@ -85,7 +107,14 @@
   dialog.addEventListener('close',()=>{dialogMode=null;if(returnFocus?.isConnected)returnFocus.focus();});
   document.addEventListener('click',e=>{if(e.target.closest('.rail')&&dialog.open&&!busy)dialog.close();});
   window.addEventListener('ui-language-change',()=>{render();if(dialog.open&&!busy)renderDialog();});
-  function applyHash(){const key=location.hash;const map={'#pixverse-logo-title':'PixVerse','#paiwo-assets':'拍我 AI','#pixlab-assets':'PixLab','#aisphere-assets':'爱诗科技'};if(map[key]){state.brand=map[key];state.page=1;render();}}
+  function applyHash(){
+    const key=location.hash,focusedCategory=document.activeElement?.dataset.category;
+    const map={'#pixverse-logo-title':'PixVerse','#paiwo-assets':'拍我 AI','#pixlab-assets':'PixLab','#aisphere-assets':'爱诗科技'};
+    category=key==='#common-fonts'?'fonts':'logos';
+    if(map[key]){state.brand=map[key];state.page=1;}
+    render();
+    if(focusedCategory)$('[aria-current="page"]')?.focus();
+  }
   window.addEventListener('hashchange',applyHash);
-  render();applyHash();
+  applyHash();
 })();
