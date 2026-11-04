@@ -135,8 +135,8 @@
 .al-badge-controls,.al-badge-result{min-width:0;border:1px solid var(--line);border-radius:12px;padding:18px}
 .al-badge-controls fieldset{padding:0;border:0;margin:0 0 18px}
 .al-badge-controls legend,.al-badge-copy{display:block;padding:0;margin:0 0 8px;font-size:13px;font-weight:650}
-.al-badge-controls fieldset label{display:inline-flex;min-height:44px;align-items:center;gap:7px;margin-right:12px;font-size:13px;white-space:nowrap}
-.al-badge-controls input[type=radio]{width:16px;height:16px;margin:0;accent-color:var(--purple)}
+.al-badge-controls fieldset label{display:inline-flex;min-height:44px;align-items:center;gap:7px;margin-right:12px;font-size:13px;white-space:nowrap;cursor:pointer}
+.al-badge-controls input[type=radio]{width:16px;height:16px;flex:none;margin:0;accent-color:var(--purple);cursor:pointer}
 #badge-copy{width:100%;min-height:44px}
 #badge-status{color:#a04b17;font-size:12px;line-height:1.5;min-height:18px;margin:7px 0 14px}
 .al-badge-downloads{display:flex;flex-wrap:wrap;gap:8px}
