@@ -178,7 +178,7 @@ test('新建设计与文件入口职责分离，文件默认展示全部设计',
   const app = fs.readFileSync(path.join(root, 'public/app.js'), 'utf8');
   const publicApp = fs.readFileSync(path.join(root, 'public/access-public.js'), 'utf8');
   const server = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
-  assert.match(html, /data-action="new-project"[^>]*>[\s\S]*?<span>新建设计<\/span>/);
+  assert.match(html, /data-action="new-project"[^>]*>[\s\S]*?<span>新建物料<\/span>/);
   assert.doesNotMatch(html, /id="create-project"/, '文件页不应重复显示新建设计入口');
   assert.match(html, /class="active" role="tab" aria-selected="true" data-file-scope="all">所有文件/);
   assert.doesNotMatch(html, /<span>运营设计<\/span>/);
