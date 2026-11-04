@@ -31,8 +31,9 @@
       <p class="al-font-intro">${t('团队日常设计常用字体，按需下载','Fonts commonly used by the team, available to download as needed')}</p>
       <ul class="al-font-list">${fonts.map(f=>{
         const name=en()?(f.englishName||f.name):f.name;
-        const link=f.file
-          ? `<a href="/assets/common-fonts/${f.file}" download aria-label="${esc(t('下载 ','Download ')+name+' ZIP')}">${t('下载 ZIP','Download ZIP')} ${icon('download')}</a>`
+        const zip=f.file||(f.id==='alibaba-puhuiti'&&document.documentElement.hasAttribute('data-alibaba-font-zip')?'AlibabaPuHuiTi-3.0.zip':null);
+        const link=zip
+          ? `<a href="/assets/common-fonts/${zip}" download aria-label="${esc(t('下载 ','Download ')+name+' ZIP')}">${t('下载 ZIP','Download ZIP')} ${icon('download')}</a>`
           : `<a href="${f.href}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t('前往官网下载 ','Open official download site for ')+name)}">${t('前往官网下载','Get from official site')} ${icon('external')}</a>`;
         return `<li class="al-font-row"><div class="al-font-name"><h2>${esc(name)}</h2><p>${t(f.zh,f.en)}</p></div><img src="/assets/common-fonts/${f.id}.webp" alt="" width="260" height="60">${link}</li>`;
       }).join('')}</ul>

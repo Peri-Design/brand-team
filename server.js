@@ -17,6 +17,7 @@ const staticDir = env.STATIC_DIR
   ? path.resolve(env.STATIC_DIR)
   : path.join(__dirname, fs.existsSync(path.join(__dirname, 'public')) ? 'public' : 'dist');
 const materialModel = require(path.join(staticDir, 'materials/model'));
+const alibabaFontZip = env.ALIBABA_FONT_ZIP_PATH ? path.resolve(env.ALIBABA_FONT_ZIP_PATH) : null;
 const appId = env.FEISHU_APP_ID || '';
 const appSecret = env.FEISHU_APP_SECRET || '';
 const publicUrl = (env.PUBLIC_URL || '').replace(/\/$/, '');
@@ -460,6 +461,9 @@ async function serveWorkspace(req, res, next) {
     const designAllowed = Boolean(user.isAdmin || user.accessStatus === 'active');
     const allowed = designAllowed && (!adminEntry || user.isAdmin);
     let html = await fs.promises.readFile(path.join(staticDir, 'index.html'), 'utf8');
+    if (alibabaFontZip && await fs.promises.stat(alibabaFontZip).then(file => file.isFile() && file.size > 0, () => false)) {
+      html = html.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-alibaba-font-zip>');
+    }
     // The first paint must use verified permissions, even when fonts/scripts/session fetches are slow.
     if (designAllowed) html = html.replace(/<button\b[^>]*class="nav protected-nav is-locked"[^>]*>/g, tag => tag.replace(' is-locked', '').replace(' aria-haspopup="dialog"', ''));
     if (user.isAdmin) html = html.replace(/<button id="admin-nav"[^>]*>/, tag => tag.replace(' hidden', ''));
@@ -504,6 +508,16 @@ app.use(async (req, res, next) => {
     next(error);
   }
 });
+if (alibabaFontZip) {
+  // The organization membership gate above also applies to HEAD and range requests.
+  app.get('/assets/common-fonts/AlibabaPuHuiTi-3.0.zip', (_req, res, next) => {
+    res.download(alibabaFontZip, '阿里普惠3.0_字体.zip', { cacheControl: false }, error => {
+      if (!error) return;
+      if (!res.headersSent && error.status === 404) return res.redirect('https://www.alibabafonts.com/#/font');
+      next(error);
+    });
+  });
+}
 app.use(express.static(staticDir, {
   etag: false,
   setHeaders(res) { res.setHeader('Cache-Control', 'private, no-store'); res.setHeader('Vary', 'Cookie'); }
