@@ -34,8 +34,9 @@
         const zip=f.file||(f.id==='alibaba-puhuiti'&&document.documentElement.hasAttribute('data-alibaba-font-zip')?'AlibabaPuHuiTi-3.0.zip':null);
         const link=zip
           ? `<a href="/assets/common-fonts/${zip}" download aria-label="${esc(t('下载 ','Download ')+name+' ZIP')}">${t('下载 ZIP','Download ZIP')} ${icon('download')}</a>`
-          : `<a href="${f.href}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t('前往官网下载 ','Open official download site for ')+name)}">${t('前往官网下载','Get from official site')} ${icon('external')}</a>`;
-        return `<li class="al-font-row"><div class="al-font-name"><h2>${esc(name)}</h2><p>${t(f.zh,f.en)}</p></div><img src="/assets/common-fonts/${f.id}.webp" alt="" width="260" height="60">${link}</li>`;
+          : `<a href="${f.href}" target="_blank" rel="noopener noreferrer">${t('去官网下载普惠体','Open Alibaba Fonts')} ${icon('external')}</a>`;
+        const guide=zip?'':`<p>${t('简体中文选「阿里巴巴普惠体 3.0」，其他语言请选择对应版本','Choose Alibaba PuHuiTi 3.0 for Simplified Chinese. For other languages, select the corresponding version.')}</p>`;
+        return `<li class="al-font-row"><div class="al-font-name"><h2>${esc(name)}</h2><p>${t(f.zh,f.en)}</p>${guide}</div><img src="/assets/common-fonts/${f.id}.webp" alt="" width="260" height="60">${link}</li>`;
       }).join('')}</ul>
     </section>`;
   }
