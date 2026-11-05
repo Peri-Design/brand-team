@@ -64,20 +64,20 @@
       $('#access-gate-copy').textContent = '使用飞书验证管理员身份后，即可进入后台审核申请。';
     } else if (status === 'none') {
       $('#access-gate-title').textContent = '申请设计权限';
-      $('#access-gate-copy').textContent = '你已可下载全部品牌 Logo。制作、保存和导出运营物料需要管理员批准，请单独提交设计权限申请。';
+      $('#access-gate-copy').textContent = '用于制作运营物料';
     } else if (status === 'pending') {
       $('#access-gate-title').textContent = '设计权限待审核';
-      $('#access-gate-copy').textContent = '全部品牌 Logo 下载权限已自动开通。设计申请通过后，才能制作、保存和导出运营物料。';
+      $('#access-gate-copy').textContent = '审核期间仍可下载品牌素材';
     } else if (status === 'rejected') {
       $('#access-gate-title').textContent = '设计权限未通过';
-      $('#access-gate-copy').textContent = '本次设计权限申请未通过，你仍可下载全部品牌素材，也可以重新申请设计权限';
+      $('#access-gate-copy').textContent = '本次设计权限申请未通过，可重新申请，品牌素材仍可下载';
     } else if (status === 'suspended') {
       $('#access-gate-title').textContent = '设计权限暂不可用';
-      $('#access-gate-copy').textContent = '你的设计权限已被停用。如需恢复，请联系管理员重新开通。';
+      $('#access-gate-copy').textContent = '设计权限已停用，品牌素材仍可下载，如需恢复请联系管理员';
 
     } else {
       $('#access-gate-title').textContent = '需要访问权限';
-      $('#access-gate-copy').textContent = '公司内部飞书账号登录后可下载全部 Logo。设计权限需另行申请，由管理员确认。';
+      $('#access-gate-copy').textContent = '公司同事登录即可下载品牌素材，制作运营物料需单独申请设计权限';
     }
     if (!dialog.open) {
       dialog.showModal();
@@ -121,15 +121,6 @@
   }
 
   function navigate(target) {
-    if (target === 'tools' || target === 'assets' && document.body.dataset.view === 'tools') {
-      const url = new URL(location.href);
-      if (target === 'tools') url.searchParams.set('view', target);
-      else url.searchParams.delete('view');
-      url.hash = '';
-      history.replaceState(history.state, '', url.pathname + url.search);
-      showMemberView(target);
-      return;
-    }
     if (session.user?.isAdmin || (target !== 'admin' && session.user?.accessStatus === 'active')) {
       location.href=(typeof window!=='undefined'&&window.BrandEntry?window.BrandEntry.url(`/?view=${encodeURIComponent(target)}`):`/?view=${encodeURIComponent(target)}`);
     } else if (target === 'assets') showMemberView('assets');
@@ -140,8 +131,7 @@
     if (session.user?.accessStatus === 'active') location.href=(typeof window!=='undefined'&&window.BrandEntry?window.BrandEntry.url('/?view=assets'):'/?view=assets');
   }
   const requested = new URLSearchParams(location.search).get('view');
-  showMemberView(requested === 'tools' ? 'tools' : 'assets');
-  if (requested === 'tools') document.documentElement.removeAttribute('data-route-pending');
+  showMemberView('assets');
   $$('[data-view]').forEach(button => {
     button.onclick = () => navigate(button.dataset.view);
   });
@@ -181,7 +171,7 @@
       location.reload();
       return;
     }
-    if (['new', 'studio', 'files', 'admin'].includes(requested)) openGate(requested);
+    if (['new', 'studio', 'tools', 'files', 'admin'].includes(requested)) openGate(requested);
     if (auth === 'success' && data.authenticated && data.user) {
       window.BrandCharacter?.success(data);
       const clean = new URL(location.href);
@@ -196,6 +186,6 @@
     // Keep the target and failed-auth marker so refresh cannot restart an OAuth loop.
   }).catch(() => {
     sessionError = true;
-    if (['new', 'studio', 'files', 'admin'].includes(requested)) openGate(requested);
+    if (['new', 'studio', 'tools', 'files', 'admin'].includes(requested)) openGate(requested);
   }).finally(() => document.documentElement.removeAttribute('data-route-pending'));
 })();

@@ -1,14 +1,14 @@
-/* PixVerse corner badge spec: Figma 21:1491 and 23:1635. */
+/* PixVerse fixed-18 spec: Figma 24:2648 / components 24:3103 (2026-11-05). */
 (function(root){
   'use strict';
   const assets='/assets/corner-badge/';
   const width=280, wordmarkHeight=49.8226, gap=8, maxInkWidth=244, pngScale=4;
   const draft={text:'GPT-6 ASTRA',ink:'white',background:'dark'};
-  const settings=[[36,0]];
-  for(let halfSize=71;halfSize>=48;halfSize--)settings.push([halfSize/2,0]);
-  for(let spacing=1;spacing<=6;spacing++)settings.push([24,-spacing/10]);
-  const barHeight=size=>Math.min(45,Math.max(38,Math.ceil(.728*size+18)));
-  const number=value=>Number(value.toFixed(5));
+  const maxSize=36, regularMinSize=24, minSize=17.5, minTracking=-.6;
+  const barHeight=size=>Math.min(45,Math.max(size<regularMinSize?32:38,Math.ceil(.728*size+18)));
+  // Preserve outline precision: rounding the font scale to five decimals visibly
+  // shifts the edges of long labels even when the layout itself fits exactly.
+  const number=value=>Number(value.toFixed(9));
 
   function layoutText(hb,font,upem,measureOutline,text){
     text=text.trim();
@@ -39,7 +39,7 @@
     }
     if(!outlines.length)return {error:'empty'};
 
-    for(const [size,tracking] of settings){
+    function at(size,tracking){
       const scale=size/upem,height=barHeight(size);
       const glyphs=outlines.map(g=>({
         ...g,x:g.x*scale+g.clusterIndex*tracking,y:-g.y*scale
@@ -48,12 +48,30 @@
       const right=Math.max(...glyphs.map(g=>g.x+(g.box.x+g.box.width)*scale));
       const top=Math.min(...glyphs.map(g=>g.y-(g.box.y+g.box.height)*scale));
       const bottom=Math.max(...glyphs.map(g=>g.y-g.box.y*scale));
-      if(right-left<=maxInkWidth && bottom-top<=height){
-        return {text,size,tracking,scale,glyphs,height,inkWidth:right-left,inkHeight:bottom-top,
-          offsetX:(width-left-right)/2,offsetY:wordmarkHeight+gap+(height-top-bottom)/2};
+      return {text,size,tracking,scale,glyphs,height,inkWidth:right-left,inkHeight:bottom-top,
+        offsetX:(width-left-right)/2,offsetY:wordmarkHeight+gap+(height-top-bottom)/2};
+    }
+    // Choose the largest fitting value. Font size and tracking remain continuous;
+    // only the bar dimensions and corner radii use integer pixels.
+    function fit(low,high,make){
+      for(let i=0;i<36;i++){
+        const middle=(low+high)/2;
+        if(make(middle).inkWidth>maxInkWidth)high=middle;else low=middle;
+      }
+      return make(low);
+    }
+    let result=at(maxSize,0);
+    if(result.inkWidth>maxInkWidth){
+      if(at(regularMinSize,0).inkWidth<=maxInkWidth){
+        result=fit(regularMinSize,maxSize,size=>at(size,0));
+      }else if(at(regularMinSize,minTracking).inkWidth<=maxInkWidth){
+        result=fit(minTracking,0,tracking=>at(regularMinSize,tracking));
+      }else{
+        if(at(minSize,minTracking).inkWidth>maxInkWidth)return {error:'overflow'};
+        result=fit(minSize,regularMinSize,size=>at(size,minTracking));
       }
     }
-    return {error:'overflow'};
+    return result.inkHeight<=result.height?result:{error:'overflow'};
   }
 
   function composeSvg(layout,wordmark){
@@ -195,13 +213,27 @@
     });
     $$('[data-badge-bg]').forEach(button=>button.onclick=()=>background(button.dataset.badgeBg));
     buttons.forEach(button=>button.onclick=async()=>{
-      if(!current)return;
+      if(!current||disposed)return;
       const snapshot=current,format=button.dataset.badgeDownload;
+      try{
+        const response=await fetch('/api/auth/session',{cache:'no-store',signal:AbortSignal.timeout(10000)});
+        if(!response.ok)throw Error('session');
+        const session=await response.json();
+        if(!session.authenticated||!(session.user?.isAdmin||session.user?.accessStatus==='active')){
+          buttons.forEach(button=>{button.disabled=true;});
+          root.dispatchEvent(new CustomEvent('workspace-session-updated',{detail:session}));
+          return;
+        }
+      }catch{
+        if(!disposed)status.textContent=t('暂时无法验证设计权限，请重试','Could not verify design access. Try again.');
+        return;
+      }
+      if(disposed)return;
       const safeText=snapshot.layout.text.replace(/[^\p{L}\p{N} ._-]+/gu,'-').slice(0,80);
       const filename='PixVerse-'+safeText+'-'+snapshot.ink+'.'+format;
       if(format==='svg'){save(snapshot.blob,filename);return;}
       const url=URL.createObjectURL(snapshot.blob);
-      try{save(await png(url,wordmarkHeight+gap+snapshot.layout.height),filename);}
+      try{const blob=await png(url,wordmarkHeight+gap+snapshot.layout.height);if(!disposed)save(blob,filename);}
       catch{if(!disposed)status.textContent=t('PNG 导出失败，请重试','PNG export failed. Try again');}
       finally{URL.revokeObjectURL(url);}
     });

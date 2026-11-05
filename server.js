@@ -449,7 +449,7 @@ app.patch('/api/admin/users/:openId/access', sameOrigin, requireAuth, requireAdm
 app.get(['/materials', '/materials/', '/materials/index.html'], async (req,res,next)=>{try{const user=await currentUser(req);if(!user||!user.isAdmin&&user.accessStatus!=='active')return res.redirect(entryUrl('/?view=new',entryContext(req)));if(req.path==='/materials')return res.redirect('/materials/'+(req.url.includes('?')?req.url.slice(req.url.indexOf('?')):''));res.set('Cache-Control','no-store');res.sendFile(path.join(staticDir,'materials/index.html'));}catch(e){if(e.status===503)return sendOrganizationGate(req,res,'verification_unavailable',503);next(e);}});
 app.use('/materials',requireDesigner,(_req,res,next)=>{res.set('Cache-Control','no-store');next();});
 
-const privateDesignScripts = ['/app.js', '/font-coverage.js', '/templates.js', '/web-blocks.js', '/history.js', '/logo.js', '/canvas-view.js', '/palette.js', '/export-preflight.js'];
+const privateDesignScripts = ['/corner-badge.js', '/app.js', '/font-coverage.js', '/templates.js', '/web-blocks.js', '/history.js', '/logo.js', '/canvas-view.js', '/palette.js', '/export-preflight.js'];
 app.get(privateDesignScripts, requireDesigner, (_req, _res, next) => next());
 
 async function serveWorkspace(req, res, next) {
@@ -470,8 +470,8 @@ async function serveWorkspace(req, res, next) {
     const initialSession = JSON.stringify(sessionPayload(user, true)).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
     html = html.replace('<head>', () => '<head><script type="application/json" id="workspace-session">' + initialSession + '</script>');
     if (!allowed) {
-      html = html.replace(/<script defer src="(?:app|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
-      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261104-tools-1"></script>\n</head>');
+      html = html.replace(/<script defer src="(?:app|corner-badge|font-coverage|templates|web-blocks|history|logo|canvas-view|palette|export-preflight)\.js[^"]*"><\/script>/g, '');
+      html = html.replace('</head>', '  <script defer src="access-public.js?v=20261105-unified-access-1"></script>\n</head>');
     }
     html=html.replace('id="aisphere-assets" aria-labelledby="aisphere-logo-title" hidden','id="aisphere-assets" aria-labelledby="aisphere-logo-title"');
     res.type('html').send(html);
@@ -500,7 +500,7 @@ app.use(async (req, res, next) => {
     }
     const canonical = path.posix.normalize(decodeURIComponent(req.path));
     if (['/', '/index.html'].includes(canonical)) return serveWorkspace(req, res, next);
-    if (privateDesignScripts.includes(canonical) || canonical.startsWith('/materials/')) return requireDesigner(req, res, next);
+    if (privateDesignScripts.includes(canonical) || canonical.startsWith('/assets/corner-badge/') || canonical.startsWith('/materials/')) return requireDesigner(req, res, next);
     next();
   } catch (error) {
     if (error instanceof URIError) return res.sendStatus(400);

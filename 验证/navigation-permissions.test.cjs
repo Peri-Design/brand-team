@@ -10,7 +10,7 @@ test('authorized navigation is unlocked in server HTML before scripts or fonts l
   const query=`entry=${entry}&ui=${ui}`;
   assert.equal((await request(app).get('/brand-guidelines.html?'+query).set('Cookie',cookie)).status,200);
   const r=await request(app).get('/?view=assets&'+query).set('Cookie',cookie);
-  const tags=navTags(r.text);assert.equal(tags.length,2);
+  const tags=navTags(r.text);assert.equal(tags.length,3);
   for(const tag of tags)assert.doesNotMatch(tag,/is-locked|aria-haspopup/);
   assert.match(r.text,/src="app\.js/);assert.match(r.headers['cache-control'],/no-store/);
  }
@@ -65,4 +65,34 @@ test('history restore keeps confirmed navigation while revalidation is pending, 
  resolveSession(session('active'));await settle();assert.deepEqual(states,['active','active']);
  handlers.pageshow({persisted:true});resolveSession(session('suspended'));await settle();assert.deepEqual(states,['active','active','suspended']);
  assert.ok(events.some(e=>e.type==='workspace-session-updated'&&e.detail.user.accessStatus==='suspended'));
+});
+
+test('badge tools require design approval while the asset library remains available to members', async () => {
+ const resources=['/corner-badge.js','/%63orner-badge.js','/assets/corner-badge/hb.wasm','/assets%2Fcorner-badge%2Fwordmark-white.svg'];
+ const admin=await member('nav-admin',null,'Navigation QA Admin');
+ const scenarios=[{label:'anonymous',cookie:null,allowed:false}];
+ for(const status of ['none','pending','rejected','suspended','active']){
+  scenarios.push({label:status,cookie:await member('badge-'+status,status),allowed:status==='active'});
+ }
+ scenarios.push({label:'admin',cookie:admin,allowed:true});
+ for(const scenario of scenarios){
+  const get=(url,method='get')=>{
+   const req=request(app)[method](url);
+   return scenario.cookie?req.set('Cookie',scenario.cookie):req;
+  };
+  for(const url of resources){
+   const result=await get(url,'head');
+   assert.equal(result.status,scenario.cookie?(scenario.allowed?200:403):401,scenario.label+' '+url);
+  }
+  const range=await get('/assets/corner-badge/wordmark-black.svg').set('Range','bytes=0-3');
+  assert.equal(range.status,scenario.cookie?(scenario.allowed?206:403):401,scenario.label+' Range');
+  const page=await get('/?view=tools&entry=domestic&ui=zh');
+  assert.equal(/<script defer src="corner-badge\.js/.test(page.text),scenario.allowed,scenario.label+' tools script');
+  const tags=navTags(page.text);
+  assert.equal(tags.length,scenario.cookie?3:0,scenario.label+' protected navigation');
+  if(!scenario.cookie)continue;
+  assert.equal((await get('/assets/PixVerse-black.svg','head')).status,200,scenario.label+' logos');
+  assert.equal((await get('/assets/common-fonts/Montserrat.zip','head')).status,200,scenario.label+' fonts');
+  assert.equal((await get('/api/cloud/projects')).status,scenario.allowed?200:403,scenario.label+' files');
+ }
 });

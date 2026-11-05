@@ -24,11 +24,11 @@
       login.href = url('/api/auth/feishu/start?next=assets');
       logout.hidden = !allowed;
       design.hidden = !allowed || user.isAdmin || user.accessStatus === 'active';
-      design.classList.toggle('primary', user?.accessStatus === 'none');
-      design.classList.toggle('secondary', user?.accessStatus !== 'none');
-      design.textContent = user?.accessStatus === 'pending' ? '查看申请状态' : ['suspended','rejected'].includes(user?.accessStatus) ? '查看设计权限' : '申请设计权限';
-      note.textContent = allowed ? '已开通全部品牌 Logo 下载权限' : '公司同事登录后，可下载全部品牌 Logo。';
-      if (allowed) window.dispatchEvent(new CustomEvent('workspace-session-updated', { detail: session }));
+      design.classList.toggle('primary', false);
+      design.classList.toggle('secondary', true);
+      design.textContent = user?.accessStatus === 'pending' ? '查看设计申请进度' : ['suspended','rejected'].includes(user?.accessStatus) ? '查看设计权限' : '申请设计权限';
+      note.textContent = allowed ? '已登录，可直接下载品牌素材' : '公司同事登录即可下载品牌素材';
+      window.dispatchEvent(new CustomEvent('workspace-session-updated', { detail: session }));
     } catch {
       document.body.hidden = true;
       location.replace(url('/?auth=verification_unavailable'));
