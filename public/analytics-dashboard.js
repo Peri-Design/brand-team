@@ -48,8 +48,17 @@
   const grid=el('div',undefined,'analytics-grid analytics-overview-grid');grid.append(trend(d),placements(d));root.append(grid);
   const summary=el('div',undefined,'analytics-summary');for(const [label,value] of [[t('新增用户','New users'),d.newUsers],[t('今日活跃','Active today'),d.activeToday],[t('近 30 天活跃','Active · 30 days'),d.active30],[t('有效文件','Active files'),d.inventory.files]]){const item=el('div');item.append(el('span',label),el('strong',n(value)));summary.append(item);}const link=el('button',undefined,'analytics-text-button');link.append(el('span',t('查看成员与文件','View members & files')),chevron());link.type='button';link.onclick=()=>selectSection('management',true);summary.append(link);root.append(summary);
  }
+ function badgeMetrics(d){
+  const b=d.badges||{users:0,exports:0,formats:{svg:0,png:0}};
+  const group=panel(t('角标生成','Badge generator'),t('成功显示预览即记为使用，所选期间按账号去重；角标统计从启用后开始记录，历史数据不补算','A successful preview counts as use; accounts are deduplicated within the selected period. Badge tracking starts when enabled; earlier activity is unavailable'));
+  group.classList.add('analytics-badges');
+  const share=format=>t(`占角标导出的 ${b.exports?Math.round(b.formats[format]/b.exports*100):0}%`,`Share of badge exports: ${b.exports?Math.round(b.formats[format]/b.exports*100):0}%`);
+  group.append(metrics(card(t('使用人数','Users'),n(b.users),t('按账号去重，含仅预览的用户','Unique accounts, including preview-only users')),card(t('导出次数','Export runs'),n(b.exports),t('文件生成并触发下载，失败不计','Files generated and downloads initiated; failures excluded')),card('SVG',n(b.formats.svg),share('svg')),card('PNG',n(b.formats.png),share('png'))));
+  return group;
+ }
  function exportsView(d){
   root.append(metrics(card(t('导出次数','Export runs'),n(d.exports),t('已生成文件并触发下载','Files generated; download initiated')),card(t('导出物料张数','Exported images'),n(d.images),t('含重复导出','Includes repeat exports')),card(t('单张导出','Single exports'),n(d.single),t('按导出次数统计','Counted per export run')),card(t('批量导出','Batch exports'),n(d.batch),t('一次 ZIP 记为一次','One ZIP counts as one run'))));
+  root.append(badgeMetrics(d));
   const grid=el('div',undefined,'analytics-grid');grid.append(placements(d),bars(t('物料语言','Material languages'),t('图片内容的语言，与界面语言无关','Language of exported materials'),[['English',d.languages.en],['中文',d.languages.zh],['日本語',d.languages.ja]]),bars(t('单张与批量导出','Single and batch exports'),t('按导出次数统计','Counted per export run'),[[t('单张','Single'),d.single],[t('批量','Batch'),d.batch]]),placements(d,true));
   const issues=[['missing_copy',t('必填文案缺失','Missing required copy')],['missing_image',t('缺少图片','Missing image')],['text_layout',t('文字排版或边界问题','Text layout or boundary')],['low_resolution',t('图片分辨率不足','Low image resolution')],['other',t('其他规范问题','Other validation issues')]];
   grid.append(bars(t('常见制作问题','Common validation issues'),t('每次检查中，同张图片的同类问题只计一次','One count per issue category per image per check'),issues.map(([k,label])=>[label,d.issues[k]])));

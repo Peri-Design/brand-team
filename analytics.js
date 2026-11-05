@@ -4,12 +4,13 @@ const dayOf = value => new Date(new Date(value).getTime() + 8 * 3600000).toISOSt
 const TYPES = ['web', 'app', 'social'];
 const LANGS = ['en', 'zh', 'ja'];
 const ISSUES = ['missing_copy', 'missing_image', 'text_layout', 'low_resolution', 'other'];
-const EVENTS = ['active', 'export_started', 'export_checked', 'export_generated', 'export_cancelled', 'export_failed', 'export_returned', 'export_confirmed', 'logo_download'];
+const EVENTS = ['active', 'export_started', 'export_checked', 'export_generated', 'export_cancelled', 'export_failed', 'export_returned', 'export_confirmed', 'logo_download', 'badge_used', 'badge_exported'];
 const ASSETS = ['PixLab-domestic','PixLab-international','PixVerse-black','PixVerse-white','PixVerse-reverse','PixVerse-world-black','PixVerse-world-white','PixVerse-world-reverse','PixVerse-icon-light','PixVerse-icon-dark','AIsphere-black','AIsphere-white','Paiwo-logo-black','Paiwo-logo-white','Paiwo-black','Paiwo-white','Paiwo-white-on-black'];
 function normalizeEvent(body) {
   if (!body || !EVENTS.includes(body.kind) || typeof body.id !== 'string' || !/^[a-zA-Z0-9_-]{8,80}$/.test(body.id)) throw Error('Invalid event');
   const data = {};
   if(body.kind==='logo_download'){if(!ASSETS.includes(body.asset)||!['svg','png'].includes(body.format))throw Error('Invalid asset');if(body.asset.startsWith('PixLab-')&&body.format!=='png')throw Error('Invalid format');if(body.asset.startsWith('Paiwo-')&&!body.asset.startsWith('Paiwo-logo-')&&body.format!=='png')throw Error('Invalid format');data.asset=body.asset;data.format=body.format;}
+  if(body.kind==='badge_exported'){if(!['svg','png'].includes(body.format))throw Error('Invalid format');data.format=body.format;}
   if (['export_started', 'export_generated'].includes(body.kind)) {
     if (!Array.isArray(body.items) || !body.items.length || body.items.length > 500 || body.items.some(x => !x || !TYPES.includes(x.type) || !LANGS.includes(x.language))) throw Error('Invalid items');
     data.items = body.items.map(x => ({type:x.type, language:x.language}));
@@ -29,9 +30,10 @@ function normalizeEvent(body) {
 function aggregate(events, projects, startedAt, days, now = new Date(), accounts = []) {
   const today = dayOf(now), start = new Date(today+'T00:00:00+08:00').getTime() - (days - 1) * DAY;
   const daily = Array.from({length:days},(_,i)=>({date:dayOf(start+i*DAY),active:new Set(),projects:0,exports:0,images:0}));
-  const byDay = new Map(daily.map(x=>[x.date,x])), users = new Set();
+  const byDay = new Map(daily.map(x=>[x.date,x])), users = new Set(), badgeUsers = new Set();
   const result = { days, timezone:'Asia/Shanghai', startedAt, generatedAt:now.toISOString(), activeUsers:0, newProjects:0, exports:0, images:0, single:0, batch:0,
     flow:{export_started:0,blocked:0,warning:0,clear:0,export_cancelled:0,export_failed:0,export_returned:0,export_confirmed:0}, types:Object.fromEntries(TYPES.map(x=>[x,0])), languages:Object.fromEntries(LANGS.map(x=>[x,0])), issues:Object.fromEntries(ISSUES.map(x=>[x,0])) };
+  result.badges={users:0,exports:0,formats:{svg:0,png:0}};
   result.newUsers=accounts.filter(u=>new Date(u.createdAt).getTime()>=start&&new Date(u.createdAt)<=now).length;
   result.logos=Object.fromEntries(ASSETS.map(x=>[x,{svg:0,png:0}]));result.logoClicks=0;
   result.inventory={files:0,trash:0,bytes:0,sizes:{small:0,medium:0,large:0},types:{web:0,app:0,social:0}};
@@ -49,6 +51,11 @@ function aggregate(events, projects, startedAt, days, now = new Date(), accounts
     const d=byDay.get(dayOf(e.createdAt));if(!d || new Date(e.createdAt)>now)continue;
     if(e.kind==='logo_download'){result.logos[e.data.asset][e.data.format]++;result.logoClicks++;continue;}
     users.add(e.actor);d.active.add(e.actor);
+    if(e.kind==='badge_used'||e.kind==='badge_exported'){
+      badgeUsers.add(e.actor);
+      if(e.kind==='badge_exported'){result.badges.exports++;result.badges.formats[e.data.format]++;}
+      continue;
+    }
     if(Object.hasOwn(result.flow,e.kind))result.flow[e.kind]++;
     if(e.kind==='export_checked') {result.flow[e.data.result]++;for(const [key,n] of Object.entries(e.data.issues))result.issues[key]+=n;}
     if(e.kind==='export_generated') {
@@ -57,19 +64,20 @@ function aggregate(events, projects, startedAt, days, now = new Date(), accounts
       for(const item of e.data.items){result.types[item.type]++;result.languages[item.language]++;}
     }
   }
+  result.badges.users=badgeUsers.size;
   result.activeUsers=users.size;
   result.daily=daily.map(d=>({...d,active:d.active.size}));return result;
 }
 function installAnalytics(MemoryStore, PostgresStore) {
   MemoryStore.prototype.initAnalytics=async function(){this.analyticsStartedAt=new Date().toISOString();this.analyticsEvents=new Map();};
-  MemoryStore.prototype.recordAnalytics=async function(actor,e){const id=e.kind==='active'?`${actor}:active:${dayOf(new Date())}`:`${actor}:${e.kind}:${e.id}`;if(!this.analyticsEvents.has(id))this.analyticsEvents.set(id,{...e,actor,createdAt:new Date().toISOString()});};
+  MemoryStore.prototype.recordAnalytics=async function(actor,e){const id=['active','badge_used'].includes(e.kind)?`${actor}:${e.kind}:${dayOf(new Date())}`:`${actor}:${e.kind}:${e.id}`;if(!this.analyticsEvents.has(id))this.analyticsEvents.set(id,{...e,actor,createdAt:new Date().toISOString()});};
   MemoryStore.prototype.analyticsOverview=async function(days){return aggregate([...this.analyticsEvents.values()],[...this.projects.values()],this.analyticsStartedAt,days,new Date(),[...this.users.values()]);};
   PostgresStore.prototype.initAnalytics=async function(){await this.pool.query(`
     CREATE TABLE IF NOT EXISTS analytics_events (id text PRIMARY KEY, actor text NOT NULL, kind text NOT NULL, data jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
     CREATE INDEX IF NOT EXISTS analytics_events_created_idx ON analytics_events(created_at);
     INSERT INTO app_settings(key,value) VALUES('analytics_started_at',to_char(now() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')) ON CONFLICT(key) DO NOTHING;
   `);};
-  PostgresStore.prototype.recordAnalytics=async function(actor,e){const id=e.kind==='active'?`${actor}:active:${dayOf(new Date())}`:`${actor}:${e.kind}:${e.id}`;await this.pool.query('INSERT INTO analytics_events(id,actor,kind,data) VALUES($1,$2,$3,$4::jsonb) ON CONFLICT(id) DO NOTHING',[id,actor,e.kind,JSON.stringify(e.data)]);};
+  PostgresStore.prototype.recordAnalytics=async function(actor,e){const id=['active','badge_used'].includes(e.kind)?`${actor}:${e.kind}:${dayOf(new Date())}`:`${actor}:${e.kind}:${e.id}`;await this.pool.query('INSERT INTO analytics_events(id,actor,kind,data) VALUES($1,$2,$3,$4::jsonb) ON CONFLICT(id) DO NOTHING',[id,actor,e.kind,JSON.stringify(e.data)]);};
   PostgresStore.prototype.analyticsOverview=async function(days){
     const since=new Date(new Date(dayOf(new Date())+'T00:00:00+08:00').getTime()-(30-1)*DAY);
     const [events,projects,setting,accounts]=await Promise.all([

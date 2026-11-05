@@ -1,6 +1,6 @@
 'use strict';
 (() => {
- const confirm=message=>window.confirm(window.PixVerseUI?.t(message)||message),prompt=(message,value)=>window.prompt(window.PixVerseUI?.t(message)||message,value);
+ const confirm=message=>window.confirm(window.PixVerseUI?.t(message)||message);
  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
  const REV = '2026-09-28-v2', LEGACY_REVS = new Set(['2026-09-23-v1']), LANG = {zh:'中文',en:'English',ja:'日本語'}, SLOT = {web:'Web 首页 Banner',app:'App 首页 Banner'};
  const FONT = {zh:'BannerSC',en:'BannerEN',ja:'BannerJP'};
@@ -382,7 +382,37 @@
  async function restoreCloudProject(project){try{await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}/restore`,{method:'POST'});toast('文件已恢复。');await refreshCloudProjects();}catch(error){toast('恢复失败：'+error.message);}}
  async function purgeCloudProject(project){if(!confirm(`永久删除“${project.name}”？此操作无法撤销。`))return;try{await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}/permanent`,{method:'DELETE'});toast('文件已永久删除。');await refreshCloudProjects();}catch(error){toast('删除失败：'+error.message);}}
  async function emptyTrash(){const count=trashProjects.length;if(!count)return;if(!confirm(`永久删除回收站内的 ${count} 个文件？此操作无法撤销。`))return;const button=$('#empty-trash');button.disabled=true;try{const data=await cloudRequest('/api/cloud/projects/trash',{method:'DELETE'});toast(data.deleted?`已永久删除 ${data.deleted} 个文件。`:'回收站已经为空。');await refreshCloudProjects();}catch(error){toast('清空失败：'+error.message);}finally{button.disabled=false;}}
- async function renameCloudProject(project){const next=prompt('重命名文件',project.name)?.trim();if(!next||next===project.name||next.length>80)return;try{const data=await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}`),payload=data.project.payload;payload.name=next;const saved=await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}`,{method:'PUT',body:JSON.stringify({project:payload,preview:data.project.previewDataUrl||project.previewDataUrl||null,baseRevision:data.project.revision})});if(project.id===cloudProjectId){state.name=next;cloudRevision=saved.project.revision;hydrate();persist(false,false);}toast('文件已重命名。');await refreshCloudProjects();}catch(error){toast('重命名失败：'+error.message);}}
+ function renameCloudProject(project){
+  const dialog=$('#rename-file-dialog'),form=$('#rename-file-form'),input=$('#rename-file-name'),error=$('#rename-file-error'),save=$('#rename-file-save'),cancel=$('#rename-file-cancel');
+  if(dialog.open)return;
+  let saving=false;
+  const t=message=>window.PixVerseUI?.t(message)||message;
+  const showError=message=>{error.textContent=message;error.hidden=false;input.setAttribute('aria-invalid','true');input.focus();};
+  const setSaving=value=>{saving=value;input.disabled=save.disabled=cancel.disabled=value;form.setAttribute('aria-busy',String(value));save.textContent=t(value?'正在保存…':'保存');};
+  input.value=project.name;input.removeAttribute('aria-invalid');error.hidden=true;error.textContent='';setSaving(false);
+  input.oninput=()=>{input.removeAttribute('aria-invalid');error.hidden=true;};
+  cancel.onclick=()=>dialog.close();
+  dialog.oncancel=event=>{if(saving)event.preventDefault();};
+  dialog.onclose=()=>{form.onsubmit=null;input.oninput=null;cancel.onclick=null;dialog.oncancel=null;dialog.onclose=null;$$('.project-tile').find(card=>card.dataset.projectId===project.id)?.querySelector('.project-menu-trigger')?.focus();};
+  form.onsubmit=async event=>{
+   event.preventDefault();if(saving)return;
+   const next=input.value.trim();
+   if(!next){showError(t('请输入文件名称'));return;}
+   if(next.length>80){showError(t('文件名称最多 80 个字符'));return;}
+   if(next===project.name){dialog.close();return;}
+   error.hidden=true;input.removeAttribute('aria-invalid');setSaving(true);
+   try{
+    const data=await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}`),payload=data.project.payload;
+    payload.name=next;
+    const saved=await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}`,{method:'PUT',body:JSON.stringify({project:payload,preview:data.project.previewDataUrl||project.previewDataUrl||null,baseRevision:data.project.revision})});
+    if(project.id===cloudProjectId){state.name=next;cloudRevision=saved.project.revision;hydrate();persist(false,false);}
+    await refreshCloudProjects();dialog.close();toast('文件已重命名。');
+   }catch(cause){setSaving(false);showError(t('重命名失败：')+t(cause.message));}
+   finally{setSaving(false);}
+  };
+  dialog.showModal();input.focus();input.select();
+ }
+
  async function duplicateCloudProject(project){try{const data=await cloudRequest(`/api/cloud/projects/${encodeURIComponent(project.id)}`),payload=structuredClone(data.project.payload);payload.name=(project.name+' 副本').slice(0,80);await cloudRequest('/api/cloud/projects',{method:'POST',body:JSON.stringify({project:payload,preview:data.project.previewDataUrl||project.previewDataUrl||null})});toast('副本已创建。');await refreshCloudProjects();}catch(error){toast('创建副本失败：'+error.message);}}
  function accessLabel(member){if(member.isAdmin)return '管理员';if(member.accessStatus==='active')return '设计权限已开通';if(member.accessStatus==='suspended')return '设计权限已停用';if(member.accessStatus==='rejected')return '设计权限未通过';if(member.accessStatus==='none')return '未申请';return '设计权限待审核';}
  async function setMemberAccess(member,accessStatus,reason=null){

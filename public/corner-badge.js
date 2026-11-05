@@ -171,7 +171,7 @@
     const $=selector=>panel.querySelector(selector),$$=selector=>panel.querySelectorAll(selector);
     const input=$('#badge-copy'),status=$('#badge-status'),preview=$('.al-badge-preview'),image=$('.al-badge-preview img'),probe=$('.al-badge-measure path');
     const buttons=$$('[data-badge-download]');
-    let engine=null,current=null,imageUrl=null,disposed=false;
+    let engine=null,current=null,imageUrl=null,disposed=false,usageRecorded=false;
     const messages={
       empty:t('请输入角标文案','Enter badge text'),
       unsupported:t('字体不支持其中的字符，请调整文案','The font does not support one or more characters. Edit the text'),
@@ -204,6 +204,7 @@
       imageUrl=URL.createObjectURL(blob);
       image.src=imageUrl;image.alt='PixVerse · '+layout.text;
       current={blob,layout,ink:draft.ink};
+      if(!usageRecorded){usageRecorded=true;root.BrandAnalytics?.badgeUsed?.();}
     }
 
     input.oninput=()=>{draft.text=input.value;render();};
@@ -231,9 +232,9 @@
       if(disposed)return;
       const safeText=snapshot.layout.text.replace(/[^\p{L}\p{N} ._-]+/gu,'-').slice(0,80);
       const filename='PixVerse-'+safeText+'-'+snapshot.ink+'.'+format;
-      if(format==='svg'){save(snapshot.blob,filename);return;}
+      if(format==='svg'){save(snapshot.blob,filename);root.BrandAnalytics?.badgeExport?.('svg');return;}
       const url=URL.createObjectURL(snapshot.blob);
-      try{const blob=await png(url,wordmarkHeight+gap+snapshot.layout.height);if(!disposed)save(blob,filename);}
+      try{const blob=await png(url,wordmarkHeight+gap+snapshot.layout.height);if(!disposed){save(blob,filename);root.BrandAnalytics?.badgeExport?.('png');}}
       catch{if(!disposed)status.textContent=t('PNG 导出失败，请重试','PNG export failed. Try again');}
       finally{URL.revokeObjectURL(url);}
     });

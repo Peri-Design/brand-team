@@ -37,7 +37,9 @@
     const match=url.pathname.match(/^\/assets\/(PixVerse-(?:black|white|reverse|world-(?:black|white|reverse)|icon-light|icon-dark)|PixLab-(?:domestic|international)|AIsphere-(?:black|white)|Paiwo-(?:logo-black|logo-white|black|white|white-on-black))\.(svg|png)$/);
     if(match)send({id:id(),kind:'logo_download',asset:match[1],format:match[2]});
   }
-  root.BrandAnalytics={begin,logoDownload};
+  function badgeUsed(){send({id:id(),kind:'badge_used'});}
+  function badgeExport(format){if(['svg','png'].includes(format))send({id:id(),kind:'badge_exported',format});}
+  root.BrandAnalytics={begin,logoDownload,badgeUsed,badgeExport};
   document.addEventListener('click',event=>{const link=event.target.closest('a[download]');if(link)logoDownload(link.href);});
   document.addEventListener('pointerdown',active,{passive:true});document.addEventListener('keydown',active);document.addEventListener('visibilitychange',active);
   // Confirm session before first activity; subsequent events remain server-authorized.

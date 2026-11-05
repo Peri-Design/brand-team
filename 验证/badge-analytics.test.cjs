@@ -1,0 +1,14 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../public/corner-badge.js'),'utf8');
+const mountSource=source.slice(source.indexOf('  function mount('),source.indexOf('\n  if(typeof module'));
+const settle=()=>new Promise(resolve=>setImmediate(resolve));
+async function boot({access=true,pngFails=false,invalid=false}={}){
+ const events=[],saved=[],elements={};for(const selector of ['#badge-copy','#badge-status','.al-badge-preview','.al-badge-preview img','.al-badge-measure path'])elements[selector]={value:'',dataset:{},setAttribute(){},removeAttribute(){}};
+ const buttons=['svg','png'].map(format=>({dataset:{badgeDownload:format},disabled:true})),draft={text:'GPT-6 ASTRA',ink:'white',background:'dark'},root={BrandAnalytics:{badgeUsed:()=>events.push(['used']),badgeExport:f=>events.push(['export',f])},dispatchEvent:()=>events.push(['revoked'])};
+ const panel={querySelector:s=>elements[s],querySelectorAll:s=>s==='[data-badge-download]'?buttons:[]};
+ const context={root,draft,width:280,pngScale:4,wordmarkHeight:50,gap:8,Blob,AbortSignal,CustomEvent:class{},URL:{createObjectURL:()=> 'blob:local',revokeObjectURL(){}},loadResources:async()=>({wordmarks:{white:'logo'},font:{},upem:1000}),layoutText:()=>invalid?{error:'empty'}:{text:draft.text,height:40},composeSvg:()=>'<svg/>',save:(blob,name)=>saved.push(name),png:async()=>{if(pngFails)throw Error('failure');return new Blob(['png']);},fetch:async()=>({ok:true,json:async()=>({authenticated:true,user:{accessStatus:access?'active':'pending'}})})};
+ vm.createContext(context);vm.runInContext(mountSource,context);const unmount=context.mount(panel,(zh)=>zh);await settle();return{events,saved,buttons,elements,unmount};
+}
+test('只有首次有效预览记使用，输入和背景变化不会重复计数',async()=>{const ui=await boot();assert.deepEqual(ui.events,[['used']]);ui.elements['#badge-copy'].oninput();ui.elements['#badge-copy'].oninput();assert.deepEqual(ui.events,[['used']]);const invalid=await boot({invalid:true});assert.equal(invalid.events.length,0);});
+test('SVG 和 PNG 仅在生成并触发下载后各记录一次',async()=>{const ui=await boot();await ui.buttons[0].onclick();await ui.buttons[1].onclick();assert.deepEqual(ui.events,[['used'],['export','svg'],['export','png']]);assert.equal(ui.saved.length,2);});
+test('PNG 生成失败、权限失效或离开页面后不计导出',async()=>{const failed=await boot({pngFails:true});await failed.buttons[1].onclick();assert.deepEqual(failed.events,[['used']]);assert.equal(failed.saved.length,0);const revoked=await boot({access:false});await revoked.buttons[0].onclick();assert.deepEqual(revoked.events,[['used'],['revoked']]);assert.equal(revoked.saved.length,0);const closed=await boot();closed.unmount();await closed.buttons[1].onclick();assert.equal(closed.saved.length,0);assert.deepEqual(closed.events,[['used']]);});

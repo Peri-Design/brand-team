@@ -392,3 +392,10 @@ button.primary,button.secondary,a.secondary,.button-link.primary,.asset-download
 @media(max-width:800px){.admin-member-head{display:none}.admin-member{grid-template-columns:minmax(0,1fr) auto;padding:16px 0}.admin-member-actions .admin-action{min-height:44px;height:44px}}
 @media(max-width:600px){.admin-member{grid-template-columns:minmax(0,1fr)}.admin-member-actions{justify-content:flex-start}}
 @media(prefers-reduced-motion:reduce){.admin-member-actions .admin-action{transition:none}}
+
+.rename-file-dialog{width:min(440px,calc(100vw - 32px));padding:28px;border:1px solid var(--line);border-radius:18px;color:var(--ink);background:#fff;box-shadow:0 24px 80px #21163333}
+.rename-file-dialog::backdrop{background:#25203066;backdrop-filter:blur(4px)}
+.rename-file-dialog h2{font-size:20px;margin:0 0 24px}.rename-file-dialog label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+.rename-file-dialog input{display:block;width:100%;min-height:44px;padding:10px 12px;background:#fff;color:var(--ink)}
+.rename-file-dialog input[aria-invalid=true]{border-color:#b33636}#rename-file-error{margin-top:8px;color:#b33636;font-size:13px;overflow-wrap:anywhere}
+.rename-file-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}.rename-file-actions button{min-width:76px;min-height:44px}
