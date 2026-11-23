@@ -15,7 +15,6 @@
     {id:'pv-logo-vertical',brand:'PixVerse',type:'logo',title:'竖版 Logo',en:'Vertical logo',layout:'vertical',variants:[
       {label:'彩色黑字',en:'Color symbol · Black wordmark',file:'PixVerse-vertical-black',exts:['svg','png']},
       {label:'彩色浅字',en:'Color symbol · Light wordmark',file:'PixVerse-vertical-white',dark:true,exts:['svg','png']},
-      {label:'反黑',en:'Black reversed',file:'PixVerse-vertical-reverse-black',exts:['svg','png']},
       {label:'反白',en:'White reversed',file:'PixVerse-vertical-reverse',dark:true,exts:['svg','png']}
     ]},
     {id:'pv-world',brand:'PixVerse',type:'logo',title:'PixVerse · World',en:'PixVerse · World',variants:pixverseVariants('PixVerse-world')},
