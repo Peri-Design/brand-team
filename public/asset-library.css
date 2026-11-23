@@ -156,3 +156,8 @@
 @media(max-width:760px){
  .al-badge-layout{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Preserve the full vertical lockup in card and version previews. */
+.al-visual>img.is-vertical{width:auto;max-width:70%;height:calc(100% - 32px);max-height:128px}
+.al-version-art:has(>img.is-vertical){height:144px}
+.al-version-art img.is-vertical{width:auto;max-width:80%;height:120px;max-height:120px}

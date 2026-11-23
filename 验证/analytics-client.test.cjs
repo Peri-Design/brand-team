@@ -11,3 +11,17 @@ test('角标使用和导出独立上报，格式白名单且不发送输入文�
  assert.deepEqual(events.map(e=>e.kind),['badge_used','badge_exported','badge_exported']);assert.deepEqual(events.slice(1).map(e=>e.format),['svg','png']);assert.equal(new Set(events.map(e=>e.id)).size,3);assert.ok(events.every(e=>Object.keys(e).every(k=>['kind','id','format'].includes(k))));
  const offline=setup(true);assert.doesNotThrow(()=>offline.root.BrandAnalytics.badgeExport('png'));await settle();
 });
+
+test('vertical Logo download tracking accepts all four SVG/PNG originals and ignores unknown variants',async()=>{
+ const {root,events}=setup();
+ for(const variant of ['black','white','reverse-black','reverse']){
+  for(const format of ['svg','png'])root.BrandAnalytics.logoDownload('/assets/PixVerse-vertical-'+variant+'.'+format);
+ }
+ root.BrandAnalytics.logoDownload('/assets/PixVerse-vertical-unknown.svg');
+ await settle();
+ assert.equal(events.length,8);
+ assert.equal(new Set(events.map(event=>event.asset)).size,4);
+ assert.ok(events.every(event=>event.kind==='logo_download'));
+ assert.equal(events.filter(event=>event.format==='svg').length,4);
+ assert.equal(events.filter(event=>event.format==='png').length,4);
+});

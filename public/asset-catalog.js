@@ -11,7 +11,13 @@
     {label:'反白',en:'Reversed',file:stem+'-reverse',dark:true,exts:['svg','png']}
   ];
   const assets=[
-    {id:'pv-logo',brand:'PixVerse',type:'logo',title:'标准 Logo',en:'Standard logo',variants:pixverseVariants('PixVerse')},
+    {id:'pv-logo',brand:'PixVerse',type:'logo',title:'横版 Logo（优先使用）',en:'Horizontal logo (preferred)',variants:pixverseVariants('PixVerse')},
+    {id:'pv-logo-vertical',brand:'PixVerse',type:'logo',title:'竖版 Logo',en:'Vertical logo',layout:'vertical',variants:[
+      {label:'彩色黑字',en:'Color symbol · Black wordmark',file:'PixVerse-vertical-black',exts:['svg','png']},
+      {label:'彩色浅字',en:'Color symbol · Light wordmark',file:'PixVerse-vertical-white',dark:true,exts:['svg','png']},
+      {label:'反黑',en:'Black reversed',file:'PixVerse-vertical-reverse-black',exts:['svg','png']},
+      {label:'反白',en:'White reversed',file:'PixVerse-vertical-reverse',dark:true,exts:['svg','png']}
+    ]},
     {id:'pv-world',brand:'PixVerse',type:'logo',title:'PixVerse · World',en:'PixVerse · World',variants:pixverseVariants('PixVerse-world')},
     {id:'pv-icon',brand:'PixVerse',type:'icon',title:'品牌图标',en:'Brand icon',icon:true,variants:[
       {label:'白底图标',en:'Light icon',file:'PixVerse-icon-light',exts:['svg','png']},
@@ -37,7 +43,7 @@
       [a.brand,brandName(a.brand,true),a.title,a.en,...a.variants.flatMap(v=>[v.label,v.en,...v.exts])].join(' ').toLowerCase().includes(q));
   }
   // Date of the latest asset addition or replacement on the live site.
-  const updatedOn='2026-11-04';
+  const updatedOn='2026-11-23';
   const api={assets,brands,brandName,files,filter,updatedOn};
   if(typeof module==='object'&&module.exports)module.exports=api;
   else root.BrandAssetCatalog=api;
