@@ -9,7 +9,7 @@
   const en=()=>window.PixVerseUI?.locale==='en',t=(zh,english)=>en()?english:zh;
   const icon=id=>`<svg aria-hidden="true"><use href="#i-${id}"/></svg>`;
   const chevron=icon('chevron-right');
-  const types=[['','全部类型','All types'],['logo','标准 Logo','Standard logo'],['icon','图标','Icons'],['combo','组合 Logo','Combination logo'],['lab','实验室标志','Lab logo']];
+  const types=[['','全部类型','All types'],['logo','标准 Logo','Standard logo'],['icon','图标','Icons'],['lab','实验室标志','Lab logo']];
   const state={brand:'',type:'',format:'',query:'',page:1},chosen=new Set(),choices=new Map();
   let dialogMode=null,detailId=null,busy=false,returnFocus=null,category='logos';
   const dialog=document.createElement('dialog');

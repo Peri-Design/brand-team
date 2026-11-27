@@ -2,21 +2,26 @@
 process.env.ENABLE_DEV_AUTH='true';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),request=require('supertest');
 const {app,ready}=require('../server');
-test('independent Paiwo originals support PNG/SVG while combination logos remain available',async()=>{
- const {store}=await ready;await store.upsertUser({openId:'paiwo-original-qa',name:'Logo QA'});
- const cookie='pv_session='+await store.createSession('paiwo-original-qa',60000);
- for(const [color,folder,stem] of [['black','黑色','拍我AI-黑色'],['white','白色','拍我AI']])for(const format of ['png','svg']){
-  const url='/assets/Paiwo-logo-'+color+'.'+format;
-  assert.equal((await request(app).get(url)).status,401);
-  const response=await request(app).get(url).set('Cookie',cookie);assert.equal(response.status,200);
-  const served=Buffer.isBuffer(response.body)?response.body:Buffer.from(response.text);
-  assert.deepEqual(served,fs.readFileSync(path.join(__dirname,'../public',url)));
-  const original=path.join('/Users/katherine/Desktop/设计资产/拍我logo/图形+拍我AI',folder,stem+'.'+format);
-  if(fs.existsSync(original))assert.deepEqual(served,fs.readFileSync(original));
-  const event=await request(app).post('/api/analytics/events').set('Cookie',cookie).send({id:'paiwo-original-'+color+'-'+format,kind:'logo_download',asset:'Paiwo-logo-'+color,format});assert.equal(event.status,204);
+const catalog=require('../public/asset-catalog');
+const retired=['Paiwo-logo-black.svg','Paiwo-logo-white.svg','Paiwo-logo-black.png','Paiwo-logo-white.png','Paiwo-black.png','Paiwo-white.png'];
+test('withdrawn Paiwo Logo groups are absent from search, ZIP selections, fallback links and member downloads',async()=>{
+ const {store}=await ready;
+ await store.upsertUser({openId:'paiwo-withdrawal-qa',name:'Withdrawal QA'});
+ const cookie='pv_session='+await store.createSession('paiwo-withdrawal-qa',60000);
+ assert.ok(catalog.assets.every(item=>!['paiwo-logo','paiwo-combo'].includes(item.id)));
+ assert.ok(!catalog.brands.includes('拍我 AI'));
+ const files=catalog.assets.flatMap(item=>catalog.files(item));
+ assert.ok(files.every(file=>!retired.includes(path.basename(file.url))));
+ for(const filename of retired){
+  const url='/assets/'+filename;
+  assert.equal(fs.existsSync(path.join(__dirname,'../public',url)),false,filename);
+  assert.equal((await request(app).get(url).set('Cookie',cookie)).status,404,url);
+  assert.equal((await request(app).head(url).set('Cookie',cookie)).status,404,url+' HEAD');
+  assert.equal((await request(app).get(url.replace('/assets/','/%61ssets/')).set('Cookie',cookie).set('Range','bytes=0-3')).status,404,url+' encoded Range');
  }
- const page=await request(app).get('/?view=assets').set('Cookie',cookie);
- assert.match(page.text,/PixVerse × 拍我 AI · 组合 Logo（黑色）/);
- assert.match(page.text,/PixVerse × 拍我 AI · 组合 Logo（白色）/);
- for(const color of ['black','white'])assert.equal((await request(app).get('/assets/Paiwo-'+color+'.png').set('Cookie',cookie)).status,200);
+ for(const entry of ['domestic','international']){
+  const page=await request(app).get('/?view=assets&entry='+entry).set('Cookie',cookie);
+  assert.equal(page.status,200);
+  for(const filename of retired)assert.ok(!page.text.includes('assets/'+filename),filename);
+ }
 });

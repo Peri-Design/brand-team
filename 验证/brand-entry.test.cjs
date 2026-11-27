@@ -47,13 +47,14 @@ test('language preference is independent from legacy entry; navigation, reload a
  }
  assert.equal(boot('http://localhost/?entry=unknown').BrandEntry.entry,'international');
 });
-test('Paiwo employee downloads retain exact supplied bytes and clicks',async()=>{
- const cookie=await login('paiwo-member');
- const folder='/Users/katherine/Desktop/设计资产/拍我AI（国内新logo）';
- const pairs=[['black','联合logo（黑）.png'],['white','联合logo（透明）.png']];
- for(const [key,source] of pairs){const res=await request(app).get('/assets/Paiwo-'+key+'.png').set('Cookie',cookie);assert.equal(res.status,200);assert.equal(Buffer.compare(res.body,fs.readFileSync(path.join(dist,'assets','Paiwo-'+key+'.png'))),0);
-  if(fs.existsSync(path.join(folder,source)))assert.equal(Buffer.compare(res.body,fs.readFileSync(path.join(folder,source))),0);
-  const event=await request(app).post('/api/analytics/events').set('Cookie',cookie).send({id:'paiwo-test-'+key,kind:'logo_download',asset:'Paiwo-'+key,format:'png'});assert.equal(event.status,204);
+test('remaining employee downloads retain original bytes and historical Logo metrics remain readable',async()=>{
+ const cookie=await login('remaining-asset-member');
+ const response=await request(app).get('/assets/PixLab-domestic.png').set('Cookie',cookie);
+ assert.equal(response.status,200);
+ assert.equal(Buffer.compare(response.body,fs.readFileSync(path.join(dist,'assets/PixLab-domestic.png'))),0);
+ for(const key of ['black','white']){
+  const event=await request(app).post('/api/analytics/events').set('Cookie',cookie).send({id:'paiwo-history-'+key,kind:'logo_download',asset:'Paiwo-'+key,format:'png'});
+  assert.equal(event.status,204);
  }
  assert.equal((await request(app).post('/api/analytics/events').send({id:'invalid-svg',kind:'logo_download',asset:'Paiwo-black',format:'svg'})).status,400);
 });

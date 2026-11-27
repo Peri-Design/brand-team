@@ -14,7 +14,7 @@ test('all asset variants, encoded URLs, HEAD and Range fail closed for anonymous
 });
 test('employee without design approval can access every brand and guidelines; logout closes all assets',async()=>{
  const cookie=await member();
- for(const path of ['/assets/PixVerse-black.svg','/assets/Paiwo-black.png','/assets/AIsphere-white.png','/brand-guidelines.html']){
+ for(const path of ['/assets/PixVerse-black.svg','/assets/PixLab-domestic.png','/assets/AIsphere-white.png','/brand-guidelines.html']){
  const r=await request(app).get(path).set('Cookie',cookie);assert.equal(r.status,200);assert.match(r.headers['cache-control'],/private, no-store/);
  }
  assert.equal((await request(app).get('/api/cloud/projects').set('Cookie',cookie)).status,403);
