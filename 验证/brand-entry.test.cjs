@@ -49,9 +49,9 @@ test('language preference is independent from legacy entry; navigation, reload a
 });
 test('remaining employee downloads retain original bytes and historical Logo metrics remain readable',async()=>{
  const cookie=await login('remaining-asset-member');
- const response=await request(app).get('/assets/PixLab-domestic.png').set('Cookie',cookie);
+ const response=await request(app).get('/assets/PixLab-international.png').set('Cookie',cookie);
  assert.equal(response.status,200);
- assert.equal(Buffer.compare(response.body,fs.readFileSync(path.join(dist,'assets/PixLab-domestic.png'))),0);
+ assert.equal(Buffer.compare(response.body,fs.readFileSync(path.join(dist,'assets/PixLab-international.png'))),0);
  for(const key of ['black','white']){
   const event=await request(app).post('/api/analytics/events').set('Cookie',cookie).send({id:'paiwo-history-'+key,kind:'logo_download',asset:'Paiwo-'+key,format:'png'});
   assert.equal(event.status,204);

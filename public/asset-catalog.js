@@ -22,7 +22,6 @@
       {label:'白底图标',en:'Light icon',file:'PixVerse-icon-light',exts:['svg','png']},
       {label:'深底图标',en:'Dark icon',file:'PixVerse-icon-dark',dark:true,exts:['svg','png']}
     ]},
-    {id:'pixlab-cn',brand:'PixLab',type:'lab',title:'国内版 · 拍我 AI',en:'Domestic · Paiwo AI',variants:[{label:'国内版',en:'Domestic',file:'PixLab-domestic',dark:true,exts:['png']}]},
     {id:'pixlab-global',brand:'PixLab',type:'lab',title:'海外版 · PixVerse',en:'International · PixVerse',variants:[{label:'海外版',en:'International',file:'PixLab-international',dark:true,exts:['png']}]},
     {id:'aisphere-logo',brand:'爱诗科技',type:'logo',title:'企业标准 Logo',en:'Corporate logo',variants:variants('AIsphere')}
   ];
